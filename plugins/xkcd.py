@@ -24,7 +24,17 @@ def onInit(plugin):
 
 def onCommand(message_in):
     if message_in.command == 'xkcd':
-        f = urllib.request.urlopen("https://xkcd.com/info.0.json")
+        if message_in.body != '':
+            try:
+                int(message_in.body)
+            except:
+                err_message = message.message
+                err_message.body = 'Input of `{}` is not a valid number'.format(message_in.body)
+                return err_message
+
+            f = urllib.request.urlopen("https://xkcd.com/{}/info.0.json".format(message_in.body.strip()))
+        else:
+            f = urllib.request.urlopen("https://xkcd.com/info.0.json")
         data = json.load(f)
 
         comic_filename = 'cache/xkcd_{}.png'.format(data['num'])
@@ -35,7 +45,7 @@ def onCommand(message_in):
             urllib.request.urlretrieve(data['img'], 'cache/xkcd_{}.png'.format(data['num']))
 
         message_send = message.message
-        message_send.body = None
+        message_send.body = '**{}/{}/{} - {}**\n_{}_'.format(data['month'], data['day'], data['year'], data['safe_title'], data['alt'])
         message_send.file = 'cache/xkcd_{}.png'.format(data['num'])
 
         return message_send
