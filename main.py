@@ -52,13 +52,17 @@ async def on_message(message_in):
         await client.send_message(message_in.channel, '```Project StarBot v0.0.1-{}\r\nDeveloped by CorpNewt and Sydney Erickson```'.format(sha[:5]))
     for command in commands:
         if message_in.content == '!' + command.name:
+
             message_recv = message.message
             message_recv.command = command.name
             message_recv.body = message_in.content.split('!' + command.name)[-1]
 
             command_result = command.plugin.onCommand(message_recv)
 
-            await client.send_message(message_in.channel, command_result.body)
+            if command_result.body != None:
+                await client.send_message(message_in.channel, command_result.body)
+            if command_result.file != None:
+                await client.send_file(message_in.channel, command_result.file)
 
             #await client.send_message(message.channel, command.plugin.onCommand())
 
