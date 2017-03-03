@@ -51,7 +51,7 @@ async def on_message(message_in):
         sha = repo.head.object.hexsha
         await client.send_message(message_in.channel, '```Project StarBot v0.0.1-{}\r\nDeveloped by CorpNewt and Sydney Erickson```'.format(sha[:5]))
     for command in commands:
-        if message_in.content == '!' + command.name:
+        if message_in.content.split(' ')[0] == '!' + command.name or message_in.content == '!' + command.name:
             await client.send_typing(message_in.channel)
             message_recv = message.message
             message_recv.command = command.name
