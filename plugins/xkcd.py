@@ -32,10 +32,21 @@ def onCommand(message_in):
                 err_message.body = 'Input of `{}` is not a valid number'.format(message_in.body)
                 return err_message
 
-            f = urllib.request.urlopen("https://xkcd.com/{}/info.0.json".format(message_in.body.strip()))
+            json_filename = 'cache/xkcd_{}.json'.format(message_in.body.strip())
+
+            if os.path.isfile(json_filename):
+                pass
+            else:
+                print("Grabbing XKCD JSON! Not in cache.")
+                urllib.request.urlretrieve("https://xkcd.com/{}/info.0.json".format(message_in.body.strip()), json_filename)
+
+            f = ''
+            with open(json_filename) as m:
+                f = m.read()
+            data = json.loads(f)
         else:
             f = urllib.request.urlopen("https://xkcd.com/info.0.json")
-        data = json.load(f)
+            data = json.load(f)
 
         comic_filename = 'cache/xkcd_{}.png'.format(data['num'])
         if os.path.isfile(comic_filename):
