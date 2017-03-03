@@ -66,4 +66,8 @@ async def on_message(message_in):
 
             #await client.send_message(message.channel, command.plugin.onCommand())
 
-client.run('Mjg2NjUxNTk3NDIzOTAyNzIw.C5j0sw.qF968us3onhFSyjOgnv6-fr4_SU')
+token = ''
+with open('token.txt') as m:
+    token = m.read().strip()
+
+client.run(token)

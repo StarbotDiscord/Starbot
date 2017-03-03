@@ -103,3 +103,4 @@ target/
 
 #StarBot specific stuff
 cache/**
+token.txt
