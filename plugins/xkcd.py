@@ -3,6 +3,7 @@ import json
 import plugin
 import command
 import message
+import os
 
 def onInit(plugin):
     #create the basics of our plugin
@@ -26,10 +27,15 @@ def onCommand(message_in):
         f = urllib.request.urlopen("https://xkcd.com/info.0.json")
         data = json.load(f)
 
-        urllib.request.urlretrieve(data['img'], 'xkcd_{}.png'.format(data['num']))
+        comic_filename = 'cache/xkcd_{}.png'.format(data['num'])
+        if os.path.isfile(comic_filename):
+            pass
+        else:
+            print("Grabbing latest XKCD! Not in cache.")
+            urllib.request.urlretrieve(data['img'], 'cache/xkcd_{}.png'.format(data['num']))
 
         message_send = message.message
         message_send.body = None
-        message_send.file = 'xkcd_{}.png'.format(data['num'])
+        message_send.file = 'cache/xkcd_{}.png'.format(data['num'])
 
         return message_send
