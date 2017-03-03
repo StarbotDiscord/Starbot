@@ -26,7 +26,10 @@ def onCommand(message_in):
         f = urllib.request.urlopen("https://xkcd.com/info.0.json")
         data = json.load(f)
 
+        urllib.request.urlretrieve(data['img'], 'xkcd_{}.png'.format(data['num']))
+
         message_send = message.message
-        message_send.body = data['img']
+        message_send.body = None
+        message_send.file = 'xkcd_{}.png'.format(data['num'])
 
         return message_send
