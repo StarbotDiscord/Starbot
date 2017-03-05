@@ -44,6 +44,7 @@ def onCommand(message_in):
                     return message.create(body='Could not find comic with ID `{}`'.format(message_in.body))
                 except urllib.error.URLError as e:
                     return message.create(body='There was an issue connecting to XKCD'.format(message_in.body))
+
             f = ''
             with open(json_filename) as m:
                 f = m.read()
