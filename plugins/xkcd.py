@@ -1,4 +1,5 @@
 import urllib.request
+import urllib.error
 import json
 import plugin
 import command
@@ -26,10 +27,15 @@ def onCommand(message_in):
     if message_in.command == 'xkcd':
         if message_in.body != '':
             try:
-                int(message_in.body)
+                if int(message_in.body) < 0:
+                    err_message = message.message
+                    err_message.body = 'ID `{}` is not a valid ID'.format(message_in.body)
+                    err_message.file = None
+                    return err_message
             except:
                 err_message = message.message
                 err_message.body = 'Input of `{}` is not a valid number'.format(message_in.body)
+                err_message.file = None
                 return err_message
 
             json_filename = 'cache/xkcd_{}.json'.format(message_in.body.strip())
@@ -38,14 +44,28 @@ def onCommand(message_in):
                 pass
             else:
                 print("Grabbing XKCD JSON! Not in cache.")
-                urllib.request.urlretrieve("https://xkcd.com/{}/info.0.json".format(message_in.body.strip()), json_filename)
-
+                try:
+                    urllib.request.urlretrieve("https://xkcd.com/{}/info.0.json".format(message_in.body.strip()), json_filename)
+                except urllib.error.HTTPError as e:
+                    err_message = message.message
+                    err_message.body = 'Could not find comic with ID `{}`'.format(message_in.body)
+                    err_message.file = None
+                    return err_message
+                except urllib.error.URLError as e:
+                    err_message = message.message
+                    err_message.body = 'There was an issue connecting to XKCD'.format(message_in.body)
+                    return err_message
             f = ''
             with open(json_filename) as m:
                 f = m.read()
             data = json.loads(f)
         else:
-            f = urllib.request.urlopen("https://xkcd.com/info.0.json")
+            try:
+                f = urllib.request.urlopen("https://xkcd.com/info.0.json")
+            except urllib.error.URLError as e:
+                err_message = message.message
+                err_message.body = 'There was an issue connecting to XKCD'.format(message_in.body)
+                return err_message
             data = json.load(f)
 
         comic_filename = 'cache/xkcd_{}.png'.format(data['num'])
