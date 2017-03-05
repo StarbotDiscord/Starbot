@@ -64,8 +64,6 @@ async def on_message(message_in):
             if command_result.file != None:
                 await client.send_file(message_in.channel, command_result.file)
 
-            #await client.send_message(message.channel, command.plugin.onCommand())
-
 token = ''
 with open('token.txt') as m:
     token = m.read().strip()
