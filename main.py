@@ -55,7 +55,7 @@ async def on_message(message_in):
     if message_in.server == None:
         return
 
-    if message_in.server.id == '186648463541272576':
+    if message_in.server.id == '186648463541272576' and message_in.author.id != '219683089457217536':
         return
 
     if message_in.content.startswith('!info'):
@@ -73,7 +73,7 @@ async def on_message(message_in):
                 caches.append('{} - {}'.format(command.name, str(len(cacheCount))))
 
         msg = '```'
-        msg += 'Project StarBot v0.0.1-{}\nDeveloped by CorpNewt and Sydney Erickson\n\n'.format(sha[:7])
+        msg += 'Project StarBot v0.0.1-{}\nDeveloped by CorpNewt and Sydney Erickson\nThis is developer stuff, nothing too useful here!\n\n'.format(sha[:7])
         msg += 'Plugins: {}\n'.format(', '.join(pluginNames))
         msg += 'Commands: {}\n\n'.format(', '.join(commandNames))
         msg += 'Caches: {}'.format(', '.join(caches))
