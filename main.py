@@ -2,6 +2,7 @@ import discord
 import asyncio
 import git
 import message
+import glob
 from pluginbase import PluginBase
 
 plugin_base = PluginBase(package='plugins')
@@ -50,11 +51,23 @@ async def on_message(message_in):
         sha = repo.head.object.hexsha
         pluginNames = []
         commandNames = []
+        caches = []
         for plugin in plugins:
             pluginNames.append(plugin.name)
         for command in commands:
             commandNames.append(command.name)
-        await client.send_message(message_in.channel, '```Project StarBot v0.0.1-{}\nDeveloped by CorpNewt and Sydney Erickson\n\nPlugins: {}\nCommands: {}```'.format(sha[:5], ', '.join(pluginNames), ', '.join(commandNames)))
+            cacheCount = glob.glob('cache/{}_*'.format(command.name))
+            if len(cacheCount) != 0:
+                caches.append('{} - {}'.format(command.name, str(len(cacheCount))))
+
+        msg = '```'
+        msg += 'Project StarBot v0.0.1-{}\nDeveloped by CorpNewt and Sydney Erickson\n\n'.format(sha[:7])
+        msg += 'Plugins: {}\n'.format(', '.join(pluginNames))
+        msg += 'Commands: {}\n\n'.format(', '.join(commandNames))
+        msg += 'Caches: {}'.format(', '.join(caches))
+        msg += '```'
+
+        await client.send_message(message_in.channel, msg)
     for command in commands:
         if message_in.content.split(' ')[0] == '!' + command.name or message_in.content == '!' + command.name:
             await client.send_typing(message_in.channel)
