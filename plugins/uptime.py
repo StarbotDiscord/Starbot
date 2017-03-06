@@ -68,5 +68,4 @@ def onCommand(message_in):
     if message_in.command == 'uptime':
         currentTime = int(time.time())
         timeString = getReadableTimeBetween(main.startTime, currentTime)
-        msg = 'I\'ve been up for *{}*.'.format(timeString)
-        return message.create(body=msg)
+        return message.create(body='I\'ve been up for *{}*.'.format(timeString))
