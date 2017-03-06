@@ -47,7 +47,7 @@ async def on_ready():
     print(client.user.id)
     print('------')
 
-    await client.change_presence(game=discord.Game(name='!help - Pooter 2.0'))
+    await client.change_presence(game=discord.Game(name='!info - Pooter 2.0'))
 
 @client.event
 async def on_message(message_in):
