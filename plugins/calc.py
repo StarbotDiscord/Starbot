@@ -135,6 +135,7 @@ def onInit(plugin):
 def onCommand(message_in):
     """Do some math."""
     formula = message_in.body
+    formula = formula.replace('*', 'x')
 
     if formula == None:
         msg = 'Usage: `{}calc [formula]`'.format('!')
