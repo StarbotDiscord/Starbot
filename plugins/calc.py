@@ -141,9 +141,10 @@ def onCommand(message_in):
         return message.create(body=msg)
 
     try:
-        nsp = NumericStringParser
+        nsp = NumericStringParser()
         answer = nsp.eval(formula)
-    except:
+    except Exception as e:
+        print("CALC PLUGIN EXCEPTION\r\n{}".format(e))
         msg = 'I couldn\'t parse "{}" :(\n\n'.format(formula)
         msg += 'I understand the following syntax:\n```\n'
         msg += "expop   :: '^'\n"
