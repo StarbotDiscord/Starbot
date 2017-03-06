@@ -1,7 +1,8 @@
 class message:
-    command = None
-    body = None
-    file = None
+    def __init__(self):
+        command = None
+        body = None
+        file = None
 
 def create(body=None, file=None):
     messageTo = message

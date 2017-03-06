@@ -1,3 +1,4 @@
 class command():
-    plugin = None
-    name = None
+    def __init__(self):
+        self.plugin = None
+        self.name = None

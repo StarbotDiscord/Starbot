@@ -1,4 +1,5 @@
-class plugin:
-    plugin = None
-    name = None
-    commands = []
+class plugin():
+    def __init__(self):
+        self.plugin = None
+        self.name = None
+        self.commands = []
