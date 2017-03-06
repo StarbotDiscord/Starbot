@@ -159,6 +159,6 @@ def onCommand(message_in):
         # msg = Nullify.clean(msg)
         return message.create(body=msg)
 
-    msg = '{} = {}'.format(formula, answer)
+    msg = '`{}` = `{}`'.format(formula, answer)
     # Say message
     return message.create(body=msg)
