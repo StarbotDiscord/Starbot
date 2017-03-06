@@ -8,12 +8,12 @@ import os
 
 def onInit(plugin):
     #create the basics of our plugin
-    xkcd_plugin = plugin.plugin
+    xkcd_plugin = plugin.plugin.plugin()
     xkcd_plugin.plugin = plugin
     xkcd_plugin.name = 'XKCD'
 
     #now to register commands
-    xkcd_command = command.command
+    xkcd_command = command.command()
     xkcd_command.plugin = plugin
     xkcd_command.name = 'xkcd'
 
