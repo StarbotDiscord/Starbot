@@ -50,6 +50,9 @@ async def on_ready():
 @client.event
 async def on_message(message_in):
 
+    if message_in.server == None:
+        return
+
     if message_in.server.id == '186648463541272576':
         return
 
