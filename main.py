@@ -74,7 +74,7 @@ async def on_message(message_in):
 
         msg = '```'
         msg += 'Project StarBot v0.0.1-{}\nDeveloped by CorpNewt and Sydney Erickson\nThis is developer stuff, nothing too useful here!\n\n'.format(sha[:7])
-        msg += 'Plugins: {}\n'.format(', '.join(pluginNames))
+        msg += 'Plugins (not runnable stuff): {}\n'.format(', '.join(pluginNames))
         msg += 'Commands: {}\n\n'.format(', '.join(commandNames))
         msg += 'Caches: {}'.format(', '.join(caches))
         msg += '```'
