@@ -71,6 +71,11 @@ async def on_message(message_in):
         msg += '```'
 
         await client.send_message(message_in.channel, msg)
+
+    if message_in.content.startswith('!cachecontents'):
+        cacheCount = glob.glob('cache/{}_*'.format(message_in.content.split(' ')[-1]))
+        cacheString = '\n'.join(cacheCount)
+        await client.send_message(message_in.channel, '```{}```'.format(cacheString))
     for command in commands:
         if message_in.content.split(' ')[0] == '!' + command.name or message_in.content == '!' + command.name:
             await client.send_typing(message_in.channel)
