@@ -47,7 +47,7 @@ async def on_ready():
     print(client.user.id)
     print('------')
 
-    await client.change_presence(game=discord.Game(name='!info - Pooter 2.0'))
+    await client.change_presence(game=discord.Game(name='!help - Pooter 2.0'))
 
 @client.event
 async def on_message(message_in):
@@ -57,29 +57,6 @@ async def on_message(message_in):
 
     if message_in.server.id == '186648463541272576' and message_in.author.id != '219683089457217536':
         return
-
-    if message_in.content.startswith('!info'):
-        repo = git.Repo(search_parent_directories=True)
-        sha = repo.head.object.hexsha
-        pluginNames = []
-        commandNames = []
-        caches = []
-        for plugin in plugins:
-            pluginNames.append(plugin.name)
-        for command in commands:
-            commandNames.append(command.name)
-            cacheCount = glob.glob('cache/{}_*'.format(command.name))
-            if len(cacheCount) != 0:
-                caches.append('{} - {}'.format(command.name, str(len(cacheCount))))
-
-        msg = '```'
-        msg += 'Project StarBot v0.0.1-{}\nDeveloped by CorpNewt and Sydney Erickson\nThis is developer stuff, nothing too useful here!\n\n'.format(sha[:7])
-        msg += 'Plugins (not runnable stuff): {}\n'.format(', '.join(pluginNames))
-        msg += 'Commands: {}\n\n'.format(', '.join(commandNames))
-        msg += 'Caches: {}'.format(', '.join(caches))
-        msg += '```'
-
-        await client.send_message(message_in.channel, msg)
 
     if message_in.content.startswith('!cachecontents'):
         cacheCount = glob.glob('cache/{}_*'.format(message_in.content.split(' ')[-1]))
