@@ -34,10 +34,6 @@ for plugin in plugin_source.list_plugins():
         print("Command `{}` registered successfully.".format(command.name))
     print("Plugin '{}' registered successfully.".format(plugin_info.name))
 
-for command in commands:
-    print(command.plugin)
-    print(command.name)
-
 client = discord.Client()
 
 @client.event
