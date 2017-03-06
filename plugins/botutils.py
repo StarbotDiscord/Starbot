@@ -10,7 +10,8 @@ def onInit(plugin_in):
     commands_command = command.command(plugin_in, 'commands')
     help_command = command.command(plugin_in, 'help')
     info_command = command.command(plugin_in, 'info')
-    return plugin.plugin(plugin_in, 'botutils', [plugins_command, commands_command, help_command, info_command])
+    plugintree_command = command.command(plugin_in, 'plugintree')
+    return plugin.plugin(plugin_in, 'botutils', [plugins_command, commands_command, help_command, info_command, plugintree_command])
 
 def onCommand(message_in):
     if message_in.command == 'plugins':
@@ -27,3 +28,17 @@ def onCommand(message_in):
         repo = git.Repo(search_parent_directories=True)
         sha = repo.head.object.hexsha
         return message.create(body='```Project StarBot v0.0.1-{}\nDeveloped by CorpNewt and Sydney Erickson```'.format(sha[:7]))
+    if message_in.command == 'plugintree':
+        pluginString = '```\n'
+        for plugin in main.plugins:
+            pluginString += '{}\n'.format(plugin.name)
+            commandsInPlugin = len(plugin.commands)
+            currentCommand = 0
+            for command in plugin.commands:
+                currentCommand += 1
+                if commandsInPlugin != currentCommand:
+                    pluginString += '├ {}\n'.format(command.name)
+                else:
+                    pluginString += '└ {}\n'.format(command.name)
+        pluginString += '```'
+        return message.create(body=pluginString)
