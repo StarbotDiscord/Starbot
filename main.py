@@ -3,7 +3,10 @@ import asyncio
 import git
 import message
 import glob
+import time
 from pluginbase import PluginBase
+
+startTime = time.time()
 
 plugin_base = PluginBase(package='plugins')
 plugin_source = plugin_base.make_plugin_source(searchpath=['./plugins'])
