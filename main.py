@@ -52,7 +52,13 @@ async def on_message(message_in):
     if message_in.content.startswith('!info'):
         repo = git.Repo(search_parent_directories=True)
         sha = repo.head.object.hexsha
-        await client.send_message(message_in.channel, '```Project StarBot v0.0.1-{}\r\nDeveloped by CorpNewt and Sydney Erickson```'.format(sha[:5]))
+        pluginNames = []
+        commandNames = []
+        for plugin in plugins:
+            pluginNames.append(plugin.name)
+        for command in commands:
+            commandNames.append(command.name)
+        await client.send_message(message_in.channel, '```Project StarBot v0.0.1-{}\nDeveloped by CorpNewt and Sydney Erickson\n\nPlugins: {}\nCommands: {}```'.format(sha[:5], ', '.join(pluginNames), ', '.join(commandNames)))
     for command in commands:
         if message_in.content.split(' ')[0] == '!' + command.name or message_in.content == '!' + command.name:
             await client.send_typing(message_in.channel)
