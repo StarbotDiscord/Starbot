@@ -31,9 +31,12 @@ for plugin in plugin_source.list_plugins():
             print("Plugin command does not define name")
             pass
         commands.append(command)
-    print("Plugin registered successfully.")
+        print("Command `{}` registered successfully.".format(command.name))
+    print("Plugin '{}' registered successfully.".format(plugin_info.name))
 
-from plugins import xkcd
+for command in commands:
+    print(command.plugin)
+    print(command.name)
 
 client = discord.Client()
 
@@ -58,6 +61,9 @@ async def on_message(message_in):
             message_recv.body = message_in.content.split('!' + command.name)[-1]
 
             command_result = command.plugin.onCommand(message_recv)
+
+            if command_result == None:
+                await client.send_message(message_in.channel, '**INTERNAL BOT ERROR**\nCommand did not return a result.')
 
             if command_result.body != None:
                 await client.send_message(message_in.channel, command_result.body)
