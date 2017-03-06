@@ -10,7 +10,7 @@ def onInit(plugin):
     #create the basics of our plugin
     xkcd_plugin = plugin.plugin.plugin()
     xkcd_plugin.plugin = plugin
-    xkcd_plugin.name = 'XKCD'
+    xkcd_plugin.name = 'comics'
 
     #now to register commands
     xkcd_command = command.command()
