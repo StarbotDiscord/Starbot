@@ -7,21 +7,8 @@ import message
 import os
 
 def onInit(plugin):
-    #create the basics of our plugin
-    xkcd_plugin = plugin.plugin.plugin()
-    xkcd_plugin.plugin = plugin
-    xkcd_plugin.name = 'comics'
-
-    #now to register commands
-    xkcd_command = command.command()
-    xkcd_command.plugin = plugin
-    xkcd_command.name = 'xkcd'
-
-    #add our commands to the plugin
-    xkcd_plugin.commands = [] #this line is for some reason needed or stuff will break
-    xkcd_plugin.commands.append(xkcd_command)
-
-    return xkcd_plugin
+    xkcd_command = command.command(plugin, 'xkcd')
+    return plugin.plugin.plugin(plugin, 'comics', [xkcd_command])
 
 def onCommand(message_in):
     if message_in.command == 'xkcd':

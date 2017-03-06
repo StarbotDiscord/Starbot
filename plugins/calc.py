@@ -117,20 +117,8 @@ class NumericStringParser(object):
 
 def onInit(plugin):
     #create the basics of our plugin
-    calc_plugin = plugin.plugin.plugin()
-    calc_plugin.plugin = plugin
-    calc_plugin.name = 'calc'
-
-    #now to register commands
-    calc_command = command.command()
-    calc_command.plugin = plugin
-    calc_command.name = 'calc'
-
-    #add our commands to the plugin
-    calc_plugin.commands = [] #this line is for some reason needed or stuff will break
-    calc_plugin.commands.append(calc_command)
-
-    return calc_plugin
+    calc_command = command.command(plugin, 'calc')
+    return plugin.plugin.plugin(plugin, 'calc', [calc_command])
 
 def onCommand(message_in):
     """Do some math."""
