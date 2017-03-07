@@ -4,6 +4,7 @@ import message
 import main
 import time
 from libs import readableTime
+from libs import progressBar
 
 import os
 import platform
@@ -39,7 +40,8 @@ def onInit(plugin_in):
     plugintree_command = command.command(plugin_in, 'plugintree', shortdesc='Print a tree of plugins and commands')
     uptime_command     = command.command(plugin_in, 'uptime',     shortdesc='Print the bot\'s uptime')
     hostinfo_command   = command.command(plugin_in, 'hostinfo',   shortdesc='Prints information about the bots home')
-    return plugin.plugin(plugin_in, 'botutils', [plugins_command, commands_command, help_command, info_command, plugintree_command, uptime_command, hostinfo_command])
+    cpuinfo_command    = command.command(plugin_in, 'cpuinfo',    shortdesc='Prints info about the system CPUs')
+    return plugin.plugin(plugin_in, 'botutils', [plugins_command, commands_command, help_command, info_command, plugintree_command, uptime_command, hostinfo_command, cpuinfo_command])
 
 def onCommand(message_in):
     if message_in.command == 'plugins':
@@ -128,3 +130,10 @@ def onCommand(message_in):
         msg += 'Host uptime   : {}```'.format(readableTime.getReadableTimeBetween(psutil.boot_time(), time.time()))
 
         return message.message(body=msg)
+
+    if message_in.command == 'cpuinfo':
+        cpuPercents = psutil.cpu_percent(interval=0.1, percpu=True)
+        cpuPercentString = ''
+        for i in range(len(cpuPercents)):
+            cpuPercentString += 'CPU {}: {}\n'.format(str(i), progressBar.makeBar(cpuPercents[i]))
+        return message.message(body='```{}```'.format(cpuPercentString))
