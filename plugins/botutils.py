@@ -9,6 +9,7 @@ import os
 import platform
 import psutil
 import sys
+import discord
 
 from libs import readableTime
 import git
@@ -62,7 +63,10 @@ def onCommand(message_in):
     if message_in.command == 'info':
         repo = git.Repo(search_parent_directories=True)
         sha = repo.head.object.hexsha
-        return message.message(body='```Project StarBot v0.0.1-{}\nDeveloped by CorpNewt and Sydney Erickson```'.format(sha[:7]))
+        embed = discord.Embed(color=discord.Color.red())
+        embed.set_author(name='Contributer List', url='https://github.com/1byte2bytes/Starbot/graphs/contributors', icon_url='https://pbs.twimg.com/profile_images/616309728688238592/pBeeJQDQ.png')
+        embed.set_footer(text='See all the amazing contributers on GitHub!')
+        return message.message(body='```Project StarBot v0.0.1-{}\nCreated by CorpNewt and Sydney Erickson```'.format(sha[:7]), embed=embed)
 
     if message_in.command == 'plugintree':
         dups = detectDuplicateCommands()
