@@ -15,9 +15,9 @@ def onCommand(message_in):
         if message_in.body != '':
             try:
                 if int(message_in.body) < 0:
-                    return message.create(body="ID `{}` is not a valid ID".format(message_in.body))
+                    return message.message(body="ID `{}` is not a valid ID".format(message_in.body))
             except:
-                return message.create(body='Input of `{}` is not a valid number'.format(message_in.body))
+                return message.message(body='Input of `{}` is not a valid number'.format(message_in.body))
 
             json_filename = 'cache/xkcd_{}.json'.format(message_in.body.strip())
 
@@ -28,9 +28,9 @@ def onCommand(message_in):
                 try:
                     urllib.request.urlretrieve("https://xkcd.com/{}/info.0.json".format(message_in.body.strip()), json_filename)
                 except urllib.error.HTTPError as e:
-                    return message.create(body='Could not find comic with ID `{}`'.format(message_in.body))
+                    return message.message(body='Could not find comic with ID `{}`'.format(message_in.body))
                 except urllib.error.URLError as e:
-                    return message.create(body='There was an issue connecting to XKCD'.format(message_in.body))
+                    return message.message(body='There was an issue connecting to XKCD'.format(message_in.body))
 
             f = ''
             with open(json_filename) as m:
@@ -40,7 +40,7 @@ def onCommand(message_in):
             try:
                 f = urllib.request.urlopen("https://xkcd.com/info.0.json")
             except urllib.error.URLError as e:
-                return message.create(body='There was an issue connecting to XKCD'.format(message_in.body))
+                return message.message(body='There was an issue connecting to XKCD'.format(message_in.body))
             data = json.load(f)
 
         comic_filename = 'cache/xkcd_{}.png'.format(data['num'])
@@ -50,5 +50,5 @@ def onCommand(message_in):
             print("Grabbing latest XKCD! Not in cache.")
             urllib.request.urlretrieve(data['img'], 'cache/xkcd_{}.png'.format(data['num']))
 
-        return message.create(body='**{}/{}/{} - {}**\n_{}_'.format(data['month'], data['day'], data['year'], data['safe_title'], data['alt']),
+        return message.message(body='**{}/{}/{} - {}**\n_{}_'.format(data['month'], data['day'], data['year'], data['safe_title'], data['alt']),
                               file='cache/xkcd_{}.png'.format(data['num']))
