@@ -69,7 +69,7 @@ async def on_message(message_in):
             command_result = command.plugin.onCommand(message_recv)
 
             if command_result == None:
-                await client.send_message(message_in.channel, '**INTERNAL BOT ERROR**\nCommand did not return a result.')
+                await client.send_message(message_in.channel, '**Beep boop - Something went wrong!**\n_Command did not return a result._')
 
             if command_result.body != None:
                 await client.send_message(message_in.channel, command_result.body)
