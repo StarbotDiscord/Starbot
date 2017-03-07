@@ -4,7 +4,7 @@ import message
 from urllib.request import urlopen
 
 def onInit(plugin):
-    tinyurl_command = command.command(plugin, 'tinyurl')
+    tinyurl_command = command.command(plugin, 'tinyurl', shortdesc='Convert a link to a TinyURL')
     return plugin.plugin.plugin(plugin, 'tinyurl', [tinyurl_command])
 
 def onCommand(message_in):
