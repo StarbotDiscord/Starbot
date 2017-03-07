@@ -7,7 +7,7 @@ import message
 import os
 
 def onInit(plugin):
-    star_command = command.command(plugin, 'star')
+    star_command = command.command(plugin, 'star', shortdesc='Post a random picture of Star Butterfly to the channel')
     return plugin.plugin.plugin(plugin, 'star', [star_command])
 
 def onCommand(message_in):
