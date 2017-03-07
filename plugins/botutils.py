@@ -25,12 +25,12 @@ def detectDuplicateCommands():
     return list(set(duplicates))
 
 def onInit(plugin_in):
-    plugins_command = command.command(plugin_in, 'plugins')
-    commands_command = command.command(plugin_in, 'commands')
-    help_command = command.command(plugin_in, 'help')
-    info_command = command.command(plugin_in, 'info')
-    plugintree_command = command.command(plugin_in, 'plugintree')
-    uptime_command = command.command(plugin_in, 'uptime')
+    plugins_command = command.command(plugin_in, 'plugins', shortdesc='Print a list of plugins')
+    commands_command = command.command(plugin_in, 'commands', shortdesc='Print a list of commands')
+    help_command = command.command(plugin_in, 'help', shortdesc='Redirects to !commands')
+    info_command = command.command(plugin_in, 'info', shortdesc='Print some basic bot info')
+    plugintree_command = command.command(plugin_in, 'plugintree', shortdesc='Print a tree of plugins and commands')
+    uptime_command = command.command(plugin_in, 'uptime', shortdesc='Print the bot\'s uptime')
     return plugin.plugin(plugin_in, 'botutils', [plugins_command, commands_command, help_command, info_command, plugintree_command, uptime_command])
 
 def onCommand(message_in):
@@ -41,10 +41,16 @@ def onCommand(message_in):
         return message.create(body='```{}```'.format(', '.join(pluginList)))
 
     if message_in.command == 'commands' or message_in.command == 'help':
-        commandList = []
+        commandNames = []
+        commandDescs = []
         for command in main.commands:
-            commandList.append(command.name)
-        return message.create(body='```{}```'.format(', '.join(commandList)))
+            commandNames.append(command.name)
+            commandDescs.append(command.shortdesc)
+        commandList = []
+        padLength = len(max(commandNames, key=len))
+        for i in range(len(commandNames)):
+            commandList.append('{} - {}'.format(commandNames[i].ljust(padLength), commandDescs[i]))
+        return message.create(body='```{}```'.format('\n'.join(commandList)))
 
     if message_in.command == 'info':
         repo = git.Repo(search_parent_directories=True)
