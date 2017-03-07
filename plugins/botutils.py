@@ -3,6 +3,12 @@ import command
 import message
 import main
 import time
+from libs import readableTime
+
+import os
+import platform
+import psutil
+import sys
 
 from libs import readableTime
 import git
@@ -31,7 +37,8 @@ def onInit(plugin_in):
     info_command       = command.command(plugin_in, 'info',       shortdesc='Print some basic bot info')
     plugintree_command = command.command(plugin_in, 'plugintree', shortdesc='Print a tree of plugins and commands')
     uptime_command     = command.command(plugin_in, 'uptime',     shortdesc='Print the bot\'s uptime')
-    return plugin.plugin(plugin_in, 'botutils', [plugins_command, commands_command, help_command, info_command, plugintree_command, uptime_command])
+    hostinfo_command   = command.command(plugin_in, 'hostinfo',   shortdesc='Prints information about the bots home')
+    return plugin.plugin(plugin_in, 'botutils', [plugins_command, commands_command, help_command, info_command, plugintree_command, uptime_command, hostinfo_command])
 
 def onCommand(message_in):
     if message_in.command == 'plugins':
@@ -83,3 +90,37 @@ def onCommand(message_in):
         currentTime = int(time.time())
         timeString = readableTime.getReadableTimeBetween(main.startTime, currentTime)
         return message.create(body='I\'ve been up for *{}*.'.format(timeString))
+
+    if message_in.command == 'hostinfo':
+        cpuThred = os.cpu_count()
+        cpuUsage = psutil.cpu_percent(interval=1)
+        memStats = psutil.virtual_memory()
+        memPerc = memStats.percent
+        memUsed = memStats.used
+        memTotal = memStats.total
+        memUsedGB = "{0:.1f}".format(((memUsed / 1024) / 1024) / 1024)
+        memTotalGB = "{0:.1f}".format(((memTotal / 1024) / 1024) / 1024)
+        currentOS = platform.platform()
+        system = platform.system()
+        release = platform.release()
+        version = platform.version()
+        processor = platform.processor()
+        currentTime = int(time.time())
+        timeString = readableTime.getReadableTimeBetween(main.startTime, currentTime)
+        pythonMajor = sys.version_info.major
+        pythonMinor = sys.version_info.minor
+        pythonMicro = sys.version_info.micro
+        pythonRelease = sys.version_info.releaselevel
+
+        msg = '***{}\'s*** **Home:**\n'.format('StarBot')
+        msg += '```Host OS       : {}\n'.format(currentOS)
+        msg += 'Host Python   : {}.{}.{} {}\n'.format(pythonMajor, pythonMinor, pythonMicro, pythonRelease)
+        if cpuThred > 1:
+            msg += 'Host CPU usage: {}% of {} ({} threads)\n'.format(cpuUsage, processor, cpuThred)
+        else:
+            msg += 'Host CPU usage: {}% of {} ({} thread)\n'.format(cpuUsage, processor, cpuThred)
+        msg += 'Host RAM      : {}GB ({}%) of {}GB\n'.format(memUsedGB, memPerc, memTotalGB)
+        msg += 'Hostname      : {}\n'.format(platform.node())
+        msg += 'Host uptime   : {}```'.format(readableTime.getReadableTimeBetween(psutil.boot_time(), time.time()))
+
+        return message.create(body=msg)
