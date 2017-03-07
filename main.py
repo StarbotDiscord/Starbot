@@ -55,9 +55,6 @@ async def on_message(message_in):
     if message_in.server == None:
         return
 
-    if message_in.server.id == '186648463541272576' and message_in.author.id != '219683089457217536':
-        return
-
     if message_in.content.startswith('!cachecontents'):
         cacheCount = glob.glob('cache/{}_*'.format(message_in.content.split(' ')[-1]))
         cacheString = '\n'.join(cacheCount)
