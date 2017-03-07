@@ -7,7 +7,7 @@ import message
 import os
 
 def onInit(plugin):
-    xkcd_command = command.command(plugin, 'xkcd')
+    xkcd_command = command.command(plugin, 'xkcd', shortdesc='Posts the latest XKCD, or by specific ID')
     return plugin.plugin.plugin(plugin, 'comics', [xkcd_command])
 
 def onCommand(message_in):
