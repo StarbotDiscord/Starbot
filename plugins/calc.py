@@ -117,7 +117,7 @@ class NumericStringParser(object):
 
 def onInit(plugin):
     #create the basics of our plugin
-    calc_command = command.command(plugin, 'calc')
+    calc_command = command.command(plugin, 'calc', shortdesc='Calculate given input')
     return plugin.plugin.plugin(plugin, 'calc', [calc_command])
 
 def onCommand(message_in):
