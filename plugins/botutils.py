@@ -25,12 +25,12 @@ def detectDuplicateCommands():
     return list(set(duplicates))
 
 def onInit(plugin_in):
-    plugins_command = command.command(plugin_in, 'plugins', shortdesc='Print a list of plugins')
-    commands_command = command.command(plugin_in, 'commands', shortdesc='Print a list of commands')
-    help_command = command.command(plugin_in, 'help', shortdesc='Redirects to !commands')
-    info_command = command.command(plugin_in, 'info', shortdesc='Print some basic bot info')
+    plugins_command    = command.command(plugin_in, 'plugins',    shortdesc='Print a list of plugins')
+    commands_command   = command.command(plugin_in, 'commands',   shortdesc='Print a list of commands')
+    help_command       = command.command(plugin_in, 'help',       shortdesc='Redirects to !commands')
+    info_command       = command.command(plugin_in, 'info',       shortdesc='Print some basic bot info')
     plugintree_command = command.command(plugin_in, 'plugintree', shortdesc='Print a tree of plugins and commands')
-    uptime_command = command.command(plugin_in, 'uptime', shortdesc='Print the bot\'s uptime')
+    uptime_command     = command.command(plugin_in, 'uptime',     shortdesc='Print the bot\'s uptime')
     return plugin.plugin(plugin_in, 'botutils', [plugins_command, commands_command, help_command, info_command, plugintree_command, uptime_command])
 
 def onCommand(message_in):
