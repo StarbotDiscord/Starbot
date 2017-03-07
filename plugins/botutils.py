@@ -133,7 +133,15 @@ def onCommand(message_in):
 
     if message_in.command == 'cpuinfo':
         cpuPercents = psutil.cpu_percent(interval=0.1, percpu=True)
-        cpuPercentString = ''
+        cpuPercentString = '{}\n'.format(platform.processor())
+        if psutil.cpu_count(logical=False) > 1:
+            cpuPercentString += '{} threads - {} cores'.format(psutil.cpu_count(), psutil.cpu_count(logical=False))
+        else:
+            if psutil.cpu_count() > 1:
+                cpuPercentString += '{} threads - {} core'.format(psutil.cpu_count(), psutil.cpu_count(logical=False))
+            else:
+                cpuPercentString += '{} thread - {} core'.format(psutil.cpu_count(), psutil.cpu_count(logical=False))
+        cpuPercentString += '\n\n'
         for i in range(len(cpuPercents)):
             cpuPercentString += 'CPU {}: {}\n'.format(str(i), progressBar.makeBar(cpuPercents[i]))
         return message.message(body='```{}```'.format(cpuPercentString))
