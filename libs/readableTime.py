@@ -38,22 +38,3 @@ def getReadableTimeBetween(first, last):
         return "0 seconds"
     else:
         return msg[:-2]
-
-#=======================================================================================================================
-
-import plugin
-import command
-import message
-import main
-import time
-
-def onInit(plugin):
-    #create the basics of our plugin
-    uptime_command = command.command(plugin, 'uptime')
-    return plugin.plugin.plugin(plugin, 'uptime', [uptime_command])
-
-def onCommand(message_in):
-    if message_in.command == 'uptime':
-        currentTime = int(time.time())
-        timeString = getReadableTimeBetween(main.startTime, currentTime)
-        return message.create(body='I\'ve been up for *{}*.'.format(timeString))
