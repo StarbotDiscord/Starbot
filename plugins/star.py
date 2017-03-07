@@ -15,7 +15,7 @@ def onCommand(message_in):
         try:
             f = urllib.request.urlopen("https://sydneyerickson.me/starapi/rand.php").read().decode("utf-8")
         except urllib.error.URLError as e:
-            return message.create(body='There was an issue connecting to XKCD'.format(message_in.body))
+            return message.message(body='There was an issue connecting to XKCD'.format(message_in.body))
 
         imageName = f.split('/')
         if os.path.isfile('cache/star_' + imageName[-1]):
@@ -23,4 +23,4 @@ def onCommand(message_in):
         else:
             urllib.request.urlretrieve(f, 'cache/star_' + imageName[-1])
 
-        return message.create(file='cache/star_' + imageName[-1])
+        return message.message(file='cache/star_' + imageName[-1])
