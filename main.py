@@ -64,19 +64,20 @@ async def on_message(message_in):
             await client.send_typing(message_in.channel)
             message_recv = message.message
             message_recv.command = command.name
-            message_recv.body = message_in.content.split('!' + command.name)[-1]
+            message_recv.body = message_in.content.split('!' + command.name)[1]
+            message_recv.author = message_in.author.id
 
             command_result = command.plugin.onCommand(message_recv)
 
             if command_result == None:
                 await client.send_message(message_in.channel, '**Beep boop - Something went wrong!**\n_Command did not return a result._')
 
-            if command_result.body != None:
+            if command_result.body != '':
                 if command_result.embed != None:
                     await client.send_message(message_in.channel, command_result.body, embed=command_result.embed)
                 else:
                     await client.send_message(message_in.channel, command_result.body)
-            if command_result.file != None:
+            if command_result.file != '':
                 await client.send_file(message_in.channel, command_result.file)
 
 token = ''
