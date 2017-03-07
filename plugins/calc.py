@@ -127,7 +127,7 @@ def onCommand(message_in):
 
     if formula == None:
         msg = 'Usage: `{}calc [formula]`'.format('!')
-        return message.create(body=msg)
+        return message.message(body=msg)
 
     try:
         nsp = NumericStringParser()
@@ -145,8 +145,8 @@ def onCommand(message_in):
         msg += "term    :: factor [ multop factor ]*\n"
         msg += "expr    :: term [ addop term ]*```"
         # msg = Nullify.clean(msg)
-        return message.create(body=msg)
+        return message.message(body=msg)
 
     msg = '`{}` = `{}`'.format(formula, answer)
     # Say message
-    return message.create(body=msg)
+    return message.message(body=msg)
