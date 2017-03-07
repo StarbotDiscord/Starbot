@@ -45,7 +45,7 @@ def onCommand(message_in):
         pluginList = []
         for plugin in main.plugins:
             pluginList.append(plugin.name)
-        return message.create(body='```{}```'.format(', '.join(pluginList)))
+        return message.message(body='```{}```'.format(', '.join(pluginList)))
 
     if message_in.command == 'commands' or message_in.command == 'help':
         commandNames = []
@@ -57,12 +57,12 @@ def onCommand(message_in):
         padLength = len(max(commandNames, key=len))
         for i in range(len(commandNames)):
             commandList.append('{} - {}'.format(commandNames[i].ljust(padLength), commandDescs[i]))
-        return message.create(body='```{}```'.format('\n'.join(commandList)))
+        return message.message(body='```{}```'.format('\n'.join(commandList)))
 
     if message_in.command == 'info':
         repo = git.Repo(search_parent_directories=True)
         sha = repo.head.object.hexsha
-        return message.create(body='```Project StarBot v0.0.1-{}\nDeveloped by CorpNewt and Sydney Erickson```'.format(sha[:7]))
+        return message.message(body='```Project StarBot v0.0.1-{}\nDeveloped by CorpNewt and Sydney Erickson```'.format(sha[:7]))
 
     if message_in.command == 'plugintree':
         dups = detectDuplicateCommands()
@@ -84,12 +84,12 @@ def onCommand(message_in):
                     else:
                         pluginString += '└ {}\n'.format(command.name)
         pluginString += '```'
-        return message.create(body=pluginString)
+        return message.message(body=pluginString)
 
     if message_in.command == 'uptime':
         currentTime = int(time.time())
         timeString = readableTime.getReadableTimeBetween(main.startTime, currentTime)
-        return message.create(body='I\'ve been up for *{}*.'.format(timeString))
+        return message.message(body='I\'ve been up for *{}*.'.format(timeString))
 
     if message_in.command == 'hostinfo':
         cpuThred = os.cpu_count()
@@ -123,4 +123,4 @@ def onCommand(message_in):
         msg += 'Hostname      : {}\n'.format(platform.node())
         msg += 'Host uptime   : {}```'.format(readableTime.getReadableTimeBetween(psutil.boot_time(), time.time()))
 
-        return message.create(body=msg)
+        return message.message(body=msg)
