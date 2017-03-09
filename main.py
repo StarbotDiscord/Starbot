@@ -72,9 +72,12 @@ async def on_message(message_in):
             if command_result == None:
                 await client.send_message(message_in.channel, '**Beep boop - Something went wrong!**\n_Command did not return a result._')
 
-            if command_result.body != '':
+            if command_result.body != '' or command_result.embed != None:
                 if command_result.embed != None:
-                    await client.send_message(message_in.channel, command_result.body, embed=command_result.embed)
+                    if command_result.body == '':
+                        await client.send_message(message_in.channel, embed=command_result.embed)
+                    else:
+                        await client.send_message(message_in.channel, command_result.body, embed=command_result.embed)
                 else:
                     await client.send_message(message_in.channel, command_result.body)
             if command_result.file != '':
