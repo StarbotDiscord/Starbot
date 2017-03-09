@@ -19,6 +19,6 @@ def onCommand(message_in):
             return message.message(body='There was an issue connecting to Starapi'.format(message_in.body))
 
         imageName = f.split('/')
-        caching.downloadToCache(f, imageName[-1])
+        caching.downloadToCache(f, imageName[-1], caller='star')
 
         return message.message(file='cache/star_' + imageName[-1])
