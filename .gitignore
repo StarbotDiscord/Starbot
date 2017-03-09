@@ -106,3 +106,5 @@ target/
 #StarBot specific stuff
 cache/**
 token.txt
+
+.DS_Store
