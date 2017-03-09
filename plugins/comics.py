@@ -5,6 +5,7 @@ import plugin
 import command
 import message
 import os
+import caching
 
 def onInit(plugin):
     xkcd_command = command.command(plugin, 'xkcd', shortdesc='Posts the latest XKCD, or by specific ID')
@@ -43,12 +44,7 @@ def onCommand(message_in):
                 return message.message(body='There was an issue connecting to XKCD'.format(message_in.body))
             data = json.load(f)
 
-        comic_filename = 'cache/xkcd_{}.png'.format(data['num'])
-        if os.path.isfile(comic_filename):
-            pass
-        else:
-            print("Grabbing latest XKCD! Not in cache.")
-            urllib.request.urlretrieve(data['img'], 'cache/xkcd_{}.png'.format(data['num']))
+        caching.downloadToCache(data['img'], '{}.png'.format(['num']))
 
         return message.message(body='**{}/{}/{} - {}**\n_{}_'.format(data['month'], data['day'], data['year'], data['safe_title'], data['alt']),
                               file='cache/xkcd_{}.png'.format(data['num']))
