@@ -15,8 +15,24 @@ def writeString(string, plugin, filename):
     with open('cache\\{}_{}'.format(plugin, filename), 'w') as f:
         f.write(string)
 
-def downloadToCache(url, filename):
-    fullFilename = 'cache/{}_{}'.format(getCaller(), filename)
+def getJson(url, caller=''):
+    if caller == '':
+        getCaller()
+    fullFilename = '{}_{}'.format(caller, url.split('/')[-1])
+    if os.path.isfile(fullFilename):
+        with open('cache/{}'.format(fullFilename)) as f:
+            return f.read()
+    else:
+        jsonString = urllib.request.urlopen(url).read().decode("utf-8")
+        with open('cache\\{}'.format(fullFilename), 'w') as f:
+            f.write(jsonString)
+        return jsonString
+
+
+def downloadToCache(url, filename, caller=''):
+    if caller == '':
+        getCaller()
+    fullFilename = 'cache/{}_{}'.format(caller, filename)
     if os.path.isfile(fullFilename):
         return 1
     else:
