@@ -4,6 +4,7 @@ import json
 import plugin
 import command
 import message
+import caching
 import os
 
 def onInit(plugin):
@@ -15,12 +16,9 @@ def onCommand(message_in):
         try:
             f = urllib.request.urlopen("https://sydneyerickson.me/starapi/rand.php").read().decode("utf-8")
         except urllib.error.URLError as e:
-            return message.message(body='There was an issue connecting to XKCD'.format(message_in.body))
+            return message.message(body='There was an issue connecting to Starapi'.format(message_in.body))
 
         imageName = f.split('/')
-        if os.path.isfile('cache/star_' + imageName[-1]):
-            pass
-        else:
-            urllib.request.urlretrieve(f, 'cache/star_' + imageName[-1])
+        caching.downloadToCache(f, imageName[-1])
 
         return message.message(file='cache/star_' + imageName[-1])
