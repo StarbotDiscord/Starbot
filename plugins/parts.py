@@ -6,8 +6,8 @@ import glob
 import os.path
 
 def onInit(plugin_in):
-    build_command   = command.command(plugin_in, 'build',    shortdesc='Print a list of a user\'s builds')
-    addbuild_command = command.command(plugin_in, 'addbuild', shortdesc='Add a build to your list')
+    build_command   = command.command(plugin_in, 'build',    shortdesc='Print a list of a user\'s builds', devcommand=True)
+    addbuild_command = command.command(plugin_in, 'addbuild', shortdesc='Add a build to your list',        devcommand=True)
     return plugin.plugin(plugin_in, 'parts', [build_command, addbuild_command])
 
 def onCommand(message_in):
