@@ -15,17 +15,20 @@ def writeString(string, plugin, filename):
     with open('cache\\{}_{}'.format(plugin, filename), 'w') as f:
         f.write(string)
 
-def getJson(url, caller=''):
+def getJson(url, caller='', customName='', save=True):
     if caller == '':
         getCaller()
-    fullFilename = '{}_{}'.format(caller, url.split('/')[-1])
+    if customName == '':
+        customName = url.split('/')[-1]
+    fullFilename = '{}_{}'.format(caller, customName)
     if os.path.isfile(fullFilename):
         with open('cache/{}'.format(fullFilename)) as f:
             return f.read()
     else:
         jsonString = urllib.request.urlopen(url).read().decode("utf-8")
-        with open('cache\\{}'.format(fullFilename), 'w') as f:
-            f.write(jsonString)
+        if save == True:
+            with open('cache/{}'.format(fullFilename), 'w') as f:
+                f.write(jsonString)
         return jsonString
 
 
