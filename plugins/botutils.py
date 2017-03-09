@@ -33,14 +33,14 @@ def detectDuplicateCommands():
     return list(set(duplicates))
 
 def onInit(plugin_in):
-    plugins_command    = command.command(plugin_in, 'plugins',    shortdesc='Print a list of plugins')
+    plugins_command    = command.command(plugin_in, 'plugins',    shortdesc='Print a list of plugins',                devcommand=True)
     commands_command   = command.command(plugin_in, 'commands',   shortdesc='Print a list of commands')
     help_command       = command.command(plugin_in, 'help',       shortdesc='Redirects to !commands')
     info_command       = command.command(plugin_in, 'info',       shortdesc='Print some basic bot info')
-    plugintree_command = command.command(plugin_in, 'plugintree', shortdesc='Print a tree of plugins and commands')
-    uptime_command     = command.command(plugin_in, 'uptime',     shortdesc='Print the bot\'s uptime')
-    hostinfo_command   = command.command(plugin_in, 'hostinfo',   shortdesc='Prints information about the bots home')
-    cpuinfo_command    = command.command(plugin_in, 'cpuinfo',    shortdesc='Prints info about the system CPUs')
+    plugintree_command = command.command(plugin_in, 'plugintree', shortdesc='Print a tree of plugins and commands',   devcommand=True)
+    uptime_command     = command.command(plugin_in, 'uptime',     shortdesc='Print the bot\'s uptime',                devcommand=True)
+    hostinfo_command   = command.command(plugin_in, 'hostinfo',   shortdesc='Prints information about the bots home', devcommand=True)
+    cpuinfo_command    = command.command(plugin_in, 'cpuinfo',    shortdesc='Prints info about the system CPUs',      devcommand=True)
     return plugin.plugin(plugin_in, 'botutils', [plugins_command, commands_command, help_command, info_command, plugintree_command, uptime_command, hostinfo_command, cpuinfo_command])
 
 def onCommand(message_in):
@@ -54,8 +54,9 @@ def onCommand(message_in):
         commandNames = []
         commandDescs = []
         for command in main.commands:
-            commandNames.append(command.name)
-            commandDescs.append(command.shortdesc)
+            if command.devcommand != True:
+                commandNames.append(command.name)
+                commandDescs.append(command.shortdesc)
         commandList = []
         padLength = len(max(commandNames, key=len))
         for i in range(len(commandNames)):
