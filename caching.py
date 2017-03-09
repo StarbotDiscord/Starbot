@@ -11,7 +11,7 @@ def getCaller():
 
 #=============================
 
-def addToCache(string, plugin, filename):
+def writeString(string, plugin, filename):
     with open('cache\\{}_{}'.format(plugin, filename), 'w') as f:
         f.write(string)
 
