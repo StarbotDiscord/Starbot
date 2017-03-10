@@ -1,8 +1,8 @@
-# Starbot - An Open-Source Discord Bot
+[# Starbot - An Open-Source Discord Bot
 
 ## Project Overview
 
-Welcome to the Starbot project! This project is intended as a complete overhaul of @CorpNewt's CorpBot.py project. The bot includes many features, silly and useful. A list of commands will be posted soon(tm), since the bot is under very active development.
+Welcome to the Starbot project! This project is intended as a complete overhaul of [CorpNewt's CorpBot.py](https://github.com/corpnewt/CorpBot.py) project. The bot includes many features, silly and useful. A list of commands will be posted soon(tm), since the bot is under very active development.
 
 ## Why should I use this bot?
 
