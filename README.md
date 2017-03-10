@@ -1,4 +1,4 @@
-[# Starbot - An Open-Source Discord Bot
+# Starbot - An Open-Source Discord Bot
 
 ## Project Overview
 
