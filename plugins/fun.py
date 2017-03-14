@@ -5,7 +5,6 @@ import random
 
 # Fun plugin
 def onInit(plugin):
-    say_command = command.command(plugin, 'say', shortdesc='Say something')
     lenny_command = command.command(plugin, 'lenny', shortdesc='Give some Lenny')
     shrug_command = command.command(plugin, 'shrug', shortdesc='Shrug it off')
     tableflip_command = command.command(plugin, 'tableflip', shortdesc='Flip a table')
@@ -13,11 +12,6 @@ def onInit(plugin):
     return plugin.plugin.plugin(plugin, 'fun', [say_command, lenny_command, shrug_command, tableflip_command, fart_command])
 
 def onCommand(message_in):
-    # Say.
-    if message_in.command == 'say':
-        # Return message with stuff.
-        return message.message(message_in.body.strip())
-
     # Lenny.
     if message_in.command == 'lenny':
         # Create message.
