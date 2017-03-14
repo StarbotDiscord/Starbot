@@ -83,6 +83,10 @@ async def on_message(message_in):
             else:
                 await process_message(message_in, command_result)
 
+                # Do we delete the message afterwards?
+                if command_result.delete:
+                    await client.delete_message(message_in)
+
 async def process_message(message_in, msg):
     if msg.body != '' or msg.embed != None:
         if msg.embed != None:
