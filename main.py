@@ -96,8 +96,12 @@ async def process_message(message_in, msg):
             if msg.body == '':
                 await client.send_message(message_in.channel, embed=msg.embed)
             else:
+                zerospace = "​"
+                msg.body = msg.body.replace("@everyone", "@{}everyone".format(zerospace)).replace("@here", "@{}here".format(zerospace))
                 await client.send_message(message_in.channel, msg.body, embed=msg.embed)
         else:
+            zerospace = "​"
+            msg.body = msg.body.replace("@everyone", "@{}everyone".format(zerospace)).replace("@here", "@{}here".format(zerospace))
             await client.send_message(message_in.channel, msg.body)
     if msg.file != '':
         await client.send_file(message_in.channel, msg.file)
