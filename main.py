@@ -65,7 +65,8 @@ async def on_message(message_in):
             message_recv = message.message
             message_recv.command = command.name
             message_recv.body = message_in.content.split('!' + command.name)[1]
-            message_recv.author = message_in.author.id
+            message_recv.author = message_in.author
+            message_recv.server = message_in.server
 
             command_result = command.plugin.onCommand(message_recv)
 
