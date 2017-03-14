@@ -9,7 +9,7 @@ def onInit(plugin):
     shrug_command = command.command(plugin, 'shrug', shortdesc='Shrug it off')
     tableflip_command = command.command(plugin, 'tableflip', shortdesc='Flip a table')
     fart_command = command.command(plugin, 'fart', shortdesc='PrincessZoey :P')
-    return plugin.plugin.plugin(plugin, 'fun', [say_command, lenny_command, shrug_command, tableflip_command, fart_command])
+    return plugin.plugin.plugin(plugin, 'fun', [lenny_command, shrug_command, tableflip_command, fart_command])
 
 def onCommand(message_in):
     # Lenny.
