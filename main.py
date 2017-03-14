@@ -70,19 +70,30 @@ async def on_message(message_in):
 
             command_result = command.plugin.onCommand(message_recv)
 
+            # No message, error.
             if command_result == None:
                 await client.send_message(message_in.channel, '**Beep boop - Something went wrong!**\n_Command did not return a result._')
+            
+            # Do list of messages, one after the other.
+            elif type(command_result) is list:
+                for item in command_result:
+                    await process_message(message_in, item)
 
-            if command_result.body != '' or command_result.embed != None:
-                if command_result.embed != None:
-                    if command_result.body == '':
-                        await client.send_message(message_in.channel, embed=command_result.embed)
-                    else:
-                        await client.send_message(message_in.channel, command_result.body, embed=command_result.embed)
-                else:
-                    await client.send_message(message_in.channel, command_result.body)
-            if command_result.file != '':
-                await client.send_file(message_in.channel, command_result.file)
+            # Do regular message.
+            else:
+                await process_message(message_in, command_result)
+
+async def process_message(message_in, msg):
+    if msg.body != '' or msg.embed != None:
+        if msg.embed != None:
+            if msg.body == '':
+                await client.send_message(message_in.channel, embed=msg.embed)
+            else:
+                await client.send_message(message_in.channel, msg.body, embed=msg.embed)
+        else:
+            await client.send_message(message_in.channel, msg.body)
+    if msg.file != '':
+        await client.send_file(message_in.channel, msg.file)
 
 token = ''
 with open('token.txt') as m:
