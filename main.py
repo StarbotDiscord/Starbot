@@ -5,6 +5,7 @@ import message
 import glob
 import time
 from pluginbase import PluginBase
+import importlib
 
 startTime = time.time()
 
@@ -14,9 +15,12 @@ plugin_source = plugin_base.make_plugin_source(searchpath=['./plugins'])
 plugins = []
 commands = []
 
-for plugin in plugin_source.list_plugins():
-    plugin_temp = plugin_source.load_plugin(plugin)
-    plugin_info = plugin_temp.onInit(plugin_temp)
+def initPlugin(plugin, autoImport=True):
+    if autoImport == True:
+        plugin_temp = plugin_source.load_plugin(plugin)
+        plugin_info = plugin_temp.onInit(plugin_temp)
+    else:
+        plugin_info = plugin.onInit(plugin)
     if plugin_info.plugin == None:
         print("Plugin not defined!")
         pass
@@ -38,6 +42,9 @@ for plugin in plugin_source.list_plugins():
         print("Command `{}` registered successfully.".format(command.name))
     print("Plugin '{}' registered successfully.".format(plugin_info.name))
 
+for plugin in plugin_source.list_plugins():
+    initPlugin(plugin)
+
 client = discord.Client()
 
 @client.event
@@ -57,6 +64,57 @@ async def on_message(message_in):
     
     if message_in.author.id == client.user.id:
         return
+
+    if message_in.content.startswith('!reloadplugin'):
+        if message_in.author.id == "219683089457217536" or message_in.author.id == "186373210495909889":
+            pass
+        else:
+            await client.send_message(message_in.channel, "You do not have permission to reload plugins.")
+        messageSplit = message_in.content.split(' ')
+        if len(messageSplit) == 2:
+
+            plugin_base2 = None
+            plugin_source2 = None
+            
+            plugin_base2 = PluginBase(package='plugins')
+            plugin_source2 = plugin_base.make_plugin_source(searchpath=['./plugins'])
+            for plugin in plugin_source2.list_plugins():
+                plugin_temp = plugin_source2.load_plugin(plugin)
+                plugin_info = plugin_temp.onInit(plugin_temp)
+                if plugin_info.name == messageSplit[1].strip():
+                    for plugin in plugins:
+                        if plugin.name == messageSplit[1].strip():
+                            try:
+                                importlib.reload(plugin.plugin)
+                                await client.send_message(message_in.channel, "Plugin reloaded!")
+                                return
+                            except:
+                                plugins.remove(plugin)
+                                for command in plugin.commands:
+                                    try:
+                                        commands.remove(command)
+                                    except:
+                                        pass
+                                pass
+                    else:
+                        initPlugin(plugin_temp, autoImport=False)
+                        await client.send_message(message_in.channel, "Plugin loaded!")
+                        return
+            
+            for plugin in plugins:
+                if plugin.name == messageSplit[1].strip():
+                    plugins.remove(plugin)
+                    for command in plugin.commands:
+                        try:
+                            commands.remove(command)
+                        except:
+                            pass
+                    await client.send_message(message_in.channel, "Plugin removed!")
+                    return
+
+            await client.send_message(message_in.channel, "No plugin with that name was found.")
+        else:
+            await client.send_message(message_in.channel, "Invalid number of args.")
 
     if message_in.content.startswith('!cachecontents'):
         cacheCount = glob.glob('cache/{}_*'.format(message_in.content.split(' ')[-1]))
