@@ -4,6 +4,7 @@ import git
 import message
 import glob
 import time
+from api import db
 from pluginbase import PluginBase
 
 startTime = time.time()
@@ -51,6 +52,8 @@ async def on_ready():
 
 @client.event
 async def on_message(message_in):
+
+    db.logUserMessage(message_in)
 
     if message_in.server == None:
         return
