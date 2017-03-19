@@ -41,6 +41,10 @@ for plugin in plugin_source.list_plugins():
 
 client = discord.Client()
 
+prefix = ''
+with open('prefix.txt') as m:
+    prefix = m.read().strip()
+
 @client.event
 async def on_ready():
     print('Logged in as')
@@ -66,11 +70,11 @@ async def on_message(message_in):
         cacheString = '\n'.join(cacheCount)
         await client.send_message(message_in.channel, '```{}```'.format(cacheString))
     for command in commands:
-        if message_in.content.split(' ')[0] == '!' + command.name or message_in.content == '!' + command.name:
+        if message_in.content.split(' ')[0] == prefix + command.name or message_in.content == prefix + command.name:
             await client.send_typing(message_in.channel)
             message_recv = message.message
             message_recv.command = command.name
-            message_recv.body = message_in.content.split('!' + command.name)[1]
+            message_recv.body = message_in.content.split(prefix + command.name)[1]
             message_recv.author = message_in.author
             message_recv.server = message_in.server
 
