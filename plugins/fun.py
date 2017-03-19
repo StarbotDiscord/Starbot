@@ -9,7 +9,8 @@ def onInit(plugin):
     shrug_command = command.command(plugin, 'shrug', shortdesc='Shrug it off')
     tableflip_command = command.command(plugin, 'tableflip', shortdesc='Flip a table')
     fart_command = command.command(plugin, 'fart', shortdesc='PrincessZoey :P')
-    return plugin.plugin.plugin(plugin, 'fun', [lenny_command, shrug_command, tableflip_command, fart_command])
+    beta_command = command.command(plugin, 'beta', shortdesc='Something went wrong™')
+    return plugin.plugin.plugin(plugin, 'fun', [lenny_command, shrug_command, tableflip_command, fart_command, beta_command])
 
 def onCommand(message_in):
     # Lenny.
@@ -61,3 +62,6 @@ def onCommand(message_in):
 
         # Return fart message.
         return message.message(msg, delete=True)
+
+    if message_in.command == 'beta':
+        return message.message(body='It looks like something went wrong', file="beta.jpg")
