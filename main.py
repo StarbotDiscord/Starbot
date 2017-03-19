@@ -41,10 +41,6 @@ for plugin in plugin_source.list_plugins():
 
 client = discord.Client()
 
-prefix = ''
-with open('prefix.txt') as m:
-    prefix = m.read().strip()
-
 @client.event
 async def on_ready():
     print('Logged in as')
@@ -58,6 +54,7 @@ async def on_ready():
 async def on_message(message_in):
 
     db.logUserMessage(message_in)
+    prefix = db.getPrefix(message_in.server.id)
 
     if message_in.server == None:
         return
