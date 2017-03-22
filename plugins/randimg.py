@@ -17,7 +17,7 @@ def onCommand(message_in):
     # Star
     if message_in.command == 'star':
         headers = {'Content-Type': 'application/json', 'Accept': 'application/json'}
-        r = requests.get("https://starbooru.com/api/posts?offset=0&limit=50&query=safety:safe%20star_butterfly%20solo", headers=headers, verify=False)
+        r = requests.get("https://starbooru.com/api/posts?offset=0&limit=100&query=safety:safe%20star_butterfly%20solo", headers=headers, verify=False)
         jsonG = r.json()
         print(len(jsonG['results']))
         randIMG = random.choice(jsonG['results'])
