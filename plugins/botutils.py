@@ -159,3 +159,12 @@ def onCommand(message_in):
     if message_in.command == 'getprefix':
         if message_in.author.id == '219683089457217536':
             return message.message(body='Prefix is {}'.format(db.getPrefix(message_in.server.id)))
+
+    if message_in.command == 'speedtest':
+        st = pyspeedtest.SpeedTest()
+        msg = '**Speed Test Results:**\n'
+        msg += '```\n'
+        msg += '    Ping: {}\n'.format(round(st.ping(), 2))
+        msg += 'Download: {}MB/s\n'.format(round(st.download()/1024/1024, 2))
+        msg += '  Upload: {}MB/s```'.format(round(st.upload()/1024/1024, 2))
+        return message.message(body=msg)
