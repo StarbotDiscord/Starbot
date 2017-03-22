@@ -5,10 +5,8 @@ import plugin
 import command
 import message
 import caching
-import os
 import requests
 import random
-import ssl
 
 def onInit(plugin):
     star_command = command.command(plugin, 'star', shortdesc='Post a random picture of Star Butterfly to the channel')
@@ -19,7 +17,7 @@ def onCommand(message_in):
     # Star
     if message_in.command == 'star':
         headers = {'Content-Type': 'application/json', 'Accept': 'application/json'}
-        r = requests.get("https://starbooru.com/api/posts?offset=0&limit=50&query=safety:safe%20star_butterfly", headers=headers, verify=False)
+        r = requests.get("https://starbooru.com/api/posts?offset=0&limit=50&query=safety:safe%20star_butterfly%20solo", headers=headers, verify=False)
         jsonG = r.json()
         print(len(jsonG['results']))
         randIMG = random.choice(jsonG['results'])
