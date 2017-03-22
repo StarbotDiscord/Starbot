@@ -5,6 +5,7 @@ import main
 import time
 from libs import readableTime
 from libs import progressBar
+from api import db
 
 import os
 import platform
@@ -41,7 +42,9 @@ def onInit(plugin_in):
     uptime_command     = command.command(plugin_in, 'uptime',     shortdesc='Print the bot\'s uptime',                devcommand=True)
     hostinfo_command   = command.command(plugin_in, 'hostinfo',   shortdesc='Prints information about the bots home', devcommand=True)
     cpuinfo_command    = command.command(plugin_in, 'cpuinfo',    shortdesc='Prints info about the system CPUs',      devcommand=True)
-    return plugin.plugin(plugin_in, 'botutils', [plugins_command, commands_command, help_command, info_command, plugintree_command, uptime_command, hostinfo_command, cpuinfo_command])
+    setprefix_command  = command.command(plugin_in, 'setprefix',  shortdesc='Set the server prefix',                  devcommand=True)
+    getprefix_command  = command.command(plugin_in, 'getprefix',  shortdesc='Get the server prefix',                  devcommand=True)
+    return plugin.plugin(plugin_in, 'botutils', [plugins_command, commands_command, help_command, info_command, plugintree_command, uptime_command, hostinfo_command, cpuinfo_command, setprefix_command, getprefix_command])
 
 def onCommand(message_in):
     if message_in.command == 'plugins':
@@ -67,7 +70,7 @@ def onCommand(message_in):
         repo = git.Repo(search_parent_directories=True)
         sha = repo.head.object.hexsha
         embed = discord.Embed(color=discord.Color.red())
-        embed.set_author(name='Project StarBot v0.0.5-{}'.format(sha[:7]), url='https://github.com/1byte2bytes/Starbot/', icon_url='https://pbs.twimg.com/profile_images/616309728688238592/pBeeJQDQ.png')
+        embed.set_author(name='Project StarBot v0.1.0-{}'.format(sha[:7]), url='https://github.com/1byte2bytes/Starbot/', icon_url='https://pbs.twimg.com/profile_images/616309728688238592/pBeeJQDQ.png')
         embed.set_footer(text='Created by CorpNewt and Sydney Erickson')
         return message.message(embed=embed)
 
@@ -146,3 +149,13 @@ def onCommand(message_in):
         for i in range(len(cpuPercents)):
             cpuPercentString += 'CPU {}: {}\n'.format(str(i), progressBar.makeBar(cpuPercents[i]))
         return message.message(body='```{}```'.format(cpuPercentString))
+
+    if message_in.command == 'setprefix':
+        if message_in.author.id == '219683089457217536':
+            prefix = message_in.body.split(' ', 1)[-1]
+            db.setPrefix(message_in.server.id, prefix)
+            return message.message(body='Prefix set to {}'.format(prefix))
+
+    if message_in.command == 'getprefix':
+        if message_in.author.id == '219683089457217536':
+            return message.message(body='Prefix is {}'.format(db.getPrefix(message_in.server.id)))
