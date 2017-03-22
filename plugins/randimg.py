@@ -6,6 +6,9 @@ import command
 import message
 import caching
 import os
+import requests
+import random
+import ssl
 
 def onInit(plugin):
     star_command = command.command(plugin, 'star', shortdesc='Post a random picture of Star Butterfly to the channel')
@@ -15,15 +18,14 @@ def onInit(plugin):
 def onCommand(message_in):
     # Star
     if message_in.command == 'star':
-        try:
-            f = urllib.request.urlopen("https://sydneyerickson.me/starapi/rand.php").read().decode("utf-8")
-        except urllib.error.URLError as e:
-            return message.message(body='There was an issue connecting to Starapi'.format(message_in.body))
-
-        imageName = f.split('/')
-        caching.downloadToCache(f, imageName[-1], caller='star')
-
-        return message.message(file='cache/star_' + imageName[-1])
+        headers = {'Content-Type': 'application/json', 'Accept': 'application/json'}
+        r = requests.get("https://starbooru.com/api/posts?offset=0&limit=50&query=safety:safe%20star_butterfly", headers=headers, verify=False)
+        jsonG = r.json()
+        print(len(jsonG['results']))
+        randIMG = random.choice(jsonG['results'])
+        filename = str(randIMG['id']) + '.' + randIMG['contentUrl'].split(".")[-1]
+        caching.downloadToCache(randIMG['contentUrl'], filename, caller='star', sslEnabled=False)
+        return message.message(file='cache/star_' + filename)
 
     # Goldfish
     if message_in.command == 'goldfish':
