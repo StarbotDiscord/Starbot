@@ -2,6 +2,8 @@ import inspect
 import os
 import urllib.request
 import urllib.error
+import urllib
+import ssl
 
 def getCaller():
     frm = inspect.stack()[2]
@@ -32,7 +34,7 @@ def getJson(url, caller='', customName='', save=True):
         return jsonString
 
 
-def downloadToCache(url, filename, caller=''):
+def downloadToCache(url, filename, caller='', sslEnabled=True):
     if caller == '':
         getCaller()
     fullFilename = 'cache/{}_{}'.format(caller, filename)
@@ -40,7 +42,11 @@ def downloadToCache(url, filename, caller=''):
         return 1
     else:
         try:
-            urllib.request.urlretrieve(url, fullFilename)
+            if sslEnabled == True:
+                urllib.request.urlretrieve(url, fullFilename)
+            else:
+                ssl._create_default_https_context = ssl._create_unverified_context
+                urllib.request.urlretrieve(url, fullFilename)
             return 1
         except urllib.error.HTTPError as e:
             return -1
