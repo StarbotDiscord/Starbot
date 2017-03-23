@@ -10,6 +10,7 @@ import random
 
 def onInit(plugin):
     star_command = command.command(plugin, 'star', shortdesc='Post a random picture of Star Butterfly to the channel')
+    star_command = command.command(plugin, 'starco', shortdesc='Nowhere is safe from the shipping wars. Nowhere.')
     goldfish_command = command.command(plugin, 'goldfish', shortdesc='Post a random picture of a goldfish to the channel')
     return plugin.plugin.plugin(plugin, 'randimg', [star_command, goldfish_command])
 
@@ -24,6 +25,16 @@ def onCommand(message_in):
         filename = str(randIMG['id']) + '.' + randIMG['contentUrl'].split(".")[-1]
         caching.downloadToCache(randIMG['contentUrl'], filename, caller='star', sslEnabled=False)
         return message.message(file='cache/star_' + filename)
+
+    if message_in.command == 'starco':
+        headers = {'Content-Type': 'application/json', 'Accept': 'application/json'}
+        r = requests.get("https://starbooru.com/api/posts?offset=0&limit=100&query=safety:safe%20starco", headers=headers, verify=False)
+        jsonG = r.json()
+        print(len(jsonG['results']))
+        randIMG = random.choice(jsonG['results'])
+        filename = str(randIMG['id']) + '.' + randIMG['contentUrl'].split(".")[-1]
+        caching.downloadToCache(randIMG['contentUrl'], filename, caller='starco', sslEnabled=False)
+        return message.message(file='cache/starco_' + filename)
 
     # Goldfish
     if message_in.command == 'goldfish':
