@@ -96,33 +96,9 @@ async def on_message(message_in):
                 if plugin_info.name == messageSplit[1].strip():
                     for plugin in plugins:
                         if plugin.name == messageSplit[1].strip():
-                            try:
-                                importlib.reload(plugin.plugin)
-                                await client.send_message(message_in.channel, "Plugin reloaded!")
-                                return
-                            except:
-                                plugins.remove(plugin)
-                                for command in plugin.commands:
-                                    try:
-                                        commands.remove(command)
-                                    except:
-                                        pass
-                                pass
-                    else:
-                        initPlugin(plugin_temp, autoImport=False)
-                        await client.send_message(message_in.channel, "Plugin loaded!")
-                        return
-            
-            for plugin in plugins:
-                if plugin.name == messageSplit[1].strip():
-                    plugins.remove(plugin)
-                    for command in plugin.commands:
-                        try:
-                            commands.remove(command)
-                        except:
-                            pass
-                    await client.send_message(message_in.channel, "Plugin removed!")
-                    return
+                            importlib.reload(plugin.plugin)
+                            await client.send_message(message_in.channel, "Plugin reloaded!")
+                            return
 
             await client.send_message(message_in.channel, "No plugin with that name was found.")
         else:
