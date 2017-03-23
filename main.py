@@ -69,7 +69,7 @@ async def on_message(message_in):
     if message_in.author.id == client.user.id:
         return
 
-    if message_in.content == '!gitpull':
+    if message_in.content == prefix + 'gitpull':
         if message_in.author.id == "219683089457217536" or message_in.author.id == "186373210495909889":
             pass
         else:
@@ -77,7 +77,7 @@ async def on_message(message_in):
         repo = git.Repo(search_parent_directories=True).remotes.origin.pull()
         await client.send_message(message_in.channel, 'Pulled from git.')
 
-    if message_in.content.startswith('!reloadplugin'):
+    if message_in.content.startswith(prefix + 'reloadplugin'):
         if message_in.author.id == "219683089457217536" or message_in.author.id == "186373210495909889":
             pass
         else:
@@ -104,7 +104,7 @@ async def on_message(message_in):
         else:
             await client.send_message(message_in.channel, "Invalid number of args.")
 
-    if message_in.content.startswith('!cachecontents'):
+    if message_in.content.startswith(prefix + 'cachecontents'):
         cacheCount = glob.glob('cache/{}_*'.format(message_in.content.split(' ')[-1]))
         cacheString = '\n'.join(cacheCount)
         await client.send_message(message_in.channel, '```{}```'.format(cacheString))
