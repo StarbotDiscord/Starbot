@@ -10,10 +10,10 @@ import random
 
 def onInit(plugin):
     star_command = command.command(plugin, 'star', shortdesc='Post a random picture of Star Butterfly to the channel')
-    star_command = command.command(plugin, 'star', shortdesc='Post a random picture of Marco Diaz to the channel')
-    star_command = command.command(plugin, 'starco', shortdesc='Nowhere is safe from the shipping wars. Nowhere.')
+    starco_command = command.command(plugin, 'starco', shortdesc='Nowhere is safe from the shipping wars. Nowhere.')
+    marco_command = command.command(plugin, 'marco', shortdesc='Post a random picture of Marco Diaz to the channel')
     goldfish_command = command.command(plugin, 'goldfish', shortdesc='Post a random picture of a goldfish to the channel')
-    return plugin.plugin.plugin(plugin, 'randimg', [star_command, goldfish_command])
+    return plugin.plugin.plugin(plugin, 'randimg', [star_command, goldfish_command, starco_command, marco_command])
 
 def onCommand(message_in):
     # Star
