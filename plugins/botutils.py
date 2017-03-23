@@ -3,6 +3,7 @@ import command
 import message
 import main
 import time
+import pyspeedtest
 from libs import readableTime
 from libs import progressBar
 from api import db
@@ -44,7 +45,10 @@ def onInit(plugin_in):
     cpuinfo_command    = command.command(plugin_in, 'cpuinfo',    shortdesc='Prints info about the system CPUs',      devcommand=True)
     setprefix_command  = command.command(plugin_in, 'setprefix',  shortdesc='Set the server prefix',                  devcommand=True)
     getprefix_command  = command.command(plugin_in, 'getprefix',  shortdesc='Get the server prefix',                  devcommand=True)
-    return plugin.plugin(plugin_in, 'botutils', [plugins_command, commands_command, help_command, info_command, plugintree_command, uptime_command, hostinfo_command, cpuinfo_command, setprefix_command, getprefix_command])
+    speedtest_command  = command.command(plugin_in, 'speedtest',  shortdesc='Run a speedtest',                        devcommand=True)
+    addowner_command   = command.command(plugin_in, 'addowner',   shortdesc='Add a bot owner',                        devcommand=True)
+    return plugin.plugin(plugin_in, 'botutils', [plugins_command, commands_command, help_command, info_command, plugintree_command, uptime_command, 
+    hostinfo_command, cpuinfo_command, setprefix_command, getprefix_command, speedtest_command, addowner_command])
 
 def onCommand(message_in):
     if message_in.command == 'plugins':
@@ -70,7 +74,7 @@ def onCommand(message_in):
         repo = git.Repo(search_parent_directories=True)
         sha = repo.head.object.hexsha
         embed = discord.Embed(color=discord.Color.red())
-        embed.set_author(name='Project StarBot v0.1.0-{}'.format(sha[:7]), url='https://github.com/1byte2bytes/Starbot/', icon_url='https://pbs.twimg.com/profile_images/616309728688238592/pBeeJQDQ.png')
+        embed.set_author(name='Project StarBot v0.1.1-{}'.format(sha[:7]), url='https://github.com/1byte2bytes/Starbot/', icon_url='https://pbs.twimg.com/profile_images/616309728688238592/pBeeJQDQ.png')
         embed.set_footer(text='Created by CorpNewt and Sydney Erickson')
         return message.message(embed=embed)
 
@@ -159,3 +163,32 @@ def onCommand(message_in):
     if message_in.command == 'getprefix':
         if message_in.author.id == '219683089457217536':
             return message.message(body='Prefix is {}'.format(db.getPrefix(message_in.server.id)))
+
+    if message_in.command == 'speedtest':
+        if db.isOwner(message_in.author.id) == True:
+            st = pyspeedtest.SpeedTest()
+            msg = '**Speed Test Results:**\n'
+            msg += '```\n'
+            msg += '    Ping: {}\n'.format(round(st.ping(), 2))
+            msg += 'Download: {}MB/s\n'.format(round(st.download()/1024/1024, 2))
+            msg += '  Upload: {}MB/s```'.format(round(st.upload()/1024/1024, 2))
+            return message.message(body=msg)
+        else:
+            return message.message(body='You do not have permisison to run a speedtest.')
+
+    if message_in.command == 'addowner':
+        if len(db.getOwners()) != 0:
+            try:
+                if db.isOwner(message_in.author.id) == True:
+                    temp = message_in.body.split('<@')
+                    uid = temp[-1][:-1]
+                    int(uid)
+                    db.addOwner(uid)
+                    return message.message(body='Added owner successfully')
+                else:
+                    return message.message(body='You aren\'t an owner of the bot')
+            except Exception as e:
+                return message.message(body='Invalid user')
+        else:
+            db.addOwner(message_in.author.id)
+            return message.message(body='You have successfully claimed yourself as the first owner!')
