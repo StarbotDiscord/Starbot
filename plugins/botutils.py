@@ -199,7 +199,7 @@ def onCommand(message_in):
         owners = []
         for owner in db.getOwners():
             print(owner)
-            owners.append(discord.get_user_info(owner).name)
+            owners.append(main.client.get_user_info(owner).name)
         print(owners)
         ownerLst = ', '.join(owners)
         return message.message(body=ownerLst)
