@@ -198,5 +198,7 @@ def onCommand(message_in):
     if message_in.command == 'owners':
         owners = []
         for owner in db.getOwners():
+            print(owner)
             owners.append(displayname.memberForID(owner, message_in.server))
-        return message.message(body=', '.join(owners))
+        ownerLst = ', '.join(owners)
+        return message.message(body=ownerLst)
