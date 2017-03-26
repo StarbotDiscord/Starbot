@@ -6,6 +6,7 @@ import time
 import pyspeedtest
 from libs import readableTime
 from libs import progressBar
+from libs import displayname
 from api import db
 
 import os
@@ -47,8 +48,9 @@ def onInit(plugin_in):
     getprefix_command  = command.command(plugin_in, 'getprefix',  shortdesc='Get the server prefix',                  devcommand=True)
     speedtest_command  = command.command(plugin_in, 'speedtest',  shortdesc='Run a speedtest',                        devcommand=True)
     addowner_command   = command.command(plugin_in, 'addowner',   shortdesc='Add a bot owner',                        devcommand=True)
+    owners_command     = command.command(plugin_in, 'owner',      shortdesc='Print the bot owners',                   devcommand=True)
     return plugin.plugin(plugin_in, 'botutils', [plugins_command, commands_command, help_command, info_command, plugintree_command, uptime_command, 
-    hostinfo_command, cpuinfo_command, setprefix_command, getprefix_command, speedtest_command, addowner_command])
+    hostinfo_command, cpuinfo_command, setprefix_command, getprefix_command, speedtest_command, addowner_command, owners_command])
 
 def onCommand(message_in):
     if message_in.command == 'plugins':
@@ -192,3 +194,8 @@ def onCommand(message_in):
         else:
             db.addOwner(message_in.author.id)
             return message.message(body='You have successfully claimed yourself as the first owner!')
+
+    if message_in.command == 'owner':
+        owners = []
+        for owner in db.getOwners():
+            owners.append(displayname.memberForID(owner, message_in.server))
