@@ -30,7 +30,7 @@ def getJson(url, caller='', customName='', save=True):
     else:
         jsonString = urllib.request.urlopen(url).read().decode("utf-8")
         if save == True:
-            writeString(jsonString, caller, fullFilename)
+            writeString(jsonString, caller, customName)
         return jsonString
 
 
