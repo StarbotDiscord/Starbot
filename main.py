@@ -138,7 +138,9 @@ async def on_message(message_in):
 
 async def process_message(message_in, msg):
     if msg.body != '' or msg.embed != None:
-        if msg.embed != None:
+        if msg.file != '':
+            pass
+        elif msg.embed != None:
             if msg.body == '':
                 await client.send_message(message_in.channel, embed=msg.embed)
             else:
@@ -150,7 +152,10 @@ async def process_message(message_in, msg):
             msg.body = msg.body.replace("@everyone", "@{}everyone".format(zerospace)).replace("@here", "@{}here".format(zerospace))
             await client.send_message(message_in.channel, msg.body)
     if msg.file != '':
-        await client.send_file(message_in.channel, msg.file)
+        if msg.body != '':
+            await client.send_file(message_in.channel, msg.file, content=msg.body)
+        else:
+            await client.send_file(message_in.channel, msg.file)
 
 token = ''
 with open('token.txt') as m:
