@@ -27,15 +27,14 @@ def getCachedFile(filename):
     return row[0]
 
 def cacheFileS(filename, data):
-    filename = filename.replace('.', '/.')
     conn = sqlite3.connect("bot.db3")
     c = conn.cursor()
     c.execute('CREATE TABLE IF NOT EXISTS cachedfiles_string (filename TEXT, data TEXT)')
     c.execute('SELECT filename FROM cachedfiles_string WHERE filename=\'' + filename + '\'')
     if len(list(c)) != 0:
-        c.execute('UPDATE cachedfiles_string SET data=\'?\' WHERE filename=\'?\'', (data, filename))
+        c.execute('UPDATE cachedfiles_string SET data=? WHERE filename=?', (data, filename))
     else:
-        c.execute('INSERT INTO cachedfiles_string VALUES (?,?)', ("'" + filename + "'", "'" + data + "'"))
+        c.execute('INSERT INTO cachedfiles_string VALUES (?,?)', (filename, data))
     conn.commit()
     conn.close()
 
@@ -47,6 +46,7 @@ def getCachedFileS(filename):
     try:
         row = list(c)[0]
     except:
+        print("[DB    ] Could not find file {} in string file cache.".format(filename))
         row = [""]
     conn.commit()
     conn.close()
