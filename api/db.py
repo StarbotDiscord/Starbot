@@ -1,5 +1,9 @@
 import sqlite3
 
+#====================================
+# Prefix Stuff
+#====================================
+
 def setPrefix(serverid, prefix):
     conn = sqlite3.connect("bot.db3")
     c = conn.cursor()
@@ -25,6 +29,10 @@ def getPrefix(serverid):
     conn.close()
     return row[0]
 
+#====================================
+# Logging Stuff
+#====================================
+
 def logUserMessage(message):
     conn = sqlite3.connect("bot.db3")
     c = conn.cursor()
@@ -33,6 +41,10 @@ def logUserMessage(message):
               (message.author.id, message.author.name, message.content, message.server.id, message.server.name))
     conn.commit()
     conn.close()
+
+#====================================
+# Server Owner Stuffs
+#====================================
 
 def isOwner(uid):
     conn = sqlite3.connect("bot.db3")
