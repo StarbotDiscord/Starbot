@@ -9,7 +9,7 @@ def cacheFileS(filename, data):
     if len(list(c)) != 0:
         c.execute('UPDATE cachedfiles_string SET data=\'?\' WHERE filename=\'?\'', (data, filename))
     else:
-        c.execute('INSERT INTO cachedfiles_string VALUES (?,?)', (filename, data))
+        c.execute('INSERT INTO cachedfiles_string VALUES (?,?)', ("'" + filename + "'", "'" + data + "'"))
     conn.commit()
     conn.close()
 
