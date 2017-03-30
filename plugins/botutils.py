@@ -75,8 +75,9 @@ def onCommand(message_in):
     if message_in.command == 'info':
         repo = git.Repo(search_parent_directories=True)
         sha = repo.head.object.hexsha
+        track = repo.active_branch.name
         embed = discord.Embed(color=discord.Color.red())
-        embed.set_author(name='Project StarBot v0.1.1-{}'.format(sha[:7]), url='https://github.com/1byte2bytes/Starbot/', icon_url='https://pbs.twimg.com/profile_images/616309728688238592/pBeeJQDQ.png')
+        embed.set_author(name='Project StarBot v0.1.1-{} on track {}'.format(sha[:7], track), url='https://github.com/1byte2bytes/Starbot/', icon_url='https://pbs.twimg.com/profile_images/616309728688238592/pBeeJQDQ.png')
         embed.set_footer(text='Created by CorpNewt and Sydney Erickson')
         return message.message(embed=embed)
 
