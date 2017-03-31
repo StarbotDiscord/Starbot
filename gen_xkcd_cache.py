@@ -2,10 +2,11 @@ from tqdm import tqdm
 import urllib.error
 import urllib.request
 import json
+import caching
 
 for i in tqdm(range(1806)):
     try:
-        urllib.request.urlretrieve("https://xkcd.com/{}/info.0.json".format(i), 'cache/xkcd_{}.json'.format(i))
+        jsonD = caching.getJson("https://xkcd.com/{}/info.0.json".format(i), caller='xkcd', customName='{}.json'.format(i))
     except urllib.error.HTTPError as e:
         print("404")
         continue
@@ -13,10 +14,8 @@ for i in tqdm(range(1806)):
         print("error")
         continue
 
-    imageUrl = ''
-    with open('cache/xkcd_{}.json'.format(i)) as fl:
-        f = json.loads(fl.read())
-        imageUrl = f['img']
+    f = json.loads(jsonD)
+    imageUrl = f['img']
 
     try:
         urllib.request.urlretrieve(imageUrl, 'cache/xkcd_{}.png'.format(i))
