@@ -3,6 +3,7 @@ import command
 import message
 import main
 import time
+import math
 import pyspeedtest
 from libs import readableTime
 from libs import progressBar
@@ -34,6 +35,15 @@ def detectDuplicateCommands():
             duplicates.append(command)
 
     return list(set(duplicates))
+
+def convert_size(size_bytes):
+   if (size_bytes == 0):
+       return '0B'
+   size_name = ("B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB")
+   i = int(math.floor(math.log(size_bytes, 1024)))
+   p = math.pow(1024, i)
+   s = round(size_bytes/p, 2)
+   return '%s %s' % (s, size_name[i])
 
 def onInit(plugin_in):
     plugins_command    = command.command(plugin_in, 'plugins',    shortdesc='Print a list of plugins',                devcommand=True)
@@ -135,6 +145,10 @@ def onCommand(message_in):
         pythonMinor = sys.version_info.minor
         pythonMicro = sys.version_info.micro
         pythonRelease = sys.version_info.releaselevel
+        storage = psutil.disk_usage('/')
+        usedStorage = convert_size(storage.used)
+        totalStorage = convert_size(storage.total)
+        freeStorage = convert_size(storage.total - storage.used)
 
         msg = '***{}\'s*** **Home:**\n'.format('StarBot')
         msg += '```Host OS       : {}\n'.format(currentOS)
@@ -144,6 +158,7 @@ def onCommand(message_in):
         else:
             msg += 'Host CPU usage: {}% of {} ({} thread)\n'.format(cpuUsage, processor, cpuThred)
         msg += 'Host RAM      : {}GB ({}%) of {}GB\n'.format(memUsedGB, memPerc, memTotalGB)
+        msg += 'Host HDD      : {} ({}%) of {} - {} free\n'.format(usedStorage, storage.percent, totalStorage, freeStorage)
         msg += 'Hostname      : {}\n'.format(platform.node())
         msg += 'Host uptime   : {}```'.format(readableTime.getReadableTimeBetween(psutil.boot_time(), time.time()))
 
