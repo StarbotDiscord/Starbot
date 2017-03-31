@@ -1,6 +1,6 @@
 import json
 
-from api import command, caching, message
+from api import command, caching, message, plugin
 
 
 def onInit(plugin):

@@ -1,6 +1,6 @@
 from urllib.request import urlopen
 
-from api import command, message
+from api import command, message, plugin
 
 
 def onInit(plugin):

@@ -3,7 +3,7 @@ import string
 import urllib.error
 import urllib.request
 
-from api import command, message
+from api import command, message, plugin
 from libs import bigmessage
 
 

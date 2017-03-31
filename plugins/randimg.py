@@ -4,7 +4,7 @@ import urllib.request
 
 import requests
 
-from api import command, caching, message
+from api import command, caching, message, plugin
 
 
 def onInit(plugin):

@@ -1,6 +1,6 @@
 import random
 
-from api import command, message
+from api import command, message, plugin
 
 
 # Fun plugin

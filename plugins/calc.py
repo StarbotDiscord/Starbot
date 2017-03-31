@@ -6,7 +6,7 @@ import operator
 from pyparsing import (Literal, CaselessLiteral, Word, Combine, Group, Optional,
                        ZeroOrMore, Forward, nums, alphas, oneOf)
 
-from api import command, message
+from api import command, message, plugin
 
 __author__='Paul McGuire'
 __version__ = '$Revision: 0.0 $'
