@@ -1,5 +1,7 @@
-import message
 import textwrap
+
+from api import message
+
 
 # Breaks giant message into chunks.
 def create(msg, characters : int = 2000):

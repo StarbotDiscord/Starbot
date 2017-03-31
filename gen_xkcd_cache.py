@@ -1,8 +1,9 @@
-from tqdm import tqdm
-import urllib.error
-import urllib.request
 import json
-import caching
+import urllib.request
+
+from tqdm import tqdm
+
+from api import caching
 
 for i in tqdm(range(1806)):
     try:

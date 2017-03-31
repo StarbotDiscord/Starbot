@@ -1,12 +1,11 @@
-import urllib.request
-import urllib.error
-import json
-import plugin
-import command
-import message
-import caching
-import requests
 import random
+import urllib.error
+import urllib.request
+
+import requests
+
+from api import command, caching, message
+
 
 def onInit(plugin):
     star_command = command.command(plugin, 'star', shortdesc='Post a random picture of Star Butterfly to the channel')

@@ -1,13 +1,12 @@
-import plugin
-import command
-import message
-
 import glob
 import os.path
 
+from api import command, message, plugin
+
+
 def onInit(plugin_in):
-    build_command   = command.command(plugin_in, 'build',    shortdesc='Print a list of a user\'s builds', devcommand=True)
-    addbuild_command = command.command(plugin_in, 'addbuild', shortdesc='Add a build to your list',        devcommand=True)
+    build_command   = command.command(plugin_in, 'build', shortdesc='Print a list of a user\'s builds', devcommand=True)
+    addbuild_command = command.command(plugin_in, 'addbuild', shortdesc='Add a build to your list', devcommand=True)
     return plugin.plugin(plugin_in, 'parts', [build_command, addbuild_command])
 
 def onCommand(message_in):

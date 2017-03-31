@@ -1,5 +1,7 @@
 import unittest
-import command
+
+from api import command
+
 
 class TestCommandSuite(unittest.TestCase):
 

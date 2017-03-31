@@ -1,12 +1,12 @@
-import discord
-import asyncio
-import git
-import message
 import glob
-import time
-from api import db
-from pluginbase import PluginBase
 import importlib
+import time
+
+import discord
+import git
+from pluginbase import PluginBase
+
+from api import db, message
 
 startTime = time.time()
 

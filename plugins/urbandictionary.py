@@ -1,12 +1,11 @@
-import command
 import json
-import message
-import plugin
 import string
-import urllib.request
 import urllib.error
+import urllib.request
 
+from api import command, message
 from libs import bigmessage
+
 
 # UD plugin
 def onInit(plugin):
