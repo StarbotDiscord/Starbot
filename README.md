@@ -1,4 +1,4 @@
-# Starbot - An Open-Source Discord Bot [![Build Status](http://sydneyerickson.me:8080/job/Starbot/job/Starbot/badge/icon)](https://sydstudios.me/jenkins/job/Starbot/job/Starbot/badge/icon) [![Doc Status](http://starbot.readthedocs.io/en/latest/?badge=latest)](http://starbot.readthedocs.io/en/latest/)
+# Starbot - An Open-Source Discord Bot [![Build Status](https://sydstudios.me/jenkins/job/Starbot/job/Starbot/badge/icon)](https://sydstudios.me/jenkins/job/Starbot/job/Starbot/) [![Doc Status](http://starbot.readthedocs.io/en/latest/?badge=latest)](http://starbot.readthedocs.io/en/latest/)
 
 ## Project Overview
 
