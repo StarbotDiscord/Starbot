@@ -10,6 +10,8 @@ Welcome to Starbot's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   api/message <message.rst>
+
 
 
 Indices and tables
