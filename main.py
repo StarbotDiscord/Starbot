@@ -56,11 +56,8 @@ if __name__ == "__main__":
     token = ''
     with open('token.txt') as m:
         token = m.read().strip()
-
-    client.run(token)
-    print("hi")
 else:
-    client = fakeClient
+    client = discord.Client()
 
 @client.event
 async def on_ready():
@@ -74,6 +71,7 @@ async def on_ready():
 
 @client.event
 async def on_message(message_in):
+    print(message_in)
     db.logUserMessage(message_in)
     prefix = db.getPrefix(message_in.server.id)
 
@@ -175,3 +173,6 @@ async def process_message(message_in, msg):
             await client.send_file(message_in.channel, msg.file, content=msg.body)
         else:
             await client.send_file(message_in.channel, msg.file)
+
+if __name__ == "__main__":
+    client.run(token)
