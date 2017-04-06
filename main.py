@@ -58,6 +58,7 @@ if __name__ == "__main__":
         token = m.read().strip()
 
     client.run(token)
+    print("hi")
 else:
     client = fakeClient
 
