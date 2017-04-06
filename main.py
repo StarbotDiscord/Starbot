@@ -71,7 +71,6 @@ async def on_ready():
 
 @client.event
 async def on_message(message_in):
-    print(message_in)
     db.logUserMessage(message_in)
     prefix = db.getPrefix(message_in.server.id)
 
@@ -175,4 +174,13 @@ async def process_message(message_in, msg):
             await client.send_file(message_in.channel, msg.file)
 
 if __name__ == "__main__":
+    # THIS MUST ALWAYS BE DOWN HERE
+    # I found this out after 3 days of stupidity and tried filing a report with the Discord.py devs to figure out why the
+    # library seems to have hanged when it was in the initial block of the same if. I still don't know. They disregarded
+    # the entirety of my ticket and told me that this is a blocking call. Yeah, I know. But if you read the rest of the ticket
+    # you would know that after this function was called all the main thread would drop and the bot would become unresponsive.
+    # But apparently it is the debugger I explicitly stated that I had turned off on some of my messages I sent while figuring it out.
+    # I don't know why you would lock a ticket because of a debugger that isn't on and a problem you were ignoring.
+    # Maybe someone should add a warning to the Discord.py library for when you run client.run in the wrong place.
+    # But honestly I can't be bothered.
     client.run(token)
