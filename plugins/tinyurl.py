@@ -1,7 +1,7 @@
-import plugin
-import command
-import message
 from urllib.request import urlopen
+
+from api import command, message, plugin
+
 
 def onInit(plugin):
     tinyurl_command = command.command(plugin, 'tinyurl', shortdesc='Convert a link to a TinyURL')

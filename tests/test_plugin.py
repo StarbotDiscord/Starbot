@@ -1,6 +1,7 @@
 import unittest
-import command
-import plugin
+
+from api import command, plugin
+
 
 class TestCommandSuite(unittest.TestCase):
 
