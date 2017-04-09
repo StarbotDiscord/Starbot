@@ -9,6 +9,8 @@ from pluginbase import PluginBase
 from api import db, message
 
 startTime = time.time()
+plugins = []
+commands = []
 
 def initPlugin(plugin, autoImport=True):
     if autoImport == True:
@@ -40,13 +42,10 @@ def initPlugin(plugin, autoImport=True):
 class fakeClient:
     def event(self):
         pass
-    
+
 if __name__ == "__main__":
     plugin_base = PluginBase(package='plugins')
     plugin_source = plugin_base.make_plugin_source(searchpath=['./plugins'])
-
-    plugins = []
-    commands = []
 
     for plugin in plugin_source.list_plugins():
         initPlugin(plugin)
