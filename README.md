@@ -28,6 +28,8 @@ If your feeling particularly adventurous you may find working on the core of the
 
 ## Installing and running Starbot
 
+_There may be a build of the [StarBot Runtime](https://github.com/StarbotDiscord/BuildScript) available that works on your system if you're feeling adventurous._
+
 1. Make sure you have Python 3.5 or 3.6 installed, as well as git
 
 2. Run `pip install discord.py pluginbase psutil gitpython pyparsing pyspeedtest requests tqdm` in a terminal session to install the dependancies
@@ -36,5 +38,5 @@ If your feeling particularly adventurous you may find working on the core of the
 
 4. Run `echo [my token here] > token.txt` to create a file for the bots token
 
-5. Run `python main.py` to run the bot!
+5. Run `./run.sh` to run the bot!
 
