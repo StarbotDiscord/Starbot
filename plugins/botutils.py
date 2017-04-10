@@ -136,6 +136,8 @@ def onCommand(message_in):
         release = platform.release()
         version = platform.version()
         processor = platform.processor()
+        if processor == '':
+            processor = 'Unknown CPU'
         currentTime = int(time.time())
         pythonMajor = sys.version_info.major
         pythonMinor = sys.version_info.minor
