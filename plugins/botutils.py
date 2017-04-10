@@ -119,7 +119,7 @@ def onCommand(message_in):
 
     if message_in.command == 'uptime':
         currentTime = int(time.time())
-        timeString = readableTime.getReadableTimeBetween(main.startTime, currentTime)
+        timeString = readableTime.getReadableTimeBetween(bot.startTime, currentTime)
         return message.message(body='I\'ve been up for *{}*.'.format(timeString))
 
     if message_in.command == 'hostinfo':

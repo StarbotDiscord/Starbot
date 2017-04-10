@@ -9,8 +9,6 @@ from pluginbase import PluginBase
 from api import db, message
 from api.bot import bot
 
-startTime = time.time()
-
 def initPlugin(plugin, autoImport=True):
     if autoImport == True:
         plugin_temp = plugin_source.load_plugin(plugin)
@@ -43,6 +41,8 @@ class fakeClient:
         pass
 
 if __name__ == "__main__":
+    bot.startTime = time.time()
+
     plugin_base = PluginBase(package='plugins')
     plugin_source = plugin_base.make_plugin_source(searchpath=['./plugins'])
 
