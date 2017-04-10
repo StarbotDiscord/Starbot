@@ -1,6 +1,8 @@
 Message.py Documentation
 ************************
 
+.. _api_message:
+
 Creating a message
 ==================
 

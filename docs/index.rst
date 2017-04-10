@@ -11,6 +11,8 @@ Welcome to Starbot's documentation!
    :caption: Contents:
 
    api/message <message.rst>
+   api/plugin <plugin.rst>
+   api/command <command.rst>
 
 
 
