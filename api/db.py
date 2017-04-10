@@ -1,5 +1,61 @@
 import sqlite3
 
+def cacheFile(filename, data):
+    filename = filename.replace('.', '/.')
+    conn = sqlite3.connect("bot.db3")
+    c = conn.cursor()
+    c.execute('CREATE TABLE IF NOT EXISTS cachedfiles_string (filename TEXT, data BLOB)')
+    c.execute('SELECT filename FROM cachedfiles_string WHERE filename=\'' + filename + '\'')
+    if len(list(c)) != 0:
+        c.execute('UPDATE cachedfiles_string SET data=\'?\' WHERE filename=\'?\'', (data, filename))
+    else:
+        c.execute('INSERT INTO cachedfiles_string VALUES (?,?)', ("'" + filename + "'", "'" + data + "'"))
+    conn.commit()
+    conn.close()
+
+def getCachedFile(filename):
+    conn = sqlite3.connect("bot.db3")
+    c = conn.cursor()
+    c.execute('CREATE TABLE IF NOT EXISTS cachedfiles_string (filename TEXT, data BLOB)')
+    c.execute('SELECT data FROM cachedfiles_string WHERE filename=\'' + filename + '\'')
+    try:
+        row = list(c)[0]
+    except:
+        row = [""]
+    conn.commit()
+    conn.close()
+    return row[0]
+
+def cacheFileS(filename, data):
+    conn = sqlite3.connect("bot.db3")
+    c = conn.cursor()
+    c.execute('CREATE TABLE IF NOT EXISTS cachedfiles_string (filename TEXT, data TEXT)')
+    c.execute('SELECT filename FROM cachedfiles_string WHERE filename=\'' + filename + '\'')
+    if len(list(c)) != 0:
+        c.execute('UPDATE cachedfiles_string SET data=? WHERE filename=?', (data, filename))
+    else:
+        c.execute('INSERT INTO cachedfiles_string VALUES (?,?)', (filename, data))
+    conn.commit()
+    conn.close()
+
+def getCachedFileS(filename):
+    conn = sqlite3.connect("bot.db3")
+    c = conn.cursor()
+    c.execute('CREATE TABLE IF NOT EXISTS cachedfiles_string (filename TEXT, data TEXT)')
+    c.execute('SELECT data FROM cachedfiles_string WHERE filename=\'' + filename + '\'')
+    try:
+        row = list(c)[0]
+    except:
+        print("[DB    ] Could not find file {} in string file cache.".format(filename))
+        row = [""]
+    conn.commit()
+    conn.close()
+    return row[0]
+
+#====================================
+# Prefix Stuff
+#====================================
+
 def setPrefix(serverid, prefix):
     conn = sqlite3.connect("bot.db3")
     c = conn.cursor()
@@ -25,6 +81,10 @@ def getPrefix(serverid):
     conn.close()
     return row[0]
 
+#====================================
+# Logging Stuff
+#====================================
+
 def logUserMessage(message):
     conn = sqlite3.connect("bot.db3")
     c = conn.cursor()
@@ -33,6 +93,10 @@ def logUserMessage(message):
               (message.author.id, message.author.name, message.content, message.server.id, message.server.name))
     conn.commit()
     conn.close()
+
+#====================================
+# Server Owner Stuffs
+#====================================
 
 def isOwner(uid):
     conn = sqlite3.connect("bot.db3")

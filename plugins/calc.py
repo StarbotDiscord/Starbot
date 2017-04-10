@@ -1,17 +1,12 @@
 from __future__ import division
-import asyncio
-import discord
-import random
-from   discord.ext import commands
 
-import plugin
-import command
-import message
-
-from pyparsing import (Literal,CaselessLiteral,Word,Combine,Group,Optional,
-                    ZeroOrMore,Forward,nums,alphas,oneOf)
 import math
 import operator
+
+from pyparsing import (Literal, CaselessLiteral, Word, Combine, Group, Optional,
+                       ZeroOrMore, Forward, nums, alphas, oneOf)
+
+from api import command, message, plugin
 
 __author__='Paul McGuire'
 __version__ = '$Revision: 0.0 $'

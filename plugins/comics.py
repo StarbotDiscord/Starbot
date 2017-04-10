@@ -1,11 +1,7 @@
-import urllib.request
-import urllib.error
 import json
-import plugin
-import command
-import message
-import os
-import caching
+
+from api import command, caching, message, plugin
+
 
 def onInit(plugin):
     xkcd_command = command.command(plugin, 'xkcd', shortdesc='Posts the latest XKCD, or by specific ID')
@@ -29,4 +25,4 @@ def onCommand(message_in):
         caching.downloadToCache(data['img'], '{}.png'.format(data['num']), caller='xkcd')
 
         return message.message(body='**{}/{}/{} - {}**\n_{}_'.format(data['month'], data['day'], data['year'], data['safe_title'], data['alt']),
-                              file='cache/xkcd_{}.png'.format(data['num']))
+                               file='cache/xkcd_{}.png'.format(data['num']))

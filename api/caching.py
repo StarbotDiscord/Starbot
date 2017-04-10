@@ -5,6 +5,8 @@ import urllib.error
 import urllib
 import ssl
 
+from api import db
+
 def getCaller():
     frm = inspect.stack()[2]
     mod = inspect.getmodule(frm[0])
@@ -14,8 +16,7 @@ def getCaller():
 #=============================
 
 def writeString(string, plugin, filename):
-    with open('cache\\{}_{}'.format(plugin, filename), 'w') as f:
-        f.write(string)
+    db.cacheFileS('{}_{}'.format(plugin, filename), string)
 
 def getJson(url, caller='', customName='', save=True):
     if caller == '':
@@ -23,14 +24,13 @@ def getJson(url, caller='', customName='', save=True):
     if customName == '':
         customName = url.split('/')[-1]
     fullFilename = '{}_{}'.format(caller, customName)
-    if os.path.isfile(fullFilename):
-        with open('cache/{}'.format(fullFilename)) as f:
-            return f.read()
+    cacheTry = db.getCachedFileS(fullFilename)
+    if cacheTry != '':
+        return cacheTry
     else:
         jsonString = urllib.request.urlopen(url).read().decode("utf-8")
         if save == True:
-            with open('cache/{}'.format(fullFilename), 'w') as f:
-                f.write(jsonString)
+            writeString(jsonString, caller, customName)
         return jsonString
 
 

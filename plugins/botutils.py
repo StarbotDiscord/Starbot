@@ -1,27 +1,25 @@
-import plugin
-import command
-import message
-import main
-import time
-import pyspeedtest
-from libs import readableTime
-from libs import progressBar
-from libs import displayname
-from api import db
-
+import math
 import os
 import platform
-import psutil
 import sys
-import discord
+import time
 
-from libs import readableTime
+import discord
 import git
+import psutil
+import pyspeedtest
+
+import main
+from api import db, command, message, plugin
+from api.bot import bot
+from libs import progressBar
+from libs import readableTime
+
 
 def detectDuplicateCommands():
     duplicates = []
     commandsL = []
-    for plugin in main.plugins:
+    for plugin in bot.plugins:
         for command in plugin.commands:
             commandsL.append(command.name)
 
@@ -35,34 +33,43 @@ def detectDuplicateCommands():
 
     return list(set(duplicates))
 
+def convert_size(size_bytes):
+   if (size_bytes == 0):
+       return '0B'
+   size_name = ("B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB")
+   i = int(math.floor(math.log(size_bytes, 1024)))
+   p = math.pow(1024, i)
+   s = round(size_bytes/p, 2)
+   return '%s %s' % (s, size_name[i])
+
 def onInit(plugin_in):
-    plugins_command    = command.command(plugin_in, 'plugins',    shortdesc='Print a list of plugins',                devcommand=True)
-    commands_command   = command.command(plugin_in, 'commands',   shortdesc='Print a list of commands')
-    help_command       = command.command(plugin_in, 'help',       shortdesc='Redirects to !commands')
-    info_command       = command.command(plugin_in, 'info',       shortdesc='Print some basic bot info')
-    plugintree_command = command.command(plugin_in, 'plugintree', shortdesc='Print a tree of plugins and commands',   devcommand=True)
-    uptime_command     = command.command(plugin_in, 'uptime',     shortdesc='Print the bot\'s uptime',                devcommand=True)
-    hostinfo_command   = command.command(plugin_in, 'hostinfo',   shortdesc='Prints information about the bots home', devcommand=True)
-    cpuinfo_command    = command.command(plugin_in, 'cpuinfo',    shortdesc='Prints info about the system CPUs',      devcommand=True)
-    setprefix_command  = command.command(plugin_in, 'setprefix',  shortdesc='Set the server prefix',                  devcommand=True)
-    getprefix_command  = command.command(plugin_in, 'getprefix',  shortdesc='Get the server prefix',                  devcommand=True)
-    speedtest_command  = command.command(plugin_in, 'speedtest',  shortdesc='Run a speedtest',                        devcommand=True)
-    addowner_command   = command.command(plugin_in, 'addowner',   shortdesc='Add a bot owner',                        devcommand=True)
-    owners_command     = command.command(plugin_in, 'owners',      shortdesc='Print the bot owners',                   devcommand=True)
-    return plugin.plugin(plugin_in, 'botutils', [plugins_command, commands_command, help_command, info_command, plugintree_command, uptime_command, 
-    hostinfo_command, cpuinfo_command, setprefix_command, getprefix_command, speedtest_command, addowner_command, owners_command])
+    plugins_command    = command.command(plugin_in, 'plugins', shortdesc='Print a list of plugins', devcommand=True)
+    commands_command   = command.command(plugin_in, 'commands', shortdesc='Print a list of commands')
+    help_command       = command.command(plugin_in, 'help', shortdesc='Redirects to !commands')
+    info_command       = command.command(plugin_in, 'info', shortdesc='Print some basic bot info')
+    plugintree_command = command.command(plugin_in, 'plugintree', shortdesc='Print a tree of plugins and commands', devcommand=True)
+    uptime_command     = command.command(plugin_in, 'uptime', shortdesc='Print the bot\'s uptime', devcommand=True)
+    hostinfo_command   = command.command(plugin_in, 'hostinfo', shortdesc='Prints information about the bots home', devcommand=True)
+    cpuinfo_command    = command.command(plugin_in, 'cpuinfo', shortdesc='Prints info about the system CPUs', devcommand=True)
+    setprefix_command  = command.command(plugin_in, 'setprefix', shortdesc='Set the server prefix', devcommand=True)
+    getprefix_command  = command.command(plugin_in, 'getprefix', shortdesc='Get the server prefix', devcommand=True)
+    speedtest_command  = command.command(plugin_in, 'speedtest', shortdesc='Run a speedtest', devcommand=True)
+    addowner_command   = command.command(plugin_in, 'addowner', shortdesc='Add a bot owner', devcommand=True)
+    owners_command     = command.command(plugin_in, 'owners', shortdesc='Print the bot owners', devcommand=True)
+    return plugin.plugin(plugin_in, 'botutils', [plugins_command, commands_command, help_command, info_command, plugintree_command, uptime_command,
+                                                 hostinfo_command, cpuinfo_command, setprefix_command, getprefix_command, speedtest_command, addowner_command, owners_command])
 
 def onCommand(message_in):
     if message_in.command == 'plugins':
         pluginList = []
-        for plugin in main.plugins:
+        for plugin in bot.plugins:
             pluginList.append(plugin.name)
         return message.message(body='```{}```'.format(', '.join(pluginList)))
 
     if message_in.command == 'commands' or message_in.command == 'help':
         commandNames = []
         commandDescs = []
-        for command in main.commands:
+        for command in bot.commands:
             if command.devcommand != True:
                 commandNames.append(command.name)
                 commandDescs.append(command.shortdesc)
@@ -75,15 +82,23 @@ def onCommand(message_in):
     if message_in.command == 'info':
         repo = git.Repo(search_parent_directories=True)
         sha = repo.head.object.hexsha
-        embed = discord.Embed(color=discord.Color.red())
-        embed.set_author(name='Project StarBot v0.1.1-{}'.format(sha[:7]), url='https://github.com/1byte2bytes/Starbot/', icon_url='https://pbs.twimg.com/profile_images/616309728688238592/pBeeJQDQ.png')
+        track = repo.active_branch.name
+        if track == 'master':
+            embed = discord.Embed(color=discord.Color.red())
+        elif track == 'unstable':
+            embed = discord.Embed(color=discord.Color.gold())
+        elif track == 'stable':
+            embed = discord.Embed(color=discord.Color.green())
+        else:
+            embed = discord.Embed(color=discord.Color.light_grey())
+        embed.set_author(name='Project StarBot v0.1.1-{} on track {}'.format(sha[:7], track), url='https://github.com/1byte2bytes/Starbot/', icon_url='https://pbs.twimg.com/profile_images/616309728688238592/pBeeJQDQ.png')
         embed.set_footer(text='Created by CorpNewt and Sydney Erickson')
         return message.message(embed=embed)
 
     if message_in.command == 'plugintree':
         dups = detectDuplicateCommands()
         pluginString = '```\n'
-        for plugin in main.plugins:
+        for plugin in bot.plugins:
             pluginString += '{}\n'.format(plugin.name)
             commandsInPlugin = len(plugin.commands)
             currentCommand = 0
@@ -104,7 +119,7 @@ def onCommand(message_in):
 
     if message_in.command == 'uptime':
         currentTime = int(time.time())
-        timeString = readableTime.getReadableTimeBetween(main.startTime, currentTime)
+        timeString = readableTime.getReadableTimeBetween(bot.startTime, currentTime)
         return message.message(body='I\'ve been up for *{}*.'.format(timeString))
 
     if message_in.command == 'hostinfo':
@@ -122,11 +137,14 @@ def onCommand(message_in):
         version = platform.version()
         processor = platform.processor()
         currentTime = int(time.time())
-        timeString = readableTime.getReadableTimeBetween(main.startTime, currentTime)
         pythonMajor = sys.version_info.major
         pythonMinor = sys.version_info.minor
         pythonMicro = sys.version_info.micro
         pythonRelease = sys.version_info.releaselevel
+        storage = psutil.disk_usage('/')
+        usedStorage = convert_size(storage.used)
+        totalStorage = convert_size(storage.total)
+        freeStorage = convert_size(storage.total - storage.used)
 
         msg = '***{}\'s*** **Home:**\n'.format('StarBot')
         msg += '```Host OS       : {}\n'.format(currentOS)
@@ -136,6 +154,7 @@ def onCommand(message_in):
         else:
             msg += 'Host CPU usage: {}% of {} ({} thread)\n'.format(cpuUsage, processor, cpuThred)
         msg += 'Host RAM      : {}GB ({}%) of {}GB\n'.format(memUsedGB, memPerc, memTotalGB)
+        msg += 'Host HDD      : {} ({}%) of {} - {} free\n'.format(usedStorage, storage.percent, totalStorage, freeStorage)
         msg += 'Hostname      : {}\n'.format(platform.node())
         msg += 'Host uptime   : {}```'.format(readableTime.getReadableTimeBetween(psutil.boot_time(), time.time()))
 

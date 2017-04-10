@@ -1,8 +1,8 @@
-import plugin
-import command
-import message
 import random
+
+from api import command, message, plugin
 from libs import displayname
+
 
 # Eating plugin
 def onInit(plugin):

@@ -1,7 +1,7 @@
-import plugin
-import command
-import message
 import random
+
+from api import command, message, plugin
+
 
 # Fun plugin
 def onInit(plugin):

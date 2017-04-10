@@ -1,14 +1,13 @@
-import plugin
-import command
-import message
-import main
-
 import glob
+
+import main
+from api import command, message, plugin
+
 
 def onInit(plugin_in):
     cachecount_command = command.command(plugin_in, 'cachecount', shortdesc='Count the number of cached items for a command', devcommand=True)
-    caches_command =     command.command(plugin_in, 'caches',     shortdesc='Count the number of cached items per command',   devcommand=True)
-    totalcache_command = command.command(plugin_in, 'totalcache', shortdesc='Count the total amount of cached items',         devcommand=True)
+    caches_command =     command.command(plugin_in, 'caches', shortdesc='Count the number of cached items per command', devcommand=True)
+    totalcache_command = command.command(plugin_in, 'totalcache', shortdesc='Count the total amount of cached items', devcommand=True)
     return plugin.plugin(plugin_in, 'cacheutils', [cachecount_command, caches_command, totalcache_command])
 
 def onCommand(message_in):
