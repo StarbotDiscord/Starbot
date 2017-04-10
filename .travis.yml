@@ -8,9 +8,9 @@ python:
   - "3.6-dev" # 3.6 development branch
   - "3.7-dev" # 3.7 development branch
   - "nightly" # currently points to 3.7-dev
-  - "pypy-5.3.1"
-  - "pypy-5.7.1"
 # command to install dependencies
-install: "pip install discord.py pluginbase psutil gitpython pyparsing pyspeedtest requests tqdm"
+install: "pip install discord.py pluginbase psutil gitpython pyparsing pyspeedtest requests tqdm sphinx"
 # command to run tests
-script: python3 -m unittest discover tests -v
+script:
+  - python3 -m unittest discover tests -v
+  - cd docs && make html
