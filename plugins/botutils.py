@@ -137,7 +137,6 @@ def onCommand(message_in):
         version = platform.version()
         processor = platform.processor()
         currentTime = int(time.time())
-        timeString = readableTime.getReadableTimeBetween(main.startTime, currentTime)
         pythonMajor = sys.version_info.major
         pythonMinor = sys.version_info.minor
         pythonMicro = sys.version_info.micro

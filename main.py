@@ -1,6 +1,7 @@
 import glob
 import importlib
 import time
+import sys
 
 import discord
 import git
@@ -78,13 +79,11 @@ async def on_message(message_in):
     if message_in.author.id == client.user.id:
         return
 
-    if message_in.content == prefix + 'gitpull':
-        if message_in.author.id == "219683089457217536" or message_in.author.id == "186373210495909889":
-            pass
-        else:
-            await client.send_message(message_in.channel, "You do not have permission to git pull.")
-        repo = git.Repo(search_parent_directories=True).remotes.origin.pull()
-        await client.send_message(message_in.channel, 'Pulled from git.')
+    if message_in.content == prefix + 'exit':
+        for owner in db.getOwners():
+            if str(message_in.author.id) == str(owner):
+                sys.exit(0)
+
 
     if message_in.content.startswith(prefix + 'reloadplugin'):
         if message_in.author.id == "219683089457217536" or message_in.author.id == "186373210495909889":
