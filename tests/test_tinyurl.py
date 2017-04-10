@@ -22,7 +22,7 @@ class TestTinyurlSuite(unittest.TestCase):
         msg.command = "tinyurl"
         result = tinyurl.onCommand(msg)
         self.assertEqual(type(result), type(msg))
-        self.assertEqual(result.body, "Invalid URL")
+        self.assertEqual(result.body, "That website doesn't seem to exist")
 
     def testTinyurlEmptyURL(self):
         emptyList = []
