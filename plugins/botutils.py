@@ -91,7 +91,7 @@ def onCommand(message_in):
             embed = discord.Embed(color=discord.Color.green())
         else:
             embed = discord.Embed(color=discord.Color.light_grey())
-        embed.set_author(name='Project StarBot v0.1.1-{} on track {}'.format(sha[:7], track), url='https://github.com/1byte2bytes/Starbot/', icon_url='https://pbs.twimg.com/profile_images/616309728688238592/pBeeJQDQ.png')
+        embed.set_author(name='Project StarBot v0.1.2-{} on track {}'.format(sha[:7], track), url='https://github.com/1byte2bytes/Starbot/', icon_url='https://pbs.twimg.com/profile_images/616309728688238592/pBeeJQDQ.png')
         embed.set_footer(text='Created by CorpNewt and Sydney Erickson')
         return message.message(embed=embed)
 
