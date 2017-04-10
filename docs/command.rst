@@ -1,4 +1,4 @@
-Message.py Documentation
+Command.py Documentation
 ************************
 
 .. _api_command:

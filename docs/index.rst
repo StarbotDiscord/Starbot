@@ -10,6 +10,7 @@ Welcome to Starbot's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   Getting Started with Plugin Writing <getstarted.rst>
    api/message <message.rst>
    api/plugin <plugin.rst>
    api/command <command.rst>

@@ -1,5 +1,5 @@
-Message.py Documentation
-************************
+Plugin.py Documentation
+***********************
 
 .. _api_plugin:
 
