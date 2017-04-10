@@ -135,9 +135,6 @@ def onCommand(message_in):
         system = platform.system()
         release = platform.release()
         version = platform.version()
-        processor = platform.processor()
-        if processor == '':
-            processor = 'Unknown CPU'
         currentTime = int(time.time())
         pythonMajor = sys.version_info.major
         pythonMinor = sys.version_info.minor
@@ -152,9 +149,9 @@ def onCommand(message_in):
         msg += '```Host OS       : {}\n'.format(currentOS)
         msg += 'Host Python   : {}.{}.{} {}\n'.format(pythonMajor, pythonMinor, pythonMicro, pythonRelease)
         if cpuThred > 1:
-            msg += 'Host CPU usage: {}% of {} ({} threads)\n'.format(cpuUsage, processor, cpuThred)
+            msg += 'Host CPU usage: {}% of {} ({} threads)\n'.format(cpuUsage, platform.machine(), cpuThred)
         else:
-            msg += 'Host CPU usage: {}% of {} ({} thread)\n'.format(cpuUsage, processor, cpuThred)
+            msg += 'Host CPU usage: {}% of {} ({} thread)\n'.format(cpuUsage, platform.machine(), cpuThred)
         msg += 'Host RAM      : {}GB ({}%) of {}GB\n'.format(memUsedGB, memPerc, memTotalGB)
         msg += 'Host HDD      : {} ({}%) of {} - {} free\n'.format(usedStorage, storage.percent, totalStorage, freeStorage)
         msg += 'Hostname      : {}\n'.format(platform.node())
