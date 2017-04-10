@@ -11,6 +11,7 @@ import pyspeedtest
 
 import main
 from api import db, command, message, plugin
+from api.bot import bot
 from libs import progressBar
 from libs import readableTime
 
@@ -18,7 +19,7 @@ from libs import readableTime
 def detectDuplicateCommands():
     duplicates = []
     commandsL = []
-    for plugin in main.plugins:
+    for plugin in bot.plugins:
         for command in plugin.commands:
             commandsL.append(command.name)
 
@@ -61,14 +62,14 @@ def onInit(plugin_in):
 def onCommand(message_in):
     if message_in.command == 'plugins':
         pluginList = []
-        for plugin in main.plugins:
+        for plugin in bot.plugins:
             pluginList.append(plugin.name)
         return message.message(body='```{}```'.format(', '.join(pluginList)))
 
     if message_in.command == 'commands' or message_in.command == 'help':
         commandNames = []
         commandDescs = []
-        for command in main.commands:
+        for command in bot.commands:
             if command.devcommand != True:
                 commandNames.append(command.name)
                 commandDescs.append(command.shortdesc)
@@ -97,7 +98,7 @@ def onCommand(message_in):
     if message_in.command == 'plugintree':
         dups = detectDuplicateCommands()
         pluginString = '```\n'
-        for plugin in main.plugins:
+        for plugin in bot.plugins:
             pluginString += '{}\n'.format(plugin.name)
             commandsInPlugin = len(plugin.commands)
             currentCommand = 0
@@ -118,7 +119,7 @@ def onCommand(message_in):
 
     if message_in.command == 'uptime':
         currentTime = int(time.time())
-        timeString = readableTime.getReadableTimeBetween(main.startTime, currentTime)
+        timeString = readableTime.getReadableTimeBetween(bot.startTime, currentTime)
         return message.message(body='I\'ve been up for *{}*.'.format(timeString))
 
     if message_in.command == 'hostinfo':

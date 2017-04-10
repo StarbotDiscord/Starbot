@@ -7,10 +7,7 @@ import git
 from pluginbase import PluginBase
 
 from api import db, message
-
-startTime = time.time()
-plugins = []
-commands = []
+from api.bot import bot
 
 def initPlugin(plugin, autoImport=True):
     if autoImport == True:
@@ -27,7 +24,7 @@ def initPlugin(plugin, autoImport=True):
     if plugin_info.commands == []:
         print("Plugin did not define any commands.")
         pass
-    plugins.append(plugin_info)
+    bot.plugins.append(plugin_info)
     for command in plugin_info.commands:
         if command.plugin == None:
             print("Plugin command does not define parent plugin")
@@ -35,7 +32,7 @@ def initPlugin(plugin, autoImport=True):
         if command.name == None:
             print("Plugin command does not define name")
             pass
-        commands.append(command)
+        bot.commands.append(command)
         print("Command `{}` registered successfully.".format(command.name))
     print("Plugin '{}' registered successfully.".format(plugin_info.name))
 
@@ -44,6 +41,8 @@ class fakeClient:
         pass
 
 if __name__ == "__main__":
+    bot.startTime = time.time()
+
     plugin_base = PluginBase(package='plugins')
     plugin_source = plugin_base.make_plugin_source(searchpath=['./plugins'])
 
@@ -104,7 +103,7 @@ async def on_message(message_in):
                 plugin_temp = plugin_source2.load_plugin(plugin)
                 plugin_info = plugin_temp.onInit(plugin_temp)
                 if plugin_info.name == messageSplit[1].strip():
-                    for plugin in plugins:
+                    for plugin in bot.plugins:
                         if plugin.name == messageSplit[1].strip():
                             importlib.reload(plugin.plugin)
                             await client.send_message(message_in.channel, "Plugin reloaded!")
@@ -118,7 +117,7 @@ async def on_message(message_in):
         cacheCount = glob.glob('cache/{}_*'.format(message_in.content.split(' ')[-1]))
         cacheString = '\n'.join(cacheCount)
         await client.send_message(message_in.channel, '```{}```'.format(cacheString))
-    for command in commands:
+    for command in bot.commands:
         if message_in.content.split(' ')[0] == prefix + command.name or message_in.content == prefix + command.name:
             await client.send_typing(message_in.channel)
             message_recv = message.message
