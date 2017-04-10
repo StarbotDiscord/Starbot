@@ -1,0 +1,3 @@
+class bot:
+    plugins = []
+    commands = []
