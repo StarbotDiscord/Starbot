@@ -17,7 +17,7 @@ def onCommand(message_in):
 
     if message_in.command == 'caches':
         cacheString = ''
-        for command in bot.commands:
+        for command in bot.bot.commands:
             commandCacheSize = len(glob.glob('cache/{}_*'.format(command.name)))
             if commandCacheSize > 0:
                 cacheString += '{} - {}\n'.format(command.name, commandCacheSize)
