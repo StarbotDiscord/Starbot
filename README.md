@@ -1,4 +1,4 @@
-# Starbot - An Open-Source Discord Bot [![Build Status](https://sydstudios.me/jenkins/job/Starbot/job/Starbot/badge/icon)](https://sydstudios.me/jenkins/job/Starbot/job/Starbot/) [![Doc Status](http://starbot.readthedocs.io/en/latest/?badge=latest)](http://starbot.readthedocs.io/en/latest/)
+# Starbot - An Open-Source Discord Bot [![Build Status](https://travis-ci.org/StarbotDiscord/Starbot.svg?branch=master)](https://travis-ci.org/StarbotDiscord/Starbot) [![Doc Status](http://starbot.readthedocs.io/en/latest/?badge=latest)](http://starbot.readthedocs.io/en/latest/)
 
 ## Project Overview
 
