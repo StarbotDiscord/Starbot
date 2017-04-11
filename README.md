@@ -1,4 +1,4 @@
-# Starbot - An Open-Source Discord Bot [![Build Status](https://sydstudios.me/jenkins/job/Starbot/job/Starbot/badge/icon)](https://sydstudios.me/jenkins/job/Starbot/job/Starbot/) [![Doc Status](http://starbot.readthedocs.io/en/latest/?badge=latest)](http://starbot.readthedocs.io/en/latest/)
+# Starbot - An Open-Source Discord Bot [![Build Status](https://travis-ci.org/StarbotDiscord/Starbot.svg?branch=master)](https://travis-ci.org/StarbotDiscord/Starbot) [![Doc Status](http://starbot.readthedocs.io/en/latest/?badge=latest)](http://starbot.readthedocs.io/en/latest/)
 
 ## Project Overview
 
@@ -20,11 +20,11 @@ If you've found a problem with Starbot, please report it to the [JIRA](https://s
 
 ### Making plugins
 
-This is very easy! Go ahead and take the template below and hack it up to your hearts content. This can be in your own repo, no need to clone the bot. Third party plugins are welcomed, and the bot doesn't need any modifications to run them. Plugins would go into the `plugins` folder.
+This is very easy! Go ahead and [take the template and hack it up to your hearts content.](http://starbot.readthedocs.io/en/latest/getstarted.html#a-basic-plugin-text-manipulation) This can be in your own repo, no need to clone the bot. Third party plugins are welcomed, and the bot doesn't need any modifications to run them. Plugins would go into the `plugins` folder.
 
 ### Working on the core
 
-If your feeling particularly adventurous you may find working on the core of the bot appealing. This would include all the very core features and APIs. Start by looking through the [JIRA](https://sydstudios.atlassian.net/projects/SB/issues/?filter=allopenissues) for open issues and reading through the [documentation](https://sydstudios.atlassian.net/wiki/spaces/SB).
+If your feeling particularly adventurous you may find working on the core of the bot appealing. This would include all the very core features and APIs. Start by looking through the [JIRA](https://sydstudios.atlassian.net/projects/SB/issues/?filter=allopenissues) for open issues and reading through the [documentation](http://starbot.readthedocs.io/en/latest/).
 
 ## Installing and running Starbot
 

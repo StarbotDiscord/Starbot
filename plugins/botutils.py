@@ -91,7 +91,7 @@ def onCommand(message_in):
             embed = discord.Embed(color=discord.Color.green())
         else:
             embed = discord.Embed(color=discord.Color.light_grey())
-        embed.set_author(name='Project StarBot v0.1.1-{} on track {}'.format(sha[:7], track), url='https://github.com/1byte2bytes/Starbot/', icon_url='https://pbs.twimg.com/profile_images/616309728688238592/pBeeJQDQ.png')
+        embed.set_author(name='Project StarBot v0.1.2-{} on track {}'.format(sha[:7], track), url='https://github.com/1byte2bytes/Starbot/', icon_url='https://pbs.twimg.com/profile_images/616309728688238592/pBeeJQDQ.png')
         embed.set_footer(text='Created by CorpNewt and Sydney Erickson')
         return message.message(embed=embed)
 
@@ -129,13 +129,12 @@ def onCommand(message_in):
         memPerc = memStats.percent
         memUsed = memStats.used
         memTotal = memStats.total
-        memUsedGB = "{0:.1f}".format(((memUsed / 1024) / 1024) / 1024)
-        memTotalGB = "{0:.1f}".format(((memTotal / 1024) / 1024) / 1024)
+        memUsedGB = convert_size(memUsed)
+        memTotalGB = convert_size(memTotal)
         currentOS = platform.platform()
         system = platform.system()
         release = platform.release()
         version = platform.version()
-        processor = platform.processor()
         currentTime = int(time.time())
         pythonMajor = sys.version_info.major
         pythonMinor = sys.version_info.minor
@@ -150,10 +149,10 @@ def onCommand(message_in):
         msg += '```Host OS       : {}\n'.format(currentOS)
         msg += 'Host Python   : {}.{}.{} {}\n'.format(pythonMajor, pythonMinor, pythonMicro, pythonRelease)
         if cpuThred > 1:
-            msg += 'Host CPU usage: {}% of {} ({} threads)\n'.format(cpuUsage, processor, cpuThred)
+            msg += 'Host CPU usage: {}% of {} ({} threads)\n'.format(cpuUsage, platform.machine(), cpuThred)
         else:
-            msg += 'Host CPU usage: {}% of {} ({} thread)\n'.format(cpuUsage, processor, cpuThred)
-        msg += 'Host RAM      : {}GB ({}%) of {}GB\n'.format(memUsedGB, memPerc, memTotalGB)
+            msg += 'Host CPU usage: {}% of {} ({} thread)\n'.format(cpuUsage, platform.machine(), cpuThred)
+        msg += 'Host RAM      : {} ({}%) of {}\n'.format(memUsedGB, memPerc, memTotalGB)
         msg += 'Host HDD      : {} ({}%) of {} - {} free\n'.format(usedStorage, storage.percent, totalStorage, freeStorage)
         msg += 'Hostname      : {}\n'.format(platform.node())
         msg += 'Host uptime   : {}```'.format(readableTime.getReadableTimeBetween(psutil.boot_time(), time.time()))
