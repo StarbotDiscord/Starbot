@@ -24,7 +24,7 @@ This is very easy! Go ahead and [take the template and hack it up to your hearts
 
 ### Working on the core
 
-If your feeling particularly adventurous you may find working on the core of the bot appealing. This would include all the very core features and APIs. Start by looking through the [JIRA](https://sydstudios.atlassian.net/projects/SB/issues/?filter=allopenissues) for open issues and reading through the [documentation](https://sydstudios.atlassian.net/wiki/spaces/SB).
+If your feeling particularly adventurous you may find working on the core of the bot appealing. This would include all the very core features and APIs. Start by looking through the [JIRA](https://sydstudios.atlassian.net/projects/SB/issues/?filter=allopenissues) for open issues and reading through the [documentation](http://starbot.readthedocs.io/en/latest/).
 
 ## Installing and running Starbot
 
