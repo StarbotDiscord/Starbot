@@ -2,7 +2,7 @@ import unittest
 from api import message, plugin
 from plugins import botutils
 
-class TestFunSuite(unittest.TestCase):
+class TestBotutilsSuite(unittest.TestCase):
 
     def testSrcutilsImport(self):
         result = botutils.onInit(__import__('api.plugin'))
