@@ -27,4 +27,3 @@ class TestFunSuite(unittest.TestCase):
         msg.command = "totalcache"
         result = cacheutils.onCommand(msg)
         self.assertEqual(type(result), type(msg))
-        self.assertEqual(result.body, "`3+4` = `7.0`")
