@@ -129,8 +129,8 @@ def onCommand(message_in):
         memPerc = memStats.percent
         memUsed = memStats.used
         memTotal = memStats.total
-        memUsedGB = "{0:.1f}".format(((memUsed / 1024) / 1024) / 1024)
-        memTotalGB = "{0:.1f}".format(((memTotal / 1024) / 1024) / 1024)
+        memUsedGB = convert_size(memUsed)
+        memTotalGB = convert_size(memTotal)
         currentOS = platform.platform()
         system = platform.system()
         release = platform.release()
@@ -152,7 +152,7 @@ def onCommand(message_in):
             msg += 'Host CPU usage: {}% of {} ({} threads)\n'.format(cpuUsage, platform.machine(), cpuThred)
         else:
             msg += 'Host CPU usage: {}% of {} ({} thread)\n'.format(cpuUsage, platform.machine(), cpuThred)
-        msg += 'Host RAM      : {}GB ({}%) of {}GB\n'.format(memUsedGB, memPerc, memTotalGB)
+        msg += 'Host RAM      : {} ({}%) of {}\n'.format(memUsedGB, memPerc, memTotalGB)
         msg += 'Host HDD      : {} ({}%) of {} - {} free\n'.format(usedStorage, storage.percent, totalStorage, freeStorage)
         msg += 'Hostname      : {}\n'.format(platform.node())
         msg += 'Host uptime   : {}```'.format(readableTime.getReadableTimeBetween(psutil.boot_time(), time.time()))
