@@ -9,7 +9,6 @@ import git
 import psutil
 import pyspeedtest
 
-import main
 from api import db, command, message, plugin
 from api.bot import bot
 from libs import progressBar
