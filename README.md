@@ -20,7 +20,7 @@ If you've found a problem with Starbot, please report it to the [JIRA](https://s
 
 ### Making plugins
 
-This is very easy! Go ahead and take the template below and hack it up to your hearts content. This can be in your own repo, no need to clone the bot. Third party plugins are welcomed, and the bot doesn't need any modifications to run them. Plugins would go into the `plugins` folder.
+This is very easy! Go ahead and [take the template and hack it up to your hearts content.](http://starbot.readthedocs.io/en/latest/getstarted.html#a-basic-plugin-text-manipulation) This can be in your own repo, no need to clone the bot. Third party plugins are welcomed, and the bot doesn't need any modifications to run them. Plugins would go into the `plugins` folder.
 
 ### Working on the core
 
