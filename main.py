@@ -4,7 +4,6 @@ import time
 import sys
 
 import discord
-import git
 from pluginbase import PluginBase
 
 from api import db, message
