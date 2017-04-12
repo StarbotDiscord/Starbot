@@ -32,7 +32,7 @@ _There may be a build of the [StarBot Runtime](https://github.com/StarbotDiscord
 
 1. Make sure you have Python 3.5 or 3.6 installed, as well as git
 
-2. Run `pip install discord.py pluginbase psutil gitpython pyparsing pyspeedtest requests tqdm` in a terminal session to install the dependancies
+2. Run `pip install discord.py pluginbase psutil gitpython pyparsing pyspeedtest tqdm` in a terminal session to install the dependancies
 
 3. Run `git clone https://github.com/1byte2bytes/Starbot.git` to copy the code to your local system
 

@@ -2,8 +2,6 @@ import random
 import urllib.error
 import urllib.request
 
-import requests
-
 from api import command, caching, message, plugin
 
 
@@ -20,7 +18,10 @@ def onCommand(message_in):
         try:
             headers = {'Content-Type': 'application/json', 'Accept': 'application/json'}
             try:
-                r = requests.get("https://starbooru.com/api/posts?offset=0&limit=100&query=safety:safe%20star_butterfly%20solo", headers=headers, verify=False)
+                re = urllib.request.Request("https://starbooru.com/api/posts?offset=0&limit=100&query=safety:safe%20star_butterfly%20solo")
+                re.add_header('Content-Type', 'application/json')
+                re.add_header('Accept', 'application/json')
+                r = urllib.request.urlopen(re).read()
             except Exception as e:
                 return message.message(body='Issue connecting to Starbooru. Perhaps it\'s down?')
             try:
@@ -39,7 +40,11 @@ def onCommand(message_in):
         try:
             headers = {'Content-Type': 'application/json', 'Accept': 'application/json'}
             try:
-                r = requests.get("https://starbooru.com/api/posts?offset=0&limit=100&query=safety:safe%20starco", headers=headers, verify=False)
+                re = urllib.request.Request(
+                    "https://starbooru.com/api/posts?offset=0&limit=100&query=safety:safe%20starco")
+                re.add_header('Content-Type', 'application/json')
+                re.add_header('Accept', 'application/json')
+                r = urllib.request.urlopen(re).read()
             except Exception as e:
                 return message.message(body='Issue connecting to Starbooru. Perhaps it\'s down?')
             try:
@@ -58,7 +63,11 @@ def onCommand(message_in):
         try:
             headers = {'Content-Type': 'application/json', 'Accept': 'application/json'}
             try:
-                r = requests.get("https://starbooru.com/api/posts?offset=0&limit=100&query=safety:safe%20marco_diaz%20solo", headers=headers, verify=False)
+                re = urllib.request.Request(
+                    "https://starbooru.com/api/posts?offset=0&limit=100&query=safety:safe%20marco_diaz%20solo")
+                re.add_header('Content-Type', 'application/json')
+                re.add_header('Accept', 'application/json')
+                r = urllib.request.urlopen(re).read()
             except Exception as e:
                 return message.message(body='Issue connecting to Starbooru. Perhaps it\'s down?')
             try:
