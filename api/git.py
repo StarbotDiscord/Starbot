@@ -2,7 +2,7 @@ def getCommit():
     if getBranch() == "UNKNOWN":
         return "UNKNOWN"
     else:
-        with open(".git/{}".format(getBranch())) as e:
+        with open(".git/refs/heads/{}".format(getBranch())) as e:
             commit = e.read()
             return commit.strip()
 
