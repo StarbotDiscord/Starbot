@@ -5,11 +5,10 @@ import sys
 import time
 
 import discord
-import git
 import psutil
 import pyspeedtest
 
-from api import db, command, message, plugin
+from api import db, command, message, plugin, git
 from api.bot import bot
 from libs import progressBar
 from libs import readableTime
@@ -79,9 +78,8 @@ def onCommand(message_in):
         return message.message(body='```{}```'.format('\n'.join(commandList)))
 
     if message_in.command == 'info':
-        repo = git.Repo(search_parent_directories=True)
-        sha = repo.head.object.hexsha
-        track = repo.active_branch.name
+        sha = git.getCommit()
+        track = git.getBranch()
         if track == 'master':
             embed = discord.Embed(color=discord.Color.red())
         elif track == 'unstable':
