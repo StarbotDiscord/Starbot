@@ -1,5 +1,5 @@
 import unittest
-from api import message, plugin
+from api import message, plugin, bot
 from plugins import botutils
 
 class TestBotutilsSuite(unittest.TestCase):
@@ -10,6 +10,11 @@ class TestBotutilsSuite(unittest.TestCase):
 
 
     def testBotutilsPlugins(self):
+        result = botutils.onInit(__import__('api.plugin'))
+        bot.bot.plugins.append(result)
+        for command in result.commands:
+            bot.bot.commands.append(command)
+            
         msg = message.message(body="")
         msg.command = "plugins"
         result = botutils.onCommand(msg)
@@ -17,12 +22,23 @@ class TestBotutilsSuite(unittest.TestCase):
 
 
     def testBotutilsCommands(self):
+        result = botutils.onInit(__import__('api.plugin'))
+        bot.bot.plugins.append(result)
+        for command in result.commands:
+            bot.bot.commands.append(command)
+
+        bot.bot.plugins.append()
         msg = message.message(body="")
         msg.command = "commands"
         result = botutils.onCommand(msg)
         self.assertEqual(type(result), type(msg))
 
     def testBotutilsHelp(self):
+        result = botutils.onInit(__import__('api.plugin'))
+        bot.bot.plugins.append(result)
+        for command in result.commands:
+            bot.bot.commands.append(command)
+
         msg = message.message(body="")
         msg.command = "help"
         result = botutils.onCommand(msg)
