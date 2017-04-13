@@ -14,7 +14,7 @@ class TestBotutilsSuite(unittest.TestCase):
         bot.bot.plugins.append(result)
         for command in result.commands:
             bot.bot.commands.append(command)
-            
+
         msg = message.message(body="")
         msg.command = "plugins"
         result = botutils.onCommand(msg)
@@ -27,7 +27,6 @@ class TestBotutilsSuite(unittest.TestCase):
         for command in result.commands:
             bot.bot.commands.append(command)
 
-        bot.bot.plugins.append()
         msg = message.message(body="")
         msg.command = "commands"
         result = botutils.onCommand(msg)
