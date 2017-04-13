@@ -1,17 +1,17 @@
 def getCommit():
-    with open(".git/HEAD") as f:
-        HEADFileS = f.read()
-        HFileA = HEADFileS.split(": ")
-        if len(HFileA) == 2:
-            with open(".git/{}".format(HFileA[1].strip())) as e:
-                commit = e.read()
-                return commit.strip()
-        else:
-            return "UNKNOWN"
+    if getBranch() == "UNKNOWN":
+        return "UNKNOWN"
+    else:
+        with open(".git/{}".format(getBranch())) as e:
+            commit = e.read()
+            return commit.strip()
 
 def getBranch():
     with open(".git/HEAD") as f:
         HEADFileS = f.read()
         HFileA = HEADFileS.split(": ")
-        branch = HFileA[1].split("/")[-1]
-        return branch.strip()
+        if len(HFileA) == 2:
+            branch = HFileA[1].split("/")[-1]
+            return branch.strip()
+        else:
+            return "UNKNOWN"
