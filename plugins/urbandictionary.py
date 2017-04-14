@@ -9,9 +9,9 @@ from libs import bigmessage
 
 # UD plugin
 def onInit(plugin_in):
-    define_command = command.command(plugin, 'define', shortdesc='Define X')
-    randefine_command = command.command(plugin, 'randefine', shortdesc='Define a random thing')
-    return plugin.plugin(plugin, 'urbandictionary', [define_command, randefine_command])
+    define_command = command.command(plugin_in, 'define', shortdesc='Define X')
+    randefine_command = command.command(plugin_in, 'randefine', shortdesc='Define a random thing')
+    return plugin.plugin(plugin_in, 'urbandictionary', [define_command, randefine_command])
 
 def onCommand(message_in):
     # Define.

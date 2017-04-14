@@ -4,8 +4,8 @@ from api import command, caching, message, plugin
 
 
 def onInit(plugin_in):
-    xkcd_command = command.command(plugin, 'xkcd', shortdesc='Posts the latest XKCD, or by specific ID')
-    return plugin.plugin(plugin, 'comics', [xkcd_command])
+    xkcd_command = command.command(plugin_in, 'xkcd', shortdesc='Posts the latest XKCD, or by specific ID')
+    return plugin.plugin(plugin_in, 'comics', [xkcd_command])
 
 def onCommand(message_in):
     if message_in.command == 'xkcd':

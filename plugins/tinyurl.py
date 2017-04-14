@@ -5,8 +5,8 @@ from api import command, message, plugin
 
 
 def onInit(plugin_in):
-    tinyurl_command = command.command(plugin, 'tinyurl', shortdesc='Convert a link to a TinyURL')
-    return plugin.plugin(plugin, 'tinyurl', [tinyurl_command])
+    tinyurl_command = command.command(plugin_in, 'tinyurl', shortdesc='Convert a link to a TinyURL')
+    return plugin.plugin(plugin_in, 'tinyurl', [tinyurl_command])
 
 def onCommand(message_in):
     if message_in.body == '':

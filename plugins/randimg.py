@@ -5,12 +5,12 @@ import urllib.request
 from api import command, caching, message, plugin
 
 
-def onInit(plugin):
-    star_command = command.command(plugin, 'star', shortdesc='Post a random picture of Star Butterfly to the channel')
-    starco_command = command.command(plugin, 'starco', shortdesc='Nowhere is safe from the shipping wars. Nowhere.')
-    marco_command = command.command(plugin, 'marco', shortdesc='Post a random picture of Marco Diaz to the channel')
-    goldfish_command = command.command(plugin, 'goldfish', shortdesc='Post a random picture of a goldfish to the channel')
-    return plugin.plugin.plugin(plugin, 'randimg', [star_command, goldfish_command, starco_command, marco_command])
+def onInit(plugin_in):
+    star_command = command.command(plugin_in, 'star', shortdesc='Post a random picture of Star Butterfly to the channel')
+    starco_command = command.command(plugin_in, 'starco', shortdesc='Nowhere is safe from the shipping wars. Nowhere.')
+    marco_command = command.command(plugin_in, 'marco', shortdesc='Post a random picture of Marco Diaz to the channel')
+    goldfish_command = command.command(plugin_in, 'goldfish', shortdesc='Post a random picture of a goldfish to the channel')
+    return plugin.plugin(plugin_in, 'randimg', [star_command, goldfish_command, starco_command, marco_command])
 
 def onCommand(message_in):
     # Star
