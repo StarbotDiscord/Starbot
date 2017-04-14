@@ -2,17 +2,15 @@ import random
 import urllib.error
 import urllib.request
 
-import requests
-
 from api import command, caching, message, plugin
 
 
-def onInit(plugin):
-    star_command = command.command(plugin, 'star', shortdesc='Post a random picture of Star Butterfly to the channel')
-    starco_command = command.command(plugin, 'starco', shortdesc='Nowhere is safe from the shipping wars. Nowhere.')
-    marco_command = command.command(plugin, 'marco', shortdesc='Post a random picture of Marco Diaz to the channel')
-    goldfish_command = command.command(plugin, 'goldfish', shortdesc='Post a random picture of a goldfish to the channel')
-    return plugin.plugin.plugin(plugin, 'randimg', [star_command, goldfish_command, starco_command, marco_command])
+def onInit(plugin_in):
+    star_command = command.command(plugin_in, 'star', shortdesc='Post a random picture of Star Butterfly to the channel')
+    starco_command = command.command(plugin_in, 'starco', shortdesc='Nowhere is safe from the shipping wars. Nowhere.')
+    marco_command = command.command(plugin_in, 'marco', shortdesc='Post a random picture of Marco Diaz to the channel')
+    goldfish_command = command.command(plugin_in, 'goldfish', shortdesc='Post a random picture of a goldfish to the channel')
+    return plugin.plugin(plugin_in, 'randimg', [star_command, goldfish_command, starco_command, marco_command])
 
 def onCommand(message_in):
     # Star
@@ -20,7 +18,10 @@ def onCommand(message_in):
         try:
             headers = {'Content-Type': 'application/json', 'Accept': 'application/json'}
             try:
-                r = requests.get("https://starbooru.com/api/posts?offset=0&limit=100&query=safety:safe%20star_butterfly%20solo", headers=headers, verify=False)
+                re = urllib.request.Request("https://starbooru.com/api/posts?offset=0&limit=100&query=safety:safe%20star_butterfly%20solo")
+                re.add_header('Content-Type', 'application/json')
+                re.add_header('Accept', 'application/json')
+                r = urllib.request.urlopen(re).read()
             except Exception as e:
                 return message.message(body='Issue connecting to Starbooru. Perhaps it\'s down?')
             try:
@@ -39,7 +40,11 @@ def onCommand(message_in):
         try:
             headers = {'Content-Type': 'application/json', 'Accept': 'application/json'}
             try:
-                r = requests.get("https://starbooru.com/api/posts?offset=0&limit=100&query=safety:safe%20starco", headers=headers, verify=False)
+                re = urllib.request.Request(
+                    "https://starbooru.com/api/posts?offset=0&limit=100&query=safety:safe%20starco")
+                re.add_header('Content-Type', 'application/json')
+                re.add_header('Accept', 'application/json')
+                r = urllib.request.urlopen(re).read()
             except Exception as e:
                 return message.message(body='Issue connecting to Starbooru. Perhaps it\'s down?')
             try:
@@ -58,7 +63,11 @@ def onCommand(message_in):
         try:
             headers = {'Content-Type': 'application/json', 'Accept': 'application/json'}
             try:
-                r = requests.get("https://starbooru.com/api/posts?offset=0&limit=100&query=safety:safe%20marco_diaz%20solo", headers=headers, verify=False)
+                re = urllib.request.Request(
+                    "https://starbooru.com/api/posts?offset=0&limit=100&query=safety:safe%20marco_diaz%20solo")
+                re.add_header('Content-Type', 'application/json')
+                re.add_header('Accept', 'application/json')
+                r = urllib.request.urlopen(re).read()
             except Exception as e:
                 return message.message(body='Issue connecting to Starbooru. Perhaps it\'s down?')
             try:

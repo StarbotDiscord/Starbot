@@ -110,10 +110,10 @@ class NumericStringParser(object):
         val=self.evaluateStack( self.exprStack[:] )
         return val
 
-def onInit(plugin):
+def onInit(plugin_in):
     #create the basics of our plugin
-    calc_command = command.command(plugin, 'calc', shortdesc='Calculate given input')
-    return plugin.plugin.plugin(plugin, 'calc', [calc_command])
+    calc_command = command.command(plugin_in, 'calc', shortdesc='Calculate given input')
+    return plugin.plugin(plugin_in, 'calc', [calc_command])
 
 def onCommand(message_in):
     """Do some math."""

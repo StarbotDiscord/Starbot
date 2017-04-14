@@ -1,7 +1,6 @@
 import glob
 
-import main
-from api import command, message, plugin
+from api import command, message, plugin, bot
 
 
 def onInit(plugin_in):
@@ -18,7 +17,7 @@ def onCommand(message_in):
 
     if message_in.command == 'caches':
         cacheString = ''
-        for command in main.commands:
+        for command in bot.bot.commands:
             commandCacheSize = len(glob.glob('cache/{}_*'.format(command.name)))
             if commandCacheSize > 0:
                 cacheString += '{} - {}\n'.format(command.name, commandCacheSize)
