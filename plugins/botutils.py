@@ -159,7 +159,9 @@ def onCommand(message_in):
     if message_in.command == 'cpuinfo':
         cpuPercents = psutil.cpu_percent(interval=0.1, percpu=True)
         cpuPercentString = '{}\n'.format(platform.processor())
-        if psutil.cpu_count(logical=False) > 1:
+        if psutil.cpu_count(logical=False) == None:
+            return message.message(body="We couldn't gather info on your CPU, this would be a bug in `psutil` not the bot.")
+        elif psutil.cpu_count(logical=False) > 1:
             cpuPercentString += '{} threads - {} cores'.format(psutil.cpu_count(), psutil.cpu_count(logical=False))
         else:
             if psutil.cpu_count() > 1:
