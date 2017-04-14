@@ -143,7 +143,9 @@ def onCommand(message_in):
         msg = '***{}\'s*** **Home:**\n'.format('StarBot')
         msg += '```Host OS       : {}\n'.format(currentOS)
         msg += 'Host Python   : {}.{}.{} {}\n'.format(pythonMajor, pythonMinor, pythonMicro, pythonRelease)
-        if cpuThred > 1:
+        if cpuThred != type(1):
+            msg += 'Host CPU usage: {}% of {} ({} threads)\n'.format(cpuUsage, platform.machine(), 1)
+        elif cpuThred > 1:
             msg += 'Host CPU usage: {}% of {} ({} threads)\n'.format(cpuUsage, platform.machine(), cpuThred)
         else:
             msg += 'Host CPU usage: {}% of {} ({} thread)\n'.format(cpuUsage, platform.machine(), cpuThred)
