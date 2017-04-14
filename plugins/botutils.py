@@ -119,7 +119,8 @@ def onCommand(message_in):
         return message.message(body='I\'ve been up for *{}*.'.format(timeString))
 
     if message_in.command == 'hostinfo':
-        cpuThred = os.cpu_count()
+        # Get information about host environment.
+        cpuThread = os.cpu_count()
         cpuUsage = psutil.cpu_percent(interval=1)
         memStats = psutil.virtual_memory()
         memPerc = memStats.percent
@@ -128,7 +129,6 @@ def onCommand(message_in):
         memUsedGB = convert_size(memUsed)
         memTotalGB = convert_size(memTotal)
         currentOS = platform.platform()
-        system = platform.system()
         release = platform.release()
         version = platform.version()
         currentTime = int(time.time())
@@ -141,37 +141,49 @@ def onCommand(message_in):
         totalStorage = convert_size(storage.total)
         freeStorage = convert_size(storage.total - storage.used)
 
+        # Format hostinfo with OS, CPU, RAM, storage, and other bot info.
         msg = '***{}\'s*** **Home:**\n'.format('StarBot')
         msg += '```Host OS       : {}\n'.format(currentOS)
         msg += 'Host Python   : {}.{}.{} {}\n'.format(pythonMajor, pythonMinor, pythonMicro, pythonRelease)
-        if cpuThred != type(1):
-            msg += 'Host CPU usage: {}% of {} ({} threads)\n'.format(cpuUsage, platform.machine(), 1)
-        elif cpuThred > 1:
-            msg += 'Host CPU usage: {}% of {} ({} threads)\n'.format(cpuUsage, platform.machine(), cpuThred)
+        if type(cpuThread) != type(1):
+            msg += 'Host CPU usage: {}% of {}\n'.format(cpuUsage, platform.machine())
+        elif cpuThread > 1:
+            msg += 'Host CPU usage: {}% of {} ({} threads)\n'.format(cpuUsage, platform.machine(), cpuThread)
         else:
-            msg += 'Host CPU usage: {}% of {} ({} thread)\n'.format(cpuUsage, platform.machine(), cpuThred)
+            msg += 'Host CPU usage: {}% of {} ({} thread)\n'.format(cpuUsage, platform.machine(), cpuThread)
         msg += 'Host RAM      : {} ({}%) of {}\n'.format(memUsedGB, memPerc, memTotalGB)
-        msg += 'Host HDD      : {} ({}%) of {} - {} free\n'.format(usedStorage, storage.percent, totalStorage, freeStorage)
+        msg += 'Host storage  : {} ({}%) of {} - {} free\n'.format(usedStorage, storage.percent, totalStorage, freeStorage)
         msg += 'Hostname      : {}\n'.format(platform.node())
         msg += 'Host uptime   : {}```'.format(readableTime.getReadableTimeBetween(psutil.boot_time(), time.time()))
 
+        # Return completed message.
         return message.message(body=msg)
 
     if message_in.command == 'cpuinfo':
+        # Get CPU usage and create string for message.
         cpuPercents = psutil.cpu_percent(interval=0.1, percpu=True)
         cpuPercentString = '{}\n'.format(platform.processor())
+
+        # First, check to see if we can accurately determine the number of physical cores. If not, omit the core count.
         if psutil.cpu_count(logical=False) == None:
-            return message.message(body="We couldn't gather info on your CPU, this would be a bug in `psutil` not the bot.")
-        elif psutil.cpu_count(logical=False) > 1:
-            cpuPercentString += '{} threads - {} cores'.format(psutil.cpu_count(), psutil.cpu_count(logical=False))
-        else:
             if psutil.cpu_count() > 1:
-                cpuPercentString += '{} threads - {} core'.format(psutil.cpu_count(), psutil.cpu_count(logical=False))
+                cpuPercentString += '{} threads of {}'.format(psutil.cpu_count(), platform.machine())
             else:
-                cpuPercentString += '{} thread - {} core'.format(psutil.cpu_count(), psutil.cpu_count(logical=False))
+                cpuPercentString += '{} thread of {}'.format(psutil.cpu_count(), platform.machine())
+        elif psutil.cpu_count(logical=False) > 1: # Multiple cores.
+            cpuPercentString += '{} threads - {} cores of {}'.format(psutil.cpu_count(), psutil.cpu_count(logical=False), platform.machine())
+        else:
+            if psutil.cpu_count() > 1: # Multiple threads, single core.
+                cpuPercentString += '{} threads - {} core of {}'.format(psutil.cpu_count(), psutil.cpu_count(logical=False), platform.machine())
+            else: # Single thread, single core.
+                cpuPercentString += '{} thread - {} core of {}'.format(psutil.cpu_count(), psutil.cpu_count(logical=False), platform.machine())
+
+        # Build CPU usage graph.
         cpuPercentString += '\n\n'
         for i in range(len(cpuPercents)):
             cpuPercentString += 'CPU {}: {}\n'.format(str(i), progressBar.makeBar(cpuPercents[i]))
+        
+        # Return completed message.
         return message.message(body='```{}```'.format(cpuPercentString))
 
     if message_in.command == 'setprefix':
