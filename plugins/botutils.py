@@ -142,7 +142,7 @@ def onCommand(message_in):
         freeStorage = convert_size(storage.total - storage.used)
 
         # Format hostinfo with OS, CPU, RAM, storage, and other bot info.
-        msg = '***{}\'s*** **Home:**\n'.format('StarBot')
+        msg = '***{}\'s*** **Home:**\n'.format(displayname.name(message_in.server.me))
         msg += '```Host OS       : {}\n'.format(currentOS)
         msg += 'Host Python   : {}.{}.{} {}\n'.format(pythonMajor, pythonMinor, pythonMicro, pythonRelease)
         if type(cpuThread) != type(1):
