@@ -87,8 +87,8 @@ def onCommand(message_in):
         else:
             embed = discord.Embed(color=discord.Color.light_grey())
         embed.set_author(name='Project StarBot v0.1.2-{} on track {}'.format(sha[:7], track), url='https://github.com/1byte2bytes/Starbot/', icon_url='https://pbs.twimg.com/profile_images/616309728688238592/pBeeJQDQ.png')
-        embed.add_field(name="\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_Bot Team", value="CorpNewt\nSydney Erickson")
-        embed.add_field(name="Alpha\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_", value="Goldfish64")
+        embed.add_field(name="Bot Team Alpha", value="CorpNewt\nSydney Erickson\n")
+        embed.add_field(name="Source Code", value="Interested in poking around inside the bot?\nClick on the link above!")
         return message.message(embed=embed)
 
     if message_in.command == 'plugintree':
