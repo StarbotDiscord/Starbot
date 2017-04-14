@@ -10,9 +10,7 @@ import pyspeedtest
 
 from api import db, command, message, plugin, git
 from api.bot import bot
-from libs import progressBar
-from libs import readableTime
-
+from libs import progressBar, readableTime, displayname
 
 def detectDuplicateCommands():
     duplicates = []
@@ -214,8 +212,11 @@ def onCommand(message_in):
         owners = []
         for owner in db.getOwners():
             print(owner)
-            user = main.client.get_user_info(owner)
-            owners.append(user.name)
+            user = displayname.memberForID(str(owner), message_in.server)
+            if user != None:
+                owners.append(user.name)
+            else:
+                owners.append(str(owner))
         print(owners)
         ownerLst = ', '.join(owners)
         return message.message(body=ownerLst)
