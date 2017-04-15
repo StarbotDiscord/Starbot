@@ -1,6 +1,7 @@
 import unittest
 from api import message, plugin, bot
 from plugins import botutils
+from tests import fake_server
 
 class TestBotutilsSuite(unittest.TestCase):
 
@@ -62,8 +63,13 @@ class TestBotutilsSuite(unittest.TestCase):
         self.assertEqual(type(result), type(msg))
 
     def testBotutilsHostinfo(self):
+        server = fake_server
+        server.me = 'StarBot'
+
         msg = message.message(body="")
         msg.command = "hostinfo"
+        msg.server = server
+
         result = botutils.onCommand(msg)
         self.assertEqual(type(result), type(msg))
 
