@@ -7,6 +7,7 @@ import discord
 from pluginbase import PluginBase
 
 from api import db, message
+from api import command as command_api
 from api.bot import bot
 from libs import displayname
 
@@ -143,9 +144,7 @@ async def on_message(message_in):
     # Check each command loaded.
     for command in bot.commands:
         # Do we have a command?
-        if message_in.content.split(' ')[0] == prefix + command.name or message_in.content == prefix + command.name or \
-                (message_in.content.split(' ')[0] == message_in.server.me.mention and message_in.content.split(' ')[1] == command.name) or \
-                message_in.content == message_in.server.me.mention + command.name:
+        if command_api.is_command(message_in, prefix, command):
             # Send typing message.
             await client.send_typing(message_in.channel)
 
