@@ -107,34 +107,6 @@ async def on_message(message_in):
             if str(message_in.author.id) == str(owner):
                 sys.exit(0)
 
-    # Should we reload a plugin? Check for reload plugin command.
-    if message_in.content.startswith(prefix + "reloadplugin") or message_in.content.startswith("{} reloadplugin".format(message_in.server.me.mention)):
-        if message_in.author.id == "219683089457217536" or message_in.author.id == "186373210495909889":
-            pass
-        else:
-            await client.send_message(message_in.channel, "You do not have permission to reload plugins.")
-        messageSplit = message_in.content.split(' ')
-        if len(messageSplit) == 2:
-
-            plugin_base2 = None
-            plugin_source2 = None
-
-            plugin_base2 = PluginBase(package="plugins")
-            plugin_source2 = plugin_base.make_plugin_source(searchpath=["./plugins"])
-            for plugin in plugin_source2.list_plugins():
-                plugin_temp = plugin_source2.load_plugin(plugin)
-                plugin_info = plugin_temp.onInit(plugin_temp)
-                if plugin_info.name == messageSplit[1].strip():
-                    for plugin in bot.plugins:
-                        if plugin.name == messageSplit[1].strip():
-                            importlib.reload(plugin.plugin)
-                            await client.send_message(message_in.channel, "Plugin reloaded!")
-                            return
-
-            await client.send_message(message_in.channel, "No plugin with that name was found.")
-        else:
-            await client.send_message(message_in.channel, "Invalid number of args.")
-
     # Check for cache contents command.
     if message_in.content.startswith(prefix + "cachecontents") or message_in.content.startswith("{} cachecontents".format(message_in.server.me.mention)):
         cacheCount = glob.glob("cache/{}_*".format(message_in.content.split(' ')[-1]))
