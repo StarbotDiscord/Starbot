@@ -10,11 +10,14 @@ from api import db, message
 from api.bot import bot
 
 def initPlugin(plugin, autoImport=True):
+    # Init plugin.
     if autoImport == True:
         plugin_temp = plugin_source.load_plugin(plugin)
         plugin_info = plugin_temp.onInit(plugin_temp)
     else:
         plugin_info = plugin.onInit(plugin)
+
+    # Verify the plugin is defined, it has a name, and it has commands.
     if plugin_info.plugin == None:
         print("Plugin not defined!")
         pass
@@ -24,16 +27,25 @@ def initPlugin(plugin, autoImport=True):
     if plugin_info.commands == []:
         print("Plugin did not define any commands.")
         pass
+
+    # Add plugin to list.
     bot.plugins.append(plugin_info)
+
+    # Load each command in plugin.
     for command in plugin_info.commands:
+        # Verify command has a parent plugin and a name.
         if command.plugin == None:
             print("Plugin command does not define parent plugin")
             pass
         if command.name == None:
             print("Plugin command does not define name")
             pass
+
+        # Add command to list of commands and print a success message.
         bot.commands.append(command)
         print("Command `{}` registered successfully.".format(command.name))
+
+    # Print success message.
     print("Plugin '{}' registered successfully.".format(plugin_info.name))
 
 class fakeClient:
@@ -41,50 +53,63 @@ class fakeClient:
         pass
 
 if __name__ == "__main__":
+    # Log the time we started.
     bot.startTime = time.time()
 
-    plugin_base = PluginBase(package='plugins')
-    plugin_source = plugin_base.make_plugin_source(searchpath=['./plugins'])
+    # Get the source of plugins.
+    plugin_base = PluginBase(package="plugins")
+    plugin_source = plugin_base.make_plugin_source(searchpath=["./plugins"])
 
+    # Load each plugin.
     for plugin in plugin_source.list_plugins():
         initPlugin(plugin)
 
+    # Create the Discord client.
     client = discord.Client()
 
-    token = ''
-    with open('token.txt') as m:
+    # Get our token to use.
+    token = ""
+    with open("token.txt") as m:
         token = m.read().strip()
 else:
     client = discord.Client()
 
+
 @client.event
 async def on_ready():
-    print('Logged in as')
+    # Print logged in message to console.
+    print("Logged in as")
     print(client.user.name)
     print(client.user.id)
-    print('------')
+    print("------")
 
-    await client.change_presence(game=discord.Game(name='with magic'))
+    # Set the game.
+    await client.change_presence(game=discord.Game(name="with magic"))
 
 
 @client.event
 async def on_message(message_in):
+    # Get prefix.
     db.logUserMessage(message_in)
     prefix = db.getPrefix(message_in.server.id)
 
+    # Ignore messages that aren't from a server and from ourself.
     if message_in.server == None:
         return
-
     if message_in.author.id == client.user.id:
         return
 
-    if message_in.content == prefix + 'exit':
+    # Create mention.
+    mention = "<@{}>".format(message_in.server.me.id)
+
+    # Should we die? Check for exit command.
+    if message_in.content == prefix + "exit" or message_in.content == "{} exit".format(mention):
         for owner in db.getOwners():
             if str(message_in.author.id) == str(owner):
                 sys.exit(0)
 
-
-    if message_in.content.startswith(prefix + 'reloadplugin'):
+    # Should we reload a plugin? Check for reload plugin command.
+    if message_in.content.startswith(prefix + "reloadplugin") or message_in.content.startswith("{} reloadplugin".format(mention)):
         if message_in.author.id == "219683089457217536" or message_in.author.id == "186373210495909889":
             pass
         else:
@@ -95,8 +120,8 @@ async def on_message(message_in):
             plugin_base2 = None
             plugin_source2 = None
 
-            plugin_base2 = PluginBase(package='plugins')
-            plugin_source2 = plugin_base.make_plugin_source(searchpath=['./plugins'])
+            plugin_base2 = PluginBase(package="plugins")
+            plugin_source2 = plugin_base.make_plugin_source(searchpath=["./plugins"])
             for plugin in plugin_source2.list_plugins():
                 plugin_temp = plugin_source2.load_plugin(plugin)
                 plugin_info = plugin_temp.onInit(plugin_temp)
@@ -111,25 +136,36 @@ async def on_message(message_in):
         else:
             await client.send_message(message_in.channel, "Invalid number of args.")
 
-    if message_in.content.startswith(prefix + 'cachecontents'):
-        cacheCount = glob.glob('cache/{}_*'.format(message_in.content.split(' ')[-1]))
+    # Check for cache contents command.
+    if message_in.content.startswith(prefix + "cachecontents") or message_in.content.startswith("{} cachecontents".format(mention)):
+        cacheCount = glob.glob("cache/{}_*".format(message_in.content.split(' ')[-1]))
         cacheString = '\n'.join(cacheCount)
-        await client.send_message(message_in.channel, '```{}```'.format(cacheString))
+        await client.send_message(message_in.channel, "```{}```".format(cacheString))
+
+    # Check each command loaded.
     for command in bot.commands:
-        if message_in.content.split(' ')[0] == prefix + command.name or message_in.content == prefix + command.name:
+        # Do we have a command?
+        if message_in.content.split(' ')[0] == prefix + command.name or message_in.content == prefix + command.name or \
+                (message_in.content.split(' ')[0] == mention and message_in.content.split(' ')[1] == command.name) or \
+                message_in.content == mention + command.name:
+            # Send typing message.
             await client.send_typing(message_in.channel)
+
+            # Build message object.
             message_recv = message.message
             message_recv.command = command.name
-            message_recv.body = message_in.content.split(prefix + command.name)[1]
+            if (message_in.content.startswith("{} ".format(mention))):
+                message_recv.body = message_in.content.split("{} ".format(mention) + command.name)[1]
+            else:
+                message_recv.body = message_in.content.split(prefix + command.name)[1]
             message_recv.author = message_in.author
             message_recv.server = message_in.server
-
             command_result = command.plugin.onCommand(message_recv)
 
             # No message, error.
             if command_result == None:
                 await client.send_message(message_in.channel,
-                                          '**Beep boop - Something went wrong!**\n_Command did not return a result._')
+                                          "**Beep boop - Something went wrong!**\n_Command did not return a result._")
 
             # Do list of messages, one after the other.
             elif type(command_result) is list:
@@ -146,30 +182,29 @@ async def on_message(message_in):
 
 
 async def process_message(message_in, msg):
-    if msg.body != '' or msg.embed != None:
-        if msg.file != '':
+    # Remove @everyone and @here from messages.
+    if msg.body != "" or msg.embed != None:
+        if msg.file != "":
             pass
         elif msg.embed != None:
-            if msg.body == '':
+            if msg.body == "":
                 await client.send_message(message_in.channel, embed=msg.embed)
             else:
                 zerospace = "​"
-                msg.body = msg.body.replace("@everyone", "@{}everyone".format(zerospace)).replace("@here",
-                                                                                                  "@{}here".format(
-                                                                                                      zerospace))
+                msg.body = msg.body.replace("@everyone", "@{}everyone".format(zerospace)).replace("@here", "@{}here".format(zerospace))
                 await client.send_message(message_in.channel, msg.body, embed=msg.embed)
         else:
             zerospace = "​"
-            msg.body = msg.body.replace("@everyone", "@{}everyone".format(zerospace)).replace("@here", "@{}here".format(
-                zerospace))
+            msg.body = msg.body.replace("@everyone", "@{}everyone".format(zerospace)).replace("@here", "@{}here".format(zerospace))
             await client.send_message(message_in.channel, msg.body)
-    if msg.file != '':
-        if msg.body != '':
+    if msg.file != "":
+        if msg.body != "":
             await client.send_file(message_in.channel, msg.file, content=msg.body)
         else:
             await client.send_file(message_in.channel, msg.file)
 
 if __name__ == "__main__":
+    # Start bot.
     # THIS MUST ALWAYS BE DOWN HERE
     # I found this out after 3 days of stupidity and tried filing a report with the Discord.py devs to figure out why the
     # library seems to have hanged when it was in the initial block of the same if. I still don't know. They disregarded
