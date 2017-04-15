@@ -3,15 +3,15 @@ import string
 import urllib.error
 import urllib.request
 
-from api import command, message, plugin
+from api import command, message, plugin, caching
 from libs import bigmessage
 
 
 # UD plugin
-def onInit(plugin):
-    define_command = command.command(plugin, 'define', shortdesc='Define X')
-    randefine_command = command.command(plugin, 'randefine', shortdesc='Define a random thing')
-    return plugin.plugin.plugin(plugin, 'urbandictionary', [define_command, randefine_command])
+def onInit(plugin_in):
+    define_command = command.command(plugin_in, 'define', shortdesc='Define X')
+    randefine_command = command.command(plugin_in, 'randefine', shortdesc='Define a random thing')
+    return plugin.plugin(plugin_in, 'urbandictionary', [define_command, randefine_command])
 
 def onCommand(message_in):
     # Define.
@@ -25,11 +25,14 @@ def onCommand(message_in):
 
         # Get definition.
         rword = word.replace(" ", "+")
-        msg = 'I couldn\'t find a definition for "{}"...'.format(word) 
-        try:
-            f = urllib.request.urlopen("http://api.urbandictionary.com/v0/define?term={}".format(rword)).read().decode("utf-8")
-        except urllib.error.URLError as e:
-            return message.message(body='There was an issue connecting to UD'.format(message_in.body))
+        msg = 'I couldn\'t find a definition for "{}"...'.format(word)
+
+        f = caching.getJson("http://api.urbandictionary.com/v0/define?term={}".format(rword), caller='define', customName=rword)
+
+        #try:
+        #    f = urllib.request.urlopen("http://api.urbandictionary.com/v0/define?term={}".format(rword)).read().decode("utf-8")
+        #except urllib.error.URLError as e:
+        #    return message.message(body='There was an issue connecting to UD'.format(message_in.body))
 
         # Decode JSON and format definition.
         theJSON = json.loads(f)["list"]

@@ -4,13 +4,13 @@ from api import command, message, plugin
 
 
 # Fun plugin
-def onInit(plugin):
-    lenny_command = command.command(plugin, 'lenny', shortdesc='Give some Lenny')
-    shrug_command = command.command(plugin, 'shrug', shortdesc='Shrug it off')
-    tableflip_command = command.command(plugin, 'tableflip', shortdesc='Flip a table')
-    fart_command = command.command(plugin, 'fart', shortdesc='PrincessZoey :P')
-    beta_command = command.command(plugin, 'beta', shortdesc='Something went wrong™')
-    return plugin.plugin.plugin(plugin, 'fun', [lenny_command, shrug_command, tableflip_command, fart_command, beta_command])
+def onInit(plugin_in):
+    lenny_command = command.command(plugin_in, 'lenny', shortdesc='Give some Lenny')
+    shrug_command = command.command(plugin_in, 'shrug', shortdesc='Shrug it off')
+    tableflip_command = command.command(plugin_in, 'tableflip', shortdesc='Flip a table')
+    fart_command = command.command(plugin_in, 'fart', shortdesc='PrincessZoey :P')
+    beta_command = command.command(plugin_in, 'beta', shortdesc='Something went wrong™')
+    return plugin.plugin(plugin_in, 'fun', [lenny_command, shrug_command, tableflip_command, fart_command, beta_command])
 
 def onCommand(message_in):
     # Lenny.
