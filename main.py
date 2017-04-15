@@ -8,6 +8,7 @@ from pluginbase import PluginBase
 
 from api import db, message
 from api.bot import bot
+from libs import displayname
 
 def initPlugin(plugin, autoImport=True):
     # Init plugin.
@@ -89,27 +90,24 @@ async def on_ready():
 
 @client.event
 async def on_message(message_in):
-    # Get prefix.
-    db.logUserMessage(message_in)
-    prefix = db.getPrefix(message_in.server.id)
-
     # Ignore messages that aren't from a server and from ourself.
     if message_in.server == None:
         return
     if message_in.author.id == client.user.id:
         return
 
-    # Create mention.
-    mention = "<@{}>".format(message_in.server.me.id)
+    # Get prefix.
+    db.logUserMessage(message_in)
+    prefix = db.getPrefix(message_in.server.id)
 
     # Should we die? Check for exit command.
-    if message_in.content == prefix + "exit" or message_in.content == "{} exit".format(mention):
+    if message_in.content == prefix + "exit" or message_in.content == "{} exit".format(message_in.server.me.mention):
         for owner in db.getOwners():
             if str(message_in.author.id) == str(owner):
                 sys.exit(0)
 
     # Should we reload a plugin? Check for reload plugin command.
-    if message_in.content.startswith(prefix + "reloadplugin") or message_in.content.startswith("{} reloadplugin".format(mention)):
+    if message_in.content.startswith(prefix + "reloadplugin") or message_in.content.startswith("{} reloadplugin".format(message_in.server.me.mention)):
         if message_in.author.id == "219683089457217536" or message_in.author.id == "186373210495909889":
             pass
         else:
@@ -137,7 +135,7 @@ async def on_message(message_in):
             await client.send_message(message_in.channel, "Invalid number of args.")
 
     # Check for cache contents command.
-    if message_in.content.startswith(prefix + "cachecontents") or message_in.content.startswith("{} cachecontents".format(mention)):
+    if message_in.content.startswith(prefix + "cachecontents") or message_in.content.startswith("{} cachecontents".format(message_in.server.me.mention)):
         cacheCount = glob.glob("cache/{}_*".format(message_in.content.split(' ')[-1]))
         cacheString = '\n'.join(cacheCount)
         await client.send_message(message_in.channel, "```{}```".format(cacheString))
@@ -146,16 +144,16 @@ async def on_message(message_in):
     for command in bot.commands:
         # Do we have a command?
         if message_in.content.split(' ')[0] == prefix + command.name or message_in.content == prefix + command.name or \
-                (message_in.content.split(' ')[0] == mention and message_in.content.split(' ')[1] == command.name) or \
-                message_in.content == mention + command.name:
+                (message_in.content.split(' ')[0] == message_in.server.me.mention and message_in.content.split(' ')[1] == command.name) or \
+                message_in.content == message_in.server.me.mention + command.name:
             # Send typing message.
             await client.send_typing(message_in.channel)
 
             # Build message object.
             message_recv = message.message
             message_recv.command = command.name
-            if (message_in.content.startswith("{} ".format(mention))):
-                message_recv.body = message_in.content.split("{} ".format(mention) + command.name)[1]
+            if (message_in.content.startswith("{} ".format(message_in.server.me.mention))):
+                message_recv.body = message_in.content.split("{} ".format(message_in.server.me.mention) + command.name)[1]
             else:
                 message_recv.body = message_in.content.split(prefix + command.name)[1]
             message_recv.author = message_in.author
@@ -179,6 +177,27 @@ async def on_message(message_in):
                 # Do we delete the message afterwards?
                 if command_result.delete:
                     await client.delete_message(message_in)
+
+
+@client.event
+async def on_member_join(member):
+    # Welcome new user.
+    await client.send_message(member.server, content = "Welcome " + member.mention + " to **" + member.server.name + "**!")
+
+@client.event
+async def on_member_remove(member):
+    # Say goodbye to user.
+    await client.send_message(member.server, content = "Goodbye " + member.mention + ", **" + member.server.name + "** will miss you!")
+
+@client.event
+async def on_member_ban(member) :
+    # Announce ban.
+    await client.send_message(member.server, content = displayname.name(member) + " got banned from **" + member.server.name + "**.")
+
+@client.event
+async def on_member_unban(server, user):
+    # Announce unban.
+    await client.send_message(server, content = displayname.name(user) + " got unbanned from **" + server.name + "**.")
 
 
 async def process_message(message_in, msg):
