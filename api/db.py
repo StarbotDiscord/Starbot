@@ -131,3 +131,32 @@ def addOwner(uid):
     c.execute('INSERT INTO owners VALUES (' + uid + ')')
     conn.commit()
     conn.close()
+
+#====================================
+# Server Owner Stuffs
+#====================================
+
+def setMessageCount(serverid, messageCount):
+    conn = sqlite3.connect("bot.db3")
+    c = conn.cursor()
+    c.execute('CREATE TABLE IF NOT EXISTS messagecounts (serverid INTEGER, count INTEGER)')
+    c.execute('SELECT count FROM messagecounts WHERE serverid=' + serverid)
+    if len(list(c)) != 0:
+        c.execute('UPDATE messagecounts SET count=? WHERE serverid=?', (messageCount, serverid))
+    else:
+        c.execute('INSERT INTO messagecounts VALUES (?,?)', (serverid, messageCount))
+    conn.commit()
+    conn.close()
+
+def getMessageCount(serverid):
+    conn = sqlite3.connect("bot.db3")
+    c = conn.cursor()
+    c.execute('CREATE TABLE IF NOT EXISTS messagecounts (serverid INTEGER, count INTEGER)')
+    c.execute('SELECT count FROM messagecounts WHERE serverid=' + serverid)
+    try:
+        row = list(c)[0]
+    except:
+        row = [0]
+    conn.commit()
+    conn.close()
+    return int(row[0])

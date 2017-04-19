@@ -52,8 +52,9 @@ def onInit(plugin_in):
     speedtest_command  = command.command(plugin_in, 'speedtest', shortdesc='Run a speedtest', devcommand=True)
     addowner_command   = command.command(plugin_in, 'addowner', shortdesc='Add a bot owner', devcommand=True)
     owners_command     = command.command(plugin_in, 'owners', shortdesc='Print the bot owners', devcommand=True)
+    messages_command   = command.command(plugin_in, 'messages', shortdesc="Show how many messages the bot has seen since start")
     return plugin.plugin(plugin_in, 'botutils', [plugins_command, commands_command, help_command, info_command, plugintree_command, uptime_command,
-                                                 hostinfo_command, cpuinfo_command, setprefix_command, getprefix_command, speedtest_command, addowner_command, owners_command])
+                                                 hostinfo_command, cpuinfo_command, setprefix_command, getprefix_command, speedtest_command, addowner_command, owners_command, messages_command])
 
 def onCommand(message_in):
     if message_in.command == 'plugins':
@@ -237,3 +238,6 @@ def onCommand(message_in):
         print(owners)
         ownerLst = ', '.join(owners)
         return message.message(body=ownerLst)
+
+    if (message_in.command == 'messages'):
+        return message.message("I've witnessed *{} messages* since I started and *{} messages* overall!".format(bot.messagesSinceStart, db.getMessageCount(message_in.server.id)))

@@ -97,6 +97,8 @@ async def on_message(message_in):
     if message_in.author.id == client.user.id:
         return
 
+    isCommand = False
+
     # Get prefix.
     db.logUserMessage(message_in)
     prefix = db.getPrefix(message_in.server.id)
@@ -145,6 +147,9 @@ async def on_message(message_in):
     for command in bot.commands:
         # Do we have a command?
         if command_api.is_command(message_in, prefix, command):
+            # Prevent message count increment.
+            isCommand = True
+
             # Send typing message.
             await client.send_typing(message_in.channel)
 
@@ -176,6 +181,13 @@ async def on_message(message_in):
                 # Do we delete the message afterwards?
                 if command_result.delete:
                     await client.delete_message(message_in)
+
+    # Increment message counters if not command.
+    if not isCommand:
+        count = db.getMessageCount(message_in.server.id)
+        bot.messagesSinceStart += 1
+        count += 1
+        db.setMessageCount(message_in.server.id, count)
 
 
 @client.event
