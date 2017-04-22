@@ -232,14 +232,14 @@ def onCommand(message_in):
 
     if message_in.command == 'owners':
         owners = []
+        if len(db.getOwners()) == 0:
+            return message.message(body='I have no owners')
         for owner in db.getOwners():
-            print(owner)
             user = displayname.memberForID(str(owner), message_in.server)
             if user != None:
-                owners.append(user.name)
+                owners.append(str(user.name))
             else:
                 owners.append(str(owner))
-        print(owners)
         ownerLst = ', '.join(owners)
         return message.message(body=ownerLst)
 
