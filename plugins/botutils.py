@@ -213,14 +213,17 @@ def onCommand(message_in):
         if len(db.getOwners()) != 0:
             try:
                 if db.isOwner(message_in.author.id) == True:
-                    temp = message_in.body.split('<@')
-                    uid = temp[-1][:-1]
-                    int(uid)
-                    db.addOwner(uid)
-                    return message.message(body='Added owner successfully')
+                    uid = message_in.mentions[0]
+                    int(uid.id)
+                    if db.isOwner(uid.id):
+                        return message.message(body='User is already an owner')
+                    else:
+                        db.addOwner(uid.id)
+                        return message.message(body='Added owner successfully')
                 else:
                     return message.message(body='You aren\'t an owner of the bot')
             except Exception as e:
+                print(e)
                 return message.message(body='Invalid user')
         else:
             db.addOwner(message_in.author.id)
