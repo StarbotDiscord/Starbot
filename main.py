@@ -97,7 +97,6 @@ async def on_message(message_in):
     if message_in.author.id == client.user.id:
         return
     if message_in.author.bot == True:
-        print("ignored")
         return
 
     isCommand = False
