@@ -13,7 +13,10 @@ from libs import displayname
 
 if __name__ == "__main__":
     from api import database
+    from api.database.table import table, tableTypes
     database.init()
+    testTable = table("testing", tableTypes.pGlobal)
+    testTable.insert(dict(test="hi", otherTest="bye"))
 
 def initPlugin(plugin, autoImport=True):
     # Init plugin.

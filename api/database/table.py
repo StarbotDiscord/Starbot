@@ -2,14 +2,18 @@ from api.database import DAL
 from api.database.db import db
 
 class table:
-    def __init__(self, name, type):
-        name = None
-        type = None
+    name = None
+    table_type = None
 
-        DAL.createTableIfNotExist(db, name)
+    def __init__(self, name_in, type_in):
+        self.name = name_in
+        self.table_type = type_in
+
+        DAL.createTableIfNotExist(db, self.name)
 
     def insert(self, dataDict):
-        pass
+        for key, value in dataDict.items():
+            DAL.insertToDatabase(db, self, key, value)
 
 class tableTypes:
     pServer = 1
