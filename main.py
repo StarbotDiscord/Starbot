@@ -11,6 +11,10 @@ from api import command as command_api
 from api.bot import bot
 from libs import displayname
 
+if __name__ == "__main__":
+    from api import database
+    database.init()
+
 def initPlugin(plugin, autoImport=True):
     # Init plugin.
     if autoImport == True:
