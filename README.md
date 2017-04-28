@@ -7,7 +7,7 @@
 ## What's Starbot about?
 Starbot is a plugin based bot for Discord. You should never have to edit the core of the bot or other plugins to add your awesome features! Due to the nature of the plugin system you can choose exactly what features the bot has.
 
-## How do I install Starbot
+## How do I install Starbot?
 Installing Starbot is pretty simple.
 
 1. Use your package manager (or otherwise obtain) a copy of Python >=3.5, Git and Pip for Python 3
