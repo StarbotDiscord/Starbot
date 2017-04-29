@@ -7,6 +7,7 @@ import discord
 from pluginbase import PluginBase
 
 from api import db, message
+from api import command as command_api
 from api.bot import bot
 from libs import displayname
 
@@ -95,6 +96,10 @@ async def on_message(message_in):
         return
     if message_in.author.id == client.user.id:
         return
+    if message_in.author.bot == True:
+        return
+
+    isCommand = False
 
     # Get prefix.
     db.logUserMessage(message_in)
@@ -106,34 +111,6 @@ async def on_message(message_in):
             if str(message_in.author.id) == str(owner):
                 sys.exit(0)
 
-    # Should we reload a plugin? Check for reload plugin command.
-    if message_in.content.startswith(prefix + "reloadplugin") or message_in.content.startswith("{} reloadplugin".format(message_in.server.me.mention)):
-        if message_in.author.id == "219683089457217536" or message_in.author.id == "186373210495909889":
-            pass
-        else:
-            await client.send_message(message_in.channel, "You do not have permission to reload plugins.")
-        messageSplit = message_in.content.split(' ')
-        if len(messageSplit) == 2:
-
-            plugin_base2 = None
-            plugin_source2 = None
-
-            plugin_base2 = PluginBase(package="plugins")
-            plugin_source2 = plugin_base.make_plugin_source(searchpath=["./plugins"])
-            for plugin in plugin_source2.list_plugins():
-                plugin_temp = plugin_source2.load_plugin(plugin)
-                plugin_info = plugin_temp.onInit(plugin_temp)
-                if plugin_info.name == messageSplit[1].strip():
-                    for plugin in bot.plugins:
-                        if plugin.name == messageSplit[1].strip():
-                            importlib.reload(plugin.plugin)
-                            await client.send_message(message_in.channel, "Plugin reloaded!")
-                            return
-
-            await client.send_message(message_in.channel, "No plugin with that name was found.")
-        else:
-            await client.send_message(message_in.channel, "Invalid number of args.")
-
     # Check for cache contents command.
     if message_in.content.startswith(prefix + "cachecontents") or message_in.content.startswith("{} cachecontents".format(message_in.server.me.mention)):
         cacheCount = glob.glob("cache/{}_*".format(message_in.content.split(' ')[-1]))
@@ -143,9 +120,10 @@ async def on_message(message_in):
     # Check each command loaded.
     for command in bot.commands:
         # Do we have a command?
-        if message_in.content.split(' ')[0] == prefix + command.name or message_in.content == prefix + command.name or \
-                (message_in.content.split(' ')[0] == message_in.server.me.mention and message_in.content.split(' ')[1] == command.name) or \
-                message_in.content == message_in.server.me.mention + command.name:
+        if command_api.is_command(message_in, prefix, command):
+            # Prevent message count increment.
+            isCommand = True
+
             # Send typing message.
             await client.send_typing(message_in.channel)
 
@@ -158,6 +136,8 @@ async def on_message(message_in):
                 message_recv.body = message_in.content.split(prefix + command.name)[1]
             message_recv.author = message_in.author
             message_recv.server = message_in.server
+            message_recv.mentions = message_in.mentions
+
             command_result = command.plugin.onCommand(message_recv)
 
             # No message, error.
@@ -177,6 +157,13 @@ async def on_message(message_in):
                 # Do we delete the message afterwards?
                 if command_result.delete:
                     await client.delete_message(message_in)
+
+    # Increment message counters if not command.
+    if not isCommand:
+        count = db.getMessageCount(message_in.server.id)
+        bot.messagesSinceStart += 1
+        count += 1
+        db.setMessageCount(message_in.server.id, count)
 
 
 @client.event

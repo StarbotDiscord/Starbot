@@ -1,5 +1,5 @@
 class message:
-    def __init__(self, body='', file='', embed=None, author=None, server=None, delete=False):
+    def __init__(self, body='', file='', embed=None, author=None, server=None, delete=False, mentions=None):
         self.command = None
         self.author = None
         self.server = None
@@ -7,3 +7,4 @@ class message:
         self.file = file
         self.embed = embed
         self.delete = delete
+        self.mentions = mentions

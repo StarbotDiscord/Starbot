@@ -52,8 +52,9 @@ def onInit(plugin_in):
     speedtest_command  = command.command(plugin_in, 'speedtest', shortdesc='Run a speedtest', devcommand=True)
     addowner_command   = command.command(plugin_in, 'addowner', shortdesc='Add a bot owner', devcommand=True)
     owners_command     = command.command(plugin_in, 'owners', shortdesc='Print the bot owners', devcommand=True)
+    messages_command   = command.command(plugin_in, 'messages', shortdesc="Show how many messages the bot has seen since start")
     return plugin.plugin(plugin_in, 'botutils', [plugins_command, commands_command, help_command, info_command, plugintree_command, uptime_command,
-                                                 hostinfo_command, cpuinfo_command, setprefix_command, getprefix_command, speedtest_command, addowner_command, owners_command])
+                                                 hostinfo_command, cpuinfo_command, setprefix_command, getprefix_command, speedtest_command, addowner_command, owners_command, messages_command])
 
 def onCommand(message_in):
     if message_in.command == 'plugins':
@@ -86,7 +87,7 @@ def onCommand(message_in):
             embed = discord.Embed(color=discord.Color.green())
         else:
             embed = discord.Embed(color=discord.Color.light_grey())
-        embed.set_author(name='Project StarBot v0.1.2-{} on track {}'.format(sha[:7], track), url='https://github.com/1byte2bytes/Starbot/', icon_url='https://pbs.twimg.com/profile_images/616309728688238592/pBeeJQDQ.png')
+        embed.set_author(name='Project StarBot v0.2.0-{} on track {}'.format(sha[:7], track), url='https://github.com/1byte2bytes/Starbot/', icon_url='https://pbs.twimg.com/profile_images/616309728688238592/pBeeJQDQ.png')
         embed.add_field(name="Bot Team Alpha", value="CorpNewt\nSydney Erickson\nGoldfish64")
         embed.add_field(name="Source Code", value="Interested in poking around inside the bot?\nClick on the link above!")
         return message.message(embed=embed)
@@ -212,14 +213,18 @@ def onCommand(message_in):
         if len(db.getOwners()) != 0:
             try:
                 if db.isOwner(message_in.author.id) == True:
-                    temp = message_in.body.split('<@')
-                    uid = temp[-1][:-1]
-                    int(uid)
-                    db.addOwner(uid)
-                    return message.message(body='Added owner successfully')
+                    member = message_in.body.strip()
+                    memberCheck = displayname.memberForName(member, message_in.server)
+
+                    if db.isOwner(memberCheck.id):
+                        return message.message(body='User is already an owner')
+                    else:
+                        db.addOwner(memberCheck.id)
+                        return message.message(body='Added owner successfully')
                 else:
                     return message.message(body='You aren\'t an owner of the bot')
             except Exception as e:
+                print(e)
                 return message.message(body='Invalid user')
         else:
             db.addOwner(message_in.author.id)
@@ -227,13 +232,16 @@ def onCommand(message_in):
 
     if message_in.command == 'owners':
         owners = []
+        if len(db.getOwners()) == 0:
+            return message.message(body='I have no owners')
         for owner in db.getOwners():
-            print(owner)
             user = displayname.memberForID(str(owner), message_in.server)
             if user != None:
-                owners.append(user.name)
+                owners.append(str(user.name))
             else:
                 owners.append(str(owner))
-        print(owners)
         ownerLst = ', '.join(owners)
         return message.message(body=ownerLst)
+
+    if (message_in.command == 'messages'):
+        return message.message("I've witnessed *{} messages* since I started and *{} messages* overall!".format(bot.messagesSinceStart, db.getMessageCount(message_in.server.id)))
