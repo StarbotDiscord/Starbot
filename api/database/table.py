@@ -12,8 +12,7 @@ class table:
         DAL.createTableIfNotExist(db, self.name)
 
     def insert(self, dataDict):
-        for key, value in dataDict.items():
-            DAL.insertToDatabase(db, self, key, value)
+        DAL.insertToDatabase(db, self, dataDict)
 
 class tableTypes:
     pServer = 1

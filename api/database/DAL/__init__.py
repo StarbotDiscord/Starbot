@@ -13,6 +13,6 @@ def createTableIfNotExist(db_in, tablename):
     if db.type == "SQLite":
         SQLite.createTableIfNotExist(db_in, tablename)
 
-def insertToDatabase(db_in, table, key, value):
+def insertToDatabase(db_in, table, dict_in):
     if db.type == "SQLite":
-        SQLite.insertToDatabase(db_in, table, key, value)
+        SQLite.insertToDatabase(db_in, table, dict_in)
