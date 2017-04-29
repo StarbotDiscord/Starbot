@@ -19,6 +19,7 @@ if __name__ == "__main__":
     testTable.insert(dict(test="hi", otherTest="bye"))
     testTable.insert(dict(test="blah"))
     testTable.insert(dict(otherTest="moreblah"))
+    testTable.insert(dict(completelyNewTest="hah!"))
 
 def initPlugin(plugin, autoImport=True):
     # Init plugin.
