@@ -228,7 +228,7 @@ def onCommand(message_in):
         else:
             return message.message(body='You do not have permisison to run a speedtest.')
 
-    if message_in.command == 'addowner':
+    if message_in.command == "addowner":
         if len(db.getOwners()) != 0:
             try:
                 if db.isOwner(message_in.author.id) == True:
@@ -236,18 +236,20 @@ def onCommand(message_in):
                     memberCheck = displayname.memberForName(member, message_in.server)
 
                     if db.isOwner(memberCheck.id):
-                        return message.message(body='User is already an owner')
+                        return message.message(body="User is already an owner.")
+                    elif memberCheck.bot:
+                        return message.message(body="Bots cannot be owners.")
                     else:
                         db.addOwner(memberCheck.id)
-                        return message.message(body='Added owner successfully')
+                        return message.message(body="Added owner successfully.")
                 else:
-                    return message.message(body='You aren\'t an owner of the bot')
+                    return message.message(body="You aren't an owner of the bot.")
             except Exception as e:
                 print(e)
-                return message.message(body='Invalid user')
+                return message.message(body="Invalid user.")
         else:
             db.addOwner(message_in.author.id)
-            return message.message(body='You have successfully claimed yourself as the first owner!')
+            return message.message(body="You have successfully claimed yourself as the first owner!")
 
     if message_in.command == 'owners':
         owners = []
