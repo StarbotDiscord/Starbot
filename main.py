@@ -82,6 +82,7 @@ if __name__ == "__main__":
 
     # Create the Discord client.
     client = discord.Client()
+    bot.client = client
 
     # Get our token to use.
     token = ""
@@ -89,6 +90,7 @@ if __name__ == "__main__":
         token = m.read().strip()
 else:
     client = discord.Client()
+    bot.client = client
 
 
 @client.event
@@ -169,7 +171,7 @@ async def on_message(message_in):
                     # PM it.
                     for item in command_result:
                         await process_message(message_in.author, message_in, item)
-                        
+
                 else: # Send to channel.
                     for item in command_result:
                         await process_message(message_in.channel, message_in, item)

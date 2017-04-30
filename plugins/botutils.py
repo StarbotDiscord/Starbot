@@ -26,6 +26,9 @@ from api import db, command, message, plugin, git
 from api.bot import bot
 from libs import progressBar, readableTime, displayname
 
+# Command names.
+SERVERS = "servers"
+
 def detectDuplicateCommands():
     duplicates = []
     commandsL = []
@@ -67,8 +70,10 @@ def onInit(plugin_in):
     addowner_command   = command.command(plugin_in, 'addowner', shortdesc='Add a bot owner', devcommand=True)
     owners_command     = command.command(plugin_in, 'owners', shortdesc='Print the bot owners', devcommand=True)
     messages_command   = command.command(plugin_in, 'messages', shortdesc="Show how many messages the bot has seen since start")
+    servers_command    = command.command(plugin_in, SERVERS, shortdesc="Show how many servers the bot is on")
     return plugin.plugin(plugin_in, 'botutils', [plugins_command, commands_command, help_command, info_command, plugintree_command, uptime_command,
-                                                 hostinfo_command, cpuinfo_command, setprefix_command, getprefix_command, speedtest_command, addowner_command, owners_command, messages_command])
+                                                 hostinfo_command, cpuinfo_command, setprefix_command, getprefix_command, speedtest_command, addowner_command,
+                                                 owners_command, messages_command, servers_command])
 
 def onCommand(message_in):
     if message_in.command == 'plugins':
@@ -256,6 +261,9 @@ def onCommand(message_in):
                 owners.append(str(owner))
         ownerLst = ', '.join(owners)
         return message.message(body=ownerLst)
+
+    if message_in.command == SERVERS:
+        return message.message("I am a member of **{} servers**!".format(len(bot.client.servers)))
 
     if (message_in.command == 'messages'):
         return message.message("I've witnessed *{} messages* since I started and *{} messages* overall!".format(bot.messagesSinceStart, db.getMessageCount(message_in.server.id)))
