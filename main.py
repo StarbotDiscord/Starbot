@@ -214,26 +214,19 @@ async def on_member_unban(server, user):
 
 
 async def process_message(target, message_in, msg):
-    # Remove @everyone and @here from messages.
-    if msg.body != "" or msg.embed != None:
-        if msg.file != "":
-            pass
-        elif msg.embed != None:
-            if msg.body == "":
-                await client.send_message(target, embed=msg.embed)
-            else:
-                zerospace = "​"
-                msg.body = msg.body.replace("@everyone", "@{}everyone".format(zerospace)).replace("@here", "@{}here".format(zerospace))
-                await client.send_message(target, msg.body, embed=msg.embed)
-        else:
-            zerospace = "​"
-            msg.body = msg.body.replace("@everyone", "@{}everyone".format(zerospace)).replace("@here", "@{}here".format(zerospace))
-            await client.send_message(target, msg.body)
+    # If the message to send has a body
+    if msg.body != None:
+        # Remove @everyone and @here from messages.
+        zerospace = "​"
+        msg.body = msg.body.replace("@everyone", "@{}everyone".format(zerospace)).replace("@here", "@{}here".format(zerospace))
+
+    # If the message to send includes a file
     if msg.file != "":
-        if msg.body != "":
-            await client.send_file(target, msg.file, content=msg.body)
-        else:
-            await client.send_file(target, msg.file)
+        # Send the file, along with any possible message
+        await client.send_file(target, msg.file, content=msg.body)
+    else:
+        # Send the message, along with a possible embed
+        await client.send_message(target, msg.body, embed=msg.embed)
 
 if __name__ == "__main__":
     # Start bot.
