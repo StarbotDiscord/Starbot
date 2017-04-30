@@ -159,14 +159,24 @@ async def on_message(message_in):
                 await client.send_message(message_in.channel,
                                           "**Beep boop - Something went wrong!**\n_Command did not return a result._")
 
-            # Do list of messages, one after the other.
+            # Do list of messages, one after the other. If the message is more than 5 chunks long, PM it.
             elif type(command_result) is list:
-                for item in command_result:
-                    await process_message(message_in, item)
+                if (len(command_result) > 5): # PM messages.
+                    # Send message saying that we are PMing the messages.
+                    await client.send_message(message_in.channel,
+                                              "Because the output of that command is **{} pages** long, I'm just going to PM the result to you.".format(len(command_result)))
+
+                    # PM it.
+                    for item in command_result:
+                        await process_message(message_in.author, message_in, item)
+                        
+                else: # Send to channel.
+                    for item in command_result:
+                        await process_message(message_in.channel, message_in, item)
 
             # Do regular message.
             else:
-                await process_message(message_in, command_result)
+                await process_message(message_in.channel, message_in, command_result)
 
                 # Do we delete the message afterwards?
                 if command_result.delete:
@@ -201,27 +211,27 @@ async def on_member_unban(server, user):
     await client.send_message(server, content = displayname.name(user) + " got unbanned from **" + server.name + "**.")
 
 
-async def process_message(message_in, msg):
+async def process_message(target, message_in, msg):
     # Remove @everyone and @here from messages.
     if msg.body != "" or msg.embed != None:
         if msg.file != "":
             pass
         elif msg.embed != None:
             if msg.body == "":
-                await client.send_message(message_in.channel, embed=msg.embed)
+                await client.send_message(target, embed=msg.embed)
             else:
                 zerospace = "​"
                 msg.body = msg.body.replace("@everyone", "@{}everyone".format(zerospace)).replace("@here", "@{}here".format(zerospace))
-                await client.send_message(message_in.channel, msg.body, embed=msg.embed)
+                await client.send_message(target, msg.body, embed=msg.embed)
         else:
             zerospace = "​"
             msg.body = msg.body.replace("@everyone", "@{}everyone".format(zerospace)).replace("@here", "@{}here".format(zerospace))
-            await client.send_message(message_in.channel, msg.body)
+            await client.send_message(target, msg.body)
     if msg.file != "":
         if msg.body != "":
-            await client.send_file(message_in.channel, msg.file, content=msg.body)
+            await client.send_file(target, msg.file, content=msg.body)
         else:
-            await client.send_file(message_in.channel, msg.file)
+            await client.send_file(target, msg.file)
 
 if __name__ == "__main__":
     # Start bot.
