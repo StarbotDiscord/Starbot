@@ -37,7 +37,7 @@ def onCommand(message_in):
         sorryList = ["Please excuse me,", "I'm sorry, but", "I hope you forgive me, because"]
         randsorry = random.randint(0, len(sorryList)-1)
 
-        msg = '*{}* {}'.format(sorryList[randsorry], excuseList[randexcuse])
+        msg = '*{} {}*'.format(sorryList[randsorry], excuseList[randexcuse])
 
         # Return newly constructed message
         return message.message(msg)
