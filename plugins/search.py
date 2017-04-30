@@ -12,6 +12,7 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
+import urllib.parse
 from api import command, message, plugin
 
 # Search plugin
@@ -25,16 +26,25 @@ def onCommand(message_in):
     query = message_in.body.strip()
 
     # Check if query is nothing
-    if query == None:
+    if not query:
         return message.message('I need a topic to search for!')
     
+    # Normalize query
+    query = urllib.parse.quote(query)
+
     # Be kind, don't use lmgtfy/similar
     if message_in.command == 'google':
-        msg = "Google search: https://www.google.com/?q="
+        msg = "Google search:"
+        url = "https://www.google.com/?q="
     if message_in.command == 'bing':
-        msg = "Bing search: https://www.bing.com/?q="
-    if message_in.command == 'tableflip':
-        msg = "DuckDuckGo search: https://www.duckduckgo.com/?q="
+        msg = "Bing search:"
+        url = "https://www.bing.com/?q="
+    if message_in.command == 'duckduckgo':
+        msg = "DuckDuckGo search:"
+        url = "https://www.duckduckgo.com/?q="
     
+    # Form URL
+    url = '{}{}'.format(url,query)
+
     # Form and return message
-    return message.message('{}{}'.format(msg, quote(query))
+    return message.message('{} {}'.format(msg, url))

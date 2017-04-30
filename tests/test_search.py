@@ -31,18 +31,18 @@ class TestSearchSuite(unittest.TestCase):
         result = search.onCommand(msg)
         self.assertEqual(type(result), type(msg))
         print(result)
-        self.assertEqual(result.body, 'Google search: https://www.google.com/?q=hello+world')
+        self.assertEqual(result.body, 'Google search: https://www.google.com/?q=hello%20world')
     
     def testSearchDuckDuckGo(self):
         msg = message.message(body="hello world")
         msg.command = "duckduckgo"
         result=search.onCommand(msg)
         self.assertEqual(type(result), type(msg))
-        self.assertEqual(result.body, "DuckDuckGo search: https://www.duckduckgo.com/?q=hello+world")
+        self.assertEqual(result.body, "DuckDuckGo search: https://www.duckduckgo.com/?q=hello%20world")
 
     def testSearchBing(self):
         msg = message.message(body="hello world")
         msg.command = "bing"
         result=search.onCommand(msg)
         self.assertEqual(type(result), type(msg))
-        self.assertEqual(result.body, "Bing search: https://www.bing.com/?q=hello+world")
+        self.assertEqual(result.body, "Bing search: https://www.bing.com/?q=hello%20world")
