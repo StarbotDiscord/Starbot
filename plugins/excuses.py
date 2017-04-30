@@ -17,7 +17,7 @@ from api import command, message, plugin
 
 def onInit(plugin_in):
     excuse_command = command.command(plugin_in, 'excuse', shortdesc='Dish out excuses ;)')
-    return plugin.plugin(plugin_in, 'excuses', [excuse_command, sorry_command])
+    return plugin.plugin(plugin_in, 'excuses', [excuse_command])
 
 def onCommand(message_in):
     if message_in.command == 'excuse':
