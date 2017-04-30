@@ -263,7 +263,14 @@ def onCommand(message_in):
         return message.message(body=ownerLst)
 
     if message_in.command == SERVERS:
-        return message.message("I am a member of **{} servers**!".format(len(bot.client.servers)))
+        # Get server count.
+        servercount = len(bot.client.servers)
+        
+        # Return message.
+        if servercount == 1:
+            return message.message("I am a member of **{} server**!".format(servercount))
+        else:
+            return message.message("I am a member of **{} servers**!".format(servercount))
 
-    if (message_in.command == 'messages'):
+    if message_in.command == 'messages':
         return message.message("I've witnessed *{} messages* since I started and *{} messages* overall!".format(bot.messagesSinceStart, db.getMessageCount(message_in.server.id)))
