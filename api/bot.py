@@ -17,3 +17,4 @@ class bot:
     plugins = []
     commands = []
     messagesSinceStart = 0
+    client = None
