@@ -71,9 +71,10 @@ def onInit(plugin_in):
     owners_command     = command.command(plugin_in, 'owners', shortdesc='Print the bot owners', devcommand=True)
     messages_command   = command.command(plugin_in, 'messages', shortdesc="Show how many messages the bot has seen since start")
     servers_command    = command.command(plugin_in, SERVERS, shortdesc="Show how many servers the bot is on")
+    invite_command     = command.command(plugin_in, 'invite', shortdesc="Invite the bot to your server!")
     return plugin.plugin(plugin_in, 'botutils', [plugins_command, commands_command, help_command, info_command, plugintree_command, uptime_command,
                                                  hostinfo_command, cpuinfo_command, setprefix_command, getprefix_command, speedtest_command, addowner_command,
-                                                 owners_command, messages_command, servers_command])
+                                                 owners_command, messages_command, servers_command, invite_command])
 
 def onCommand(message_in):
     if message_in.command == 'plugins':
@@ -276,3 +277,9 @@ def onCommand(message_in):
 
     if message_in.command == 'messages':
         return message.message("I've witnessed *{} messages* since I started and *{} messages* overall!".format(bot.messagesSinceStart, db.getMessageCount(message_in.server.id)))
+
+    if message_in.command == 'invite':
+        return message.message(body=discord.utils.oauth_url(bot.client.user.id, adminPerm))
+
+class adminPerm:
+    value = 8
