@@ -25,7 +25,7 @@ def getBranch():
         HEADFileS = f.read()
         HFileA = HEADFileS.split(": ")
         if len(HFileA) == 2:
-            branch = HFileA[1].split("/")[-1]
+            branch = HFileA[1].split("/", 2)[-1]
             return branch.strip()
         else:
             return "UNKNOWN"
