@@ -1,3 +1,17 @@
+#    Copyright 2017 Starbot Discord Project
+# 
+#    Licensed under the Apache License, Version 2.0 (the "License");
+#    you may not use this file except in compliance with the License.
+#    You may obtain a copy of the License at
+# 
+#        http://www.apache.org/licenses/LICENSE-2.0
+# 
+#    Unless required by applicable law or agreed to in writing, software
+#    distributed under the License is distributed on an "AS IS" BASIS,
+#    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#    See the License for the specific language governing permissions and
+#    limitations under the License.
+
 import random
 import urllib.error
 import urllib.request
@@ -6,82 +20,10 @@ from api import command, caching, message, plugin
 
 
 def onInit(plugin_in):
-    star_command = command.command(plugin_in, 'star', shortdesc='Post a random picture of Star Butterfly to the channel')
-    starco_command = command.command(plugin_in, 'starco', shortdesc='Nowhere is safe from the shipping wars. Nowhere.')
-    marco_command = command.command(plugin_in, 'marco', shortdesc='Post a random picture of Marco Diaz to the channel')
     goldfish_command = command.command(plugin_in, 'goldfish', shortdesc='Post a random picture of a goldfish to the channel')
-    return plugin.plugin(plugin_in, 'randimg', [star_command, goldfish_command, starco_command, marco_command])
+    return plugin.plugin(plugin_in, 'randimg', [goldfish_command])
 
 def onCommand(message_in):
-    # Star
-    if message_in.command == 'star':
-        try:
-            headers = {'Content-Type': 'application/json', 'Accept': 'application/json'}
-            try:
-                re = urllib.request.Request("https://starbooru.com/api/posts?offset=0&limit=100&query=safety:safe%20star_butterfly%20solo")
-                re.add_header('Content-Type', 'application/json')
-                re.add_header('Accept', 'application/json')
-                r = urllib.request.urlopen(re).read()
-            except Exception as e:
-                return message.message(body='Issue connecting to Starbooru. Perhaps it\'s down?')
-            try:
-                jsonG = r.json()
-                print(len(jsonG['results']))
-                randIMG = random.choice(jsonG['results'])
-                filename = str(randIMG['id']) + '.' + randIMG['contentUrl'].split(".")[-1]
-                caching.downloadToCache(randIMG['contentUrl'], filename, caller='star', sslEnabled=False)
-                return message.message(file='cache/star_' + filename)
-            except Exception as e:
-                return message.message(body='No images by these tags found. :(')
-        except Exception as e:
-            return message.message(body='Unknown issue')
-
-    if message_in.command == 'starco':
-        try:
-            headers = {'Content-Type': 'application/json', 'Accept': 'application/json'}
-            try:
-                re = urllib.request.Request(
-                    "https://starbooru.com/api/posts?offset=0&limit=100&query=safety:safe%20starco")
-                re.add_header('Content-Type', 'application/json')
-                re.add_header('Accept', 'application/json')
-                r = urllib.request.urlopen(re).read()
-            except Exception as e:
-                return message.message(body='Issue connecting to Starbooru. Perhaps it\'s down?')
-            try:
-                jsonG = r.json()
-                print(len(jsonG['results']))
-                randIMG = random.choice(jsonG['results'])
-                filename = str(randIMG['id']) + '.' + randIMG['contentUrl'].split(".")[-1]
-                caching.downloadToCache(randIMG['contentUrl'], filename, caller='starco', sslEnabled=False)
-                return message.message(file='cache/starco_' + filename)
-            except Exception as e:
-                return message.message(body='No images by these tags found. :(')
-        except Exception as e:
-            return message.message(body='Unknown issue')
-
-    if message_in.command == 'marco':
-        try:
-            headers = {'Content-Type': 'application/json', 'Accept': 'application/json'}
-            try:
-                re = urllib.request.Request(
-                    "https://starbooru.com/api/posts?offset=0&limit=100&query=safety:safe%20marco_diaz%20solo")
-                re.add_header('Content-Type', 'application/json')
-                re.add_header('Accept', 'application/json')
-                r = urllib.request.urlopen(re).read()
-            except Exception as e:
-                return message.message(body='Issue connecting to Starbooru. Perhaps it\'s down?')
-            try:
-                jsonG = r.json()
-                print(len(jsonG['results']))
-                randIMG = random.choice(jsonG['results'])
-                filename = str(randIMG['id']) + '.' + randIMG['contentUrl'].split(".")[-1]
-                caching.downloadToCache(randIMG['contentUrl'], filename, caller='marco', sslEnabled=False)
-                return message.message(file='cache/marco_' + filename)
-            except Exception as e:
-                return message.message(body='No images by these tags found. :(')
-        except Exception as e:
-            return message.message(body='Unkown issue')
-
     # Goldfish
     if message_in.command == 'goldfish':
         try:

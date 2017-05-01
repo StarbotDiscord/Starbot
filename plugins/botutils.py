@@ -1,3 +1,17 @@
+#    Copyright 2017 Starbot Discord Project
+# 
+#    Licensed under the Apache License, Version 2.0 (the "License");
+#    you may not use this file except in compliance with the License.
+#    You may obtain a copy of the License at
+# 
+#        http://www.apache.org/licenses/LICENSE-2.0
+# 
+#    Unless required by applicable law or agreed to in writing, software
+#    distributed under the License is distributed on an "AS IS" BASIS,
+#    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#    See the License for the specific language governing permissions and
+#    limitations under the License.
+
 import math
 import os
 import platform
@@ -11,6 +25,9 @@ import pyspeedtest
 from api import db, command, message, plugin, git
 from api.bot import bot
 from libs import progressBar, readableTime, displayname
+
+# Command names.
+SERVERS = "servers"
 
 def detectDuplicateCommands():
     duplicates = []
@@ -53,8 +70,10 @@ def onInit(plugin_in):
     addowner_command   = command.command(plugin_in, 'addowner', shortdesc='Add a bot owner', devcommand=True)
     owners_command     = command.command(plugin_in, 'owners', shortdesc='Print the bot owners', devcommand=True)
     messages_command   = command.command(plugin_in, 'messages', shortdesc="Show how many messages the bot has seen since start")
+    servers_command    = command.command(plugin_in, SERVERS, shortdesc="Show how many servers the bot is on")
     return plugin.plugin(plugin_in, 'botutils', [plugins_command, commands_command, help_command, info_command, plugintree_command, uptime_command,
-                                                 hostinfo_command, cpuinfo_command, setprefix_command, getprefix_command, speedtest_command, addowner_command, owners_command, messages_command])
+                                                 hostinfo_command, cpuinfo_command, setprefix_command, getprefix_command, speedtest_command, addowner_command,
+                                                 owners_command, messages_command, servers_command])
 
 def onCommand(message_in):
     if message_in.command == 'plugins':
@@ -209,7 +228,7 @@ def onCommand(message_in):
         else:
             return message.message(body='You do not have permisison to run a speedtest.')
 
-    if message_in.command == 'addowner':
+    if message_in.command == "addowner":
         if len(db.getOwners()) != 0:
             try:
                 if db.isOwner(message_in.author.id) == True:
@@ -217,18 +236,20 @@ def onCommand(message_in):
                     memberCheck = displayname.memberForName(member, message_in.server)
 
                     if db.isOwner(memberCheck.id):
-                        return message.message(body='User is already an owner')
+                        return message.message(body="User is already an owner.")
+                    elif memberCheck.bot:
+                        return message.message(body="Bots cannot be owners.")
                     else:
                         db.addOwner(memberCheck.id)
-                        return message.message(body='Added owner successfully')
+                        return message.message(body="Added owner successfully.")
                 else:
-                    return message.message(body='You aren\'t an owner of the bot')
+                    return message.message(body="You aren't an owner of the bot.")
             except Exception as e:
                 print(e)
-                return message.message(body='Invalid user')
+                return message.message(body="Invalid user.")
         else:
             db.addOwner(message_in.author.id)
-            return message.message(body='You have successfully claimed yourself as the first owner!')
+            return message.message(body="You have successfully claimed yourself as the first owner!")
 
     if message_in.command == 'owners':
         owners = []
@@ -243,5 +264,15 @@ def onCommand(message_in):
         ownerLst = ', '.join(owners)
         return message.message(body=ownerLst)
 
-    if (message_in.command == 'messages'):
+    if message_in.command == SERVERS:
+        # Get server count.
+        servercount = len(bot.client.servers)
+        
+        # Return message.
+        if servercount == 1:
+            return message.message("I am a member of **{} server**!".format(servercount))
+        else:
+            return message.message("I am a member of **{} servers**!".format(servercount))
+
+    if message_in.command == 'messages':
         return message.message("I've witnessed *{} messages* since I started and *{} messages* overall!".format(bot.messagesSinceStart, db.getMessageCount(message_in.server.id)))
