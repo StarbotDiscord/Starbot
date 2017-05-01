@@ -22,12 +22,23 @@ class TestExcuseSuite(unittest.TestCase):
         msg = message.message(body="")
         msg.command = "excuse"
 
+        excuseList = ["I have an appointment with a robot.", 
+        "I was abducted by robots.", 
+        "I didn’t know what day it was because I was looking at the Robotic Calendar.",
+        "My robot threw up on my source code.", 
+        "I need to take my robot for a walk.",
+        "I had to get a cybernetic head and couldn't get anything done.",
+        "My Robot Assistant blue-screened.",
+        "A kernel panic erased my work.",
+        "Somebody used up the data limit watching YouTube."]
+        sorryList = ["Please excuse me,", "I'm sorry, but", "I hope you forgive me, because"]
         fullExcuseList = []
 
-        for sorry in excuses.sorryList:
-            for excuse in excuses.excuseList:
-                fullExcuseList.append('*{} {}*'.format(sorryList[sorry], excuseList[excuse])
+        for sorry in sorryList:
+            for excuse in excuseList:
+                fullExcuseList.append('*{} {}*'.format(sorry, excuse))
         
         result=excuses.onCommand(msg)
+        print(result.body)
         self.assertEqual(type(result), type(msg))
         self.assertEqual(result.body in fullExcuseList, True)
