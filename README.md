@@ -11,7 +11,7 @@ Starbot is a plugin based bot for Discord. You should never have to edit the cor
 Installing Starbot is pretty simple.
 
 1. Use your package manager (or otherwise obtain) a copy of Python >=3.5, Git and Pip for Python 3
-2. `git clone https://github.com/1byte2bytes/Starbot.git`
+2. `git clone https://github.com/StarbotDiscord/Starbot.git`
 3. `pip install discord.py pluginbase psutil pyparsing pyspeedtest tqdm`
 4. Git a bot token from the [Discord Developers page](https://discordapp.com/developers/applications/me)
 5. Paste the token for the bot user into a file called `token.txt` in the folder with the bots code
