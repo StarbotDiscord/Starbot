@@ -1,3 +1,8 @@
+# Copyright (c) 2017 CorpNewt
+# 
+# This software is released under the MIT License.
+# https://opensource.org/licenses/MIT
+
 import discord
 
 def name(member : discord.Member):
