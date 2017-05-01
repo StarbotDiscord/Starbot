@@ -31,7 +31,7 @@ class TestSearchSuite(unittest.TestCase):
         result = search.onCommand(msg)
         self.assertEqual(type(result), type(msg))
         print(result)
-        self.assertEqual(result.body, 'Google search: https://www.google.com/?q=hello%20world')
+        self.assertEqual(result.body, 'Google search: https://www.google.com/#q=hello%20world')
     
     def testSearchDuckDuckGo(self):
         msg = message.message(body="hello world")

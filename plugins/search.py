@@ -35,7 +35,7 @@ def onCommand(message_in):
     # Be kind, don't use lmgtfy/similar
     if message_in.command == 'google':
         msg = "Google search:"
-        url = "https://www.google.com/?q="
+        url = "https://www.google.com/#q="
     if message_in.command == 'bing':
         msg = "Bing search:"
         url = "https://www.bing.com/?q="
