@@ -18,8 +18,6 @@ import urllib.error
 import urllib.request
 
 from api import command, message, plugin, caching
-from libs import bigmessage
-
 
 # UD plugin
 def onInit(plugin_in):
@@ -58,7 +56,7 @@ def onCommand(message_in):
                 msg = '{}\n\n__Example(s):__\n\n*{}*'.format(msg, ourWord["example"])
 
         # Return message.
-        return bigmessage.create(msg)
+        return message.createBigMessage(msg)
 
     # Random define.
     if message_in.command == 'randefine':
@@ -78,4 +76,4 @@ def onCommand(message_in):
                 msg = '{}\n\n__Example(s):__\n\n*{}*'.format(msg, ourWord["example"])
 
         # Return message.
-        return bigmessage.create(msg)
+        return message.createBigMessage(msg)
