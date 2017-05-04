@@ -26,7 +26,7 @@ class table:
         DAL.createTableIfNotExist(db, self.name)
 
     def insert(self, dataDict):
-        DAL.insertToDatabase(db, self, dataDict)
+        return DAL.insertToDatabase(db, self, dataDict)
 
 class tableTypes:
     pServer = 1

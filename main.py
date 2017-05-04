@@ -69,6 +69,15 @@ class fakeClient:
         pass
 
 if __name__ == "__main__":
+    from api import database
+    database.init()
+
+    from api.database.table import table, tableTypes
+    newTable = table('test', tableTypes.pGlobal)
+
+    newEntry = table.insert(newTable, dict(mytest="bananas", hertest="apples"))
+    print(newEntry.id)
+
     # Log the time we started.
     bot.startTime = time.time()
 
