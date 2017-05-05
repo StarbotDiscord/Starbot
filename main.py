@@ -78,6 +78,8 @@ if __name__ == "__main__":
     newEntry = table.insert(newTable, dict(mytest="bananas", hertest="apples"))
     print(newEntry.id)
 
+    newEntry.edit(dict(histest="hi", hertest="grapes"))
+
     # Log the time we started.
     bot.startTime = time.time()
 

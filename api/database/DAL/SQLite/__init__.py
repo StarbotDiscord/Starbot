@@ -13,6 +13,7 @@
 #    limitations under the License.
 
 import sqlite3
+from api.database.entry import entry
 
 def open(db_in):
     db_in.type = "SQLite"
@@ -40,4 +41,21 @@ def insertToDatabase(db_in, table, dict_in):
             pass
 
     c.execute("INSERT INTO " + table.name + "(" + ",".join(keys) + ") VALUES (" + ",".join(values) + ");")
+    return_entry = entry(c.lastrowid, db_in, table, dict_in)
+    db_in.connection.commit()
+    return return_entry
+
+def editInDatabase(db_in, table, id, dict_in):
+    c = db_in.connection.cursor()
+    keys = []
+    values = []
+    tableArray = []
+    for key, value in dict_in.items():
+        try:
+            c.execute('ALTER TABLE ' + table.name + ' ADD COLUMN ' + key)
+        except:
+            pass
+        print("UPDATE " + table.name + " SET " + key + "=" + value + " WHERE id=" + str(id) + ";")
+        c.execute("UPDATE " + table.name + " SET " + key + "='" + value + "' WHERE id=" + str(id) + ";")
+
     db_in.connection.commit()
