@@ -129,7 +129,7 @@ def onInit(plugin_in):
     calc_command = command.command(plugin_in, 'calc', shortdesc='Calculate given input')
     return plugin.plugin(plugin_in, 'calc', [calc_command])
 
-def onCommand(message_in):
+async def onCommand(message_in):
     """Do some math."""
     formula = message_in.body
     formula = formula.replace('*', 'x')

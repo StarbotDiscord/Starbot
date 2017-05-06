@@ -19,7 +19,7 @@ def onInit(plugin_in):
     excuse_command = command.command(plugin_in, 'excuse', shortdesc='Dish out excuses ;)')
     return plugin.plugin(plugin_in, 'excuses', [excuse_command])
 
-def onCommand(message_in):
+async def onCommand(message_in):
     if message_in.command == 'excuse':
         # Give excuses
         excuseList = ["I have an appointment with a robot.", 

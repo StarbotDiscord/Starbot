@@ -78,7 +78,7 @@ def onInit(plugin_in):
                                                  hostinfo_command, cpuinfo_command, setprefix_command, getprefix_command, speedtest_command, addowner_command,
                                                  owners_command, messages_command, servers_command, invite_command, nickname_command])
 
-def onCommand(message_in):
+async def onCommand(message_in):
     if message_in.command == 'plugins':
         pluginList = []
         for plugin in bot.plugins:

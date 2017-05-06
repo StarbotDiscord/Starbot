@@ -23,7 +23,7 @@ def onInit(plugin_in):
     totalcache_command = command.command(plugin_in, 'totalcache', shortdesc='Count the total amount of cached items', devcommand=True)
     return plugin.plugin(plugin_in, 'cacheutils', [cachecount_command, caches_command, totalcache_command])
 
-def onCommand(message_in):
+async def onCommand(message_in):
     if message_in.command == 'cachecount':
         if message_in.body == '':
             return message.message(body='No plugin specified')

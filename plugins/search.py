@@ -22,7 +22,7 @@ def onInit(plugin_in):
     duckduckgo_command = command.command(plugin_in, 'duckduckgo', shortdesc='Ask the duck.')
     return plugin.plugin(plugin_in, 'fun', [google_command, bing_command, duckduckgo_command])
 
-def onCommand(message_in):
+async def onCommand(message_in):
     query = message_in.body.strip()
 
     # Check if query is nothing
