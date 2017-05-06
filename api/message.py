@@ -15,7 +15,7 @@
 import textwrap
 
 class message:
-    def __init__(self, body='', file='', embed=None, author=None, server=None, delete=False, mentions=None):
+    def __init__(self, body='', file='', embed=None, author=None, server=None, delete=False, mentions=None, channel=None):
         self.command = None
         self.author = None
         self.server = None
@@ -24,6 +24,7 @@ class message:
         self.embed = embed
         self.delete = delete
         self.mentions = mentions
+        self.channel = channel
         
 # Breaks giant message into chunks.
 def createBigMessage(msg, characters : int = 2000):

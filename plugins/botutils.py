@@ -27,7 +27,8 @@ from api.bot import bot
 from libs import progressBar, readableTime, displayname
 
 # Command names.
-SERVERS = "servers"
+SERVERSCMD = "servers"
+NICKNAMECMD = "nickname"
 
 def detectDuplicateCommands():
     duplicates = []
@@ -70,11 +71,12 @@ def onInit(plugin_in):
     addowner_command   = command.command(plugin_in, 'addowner', shortdesc='Add a bot owner', devcommand=True)
     owners_command     = command.command(plugin_in, 'owners', shortdesc='Print the bot owners', devcommand=True)
     messages_command   = command.command(plugin_in, 'messages', shortdesc="Show how many messages the bot has seen since start")
-    servers_command    = command.command(plugin_in, SERVERS, shortdesc="Show how many servers the bot is on")
+    servers_command    = command.command(plugin_in, SERVERSCMD, shortdesc="Show how many servers the bot is on")
     invite_command     = command.command(plugin_in, 'invite', shortdesc="Invite the bot to your server!")
+    nickname_command   = command.command(plugin_in, NICKNAMECMD, shortdesc="Change the bot's nickname")
     return plugin.plugin(plugin_in, 'botutils', [plugins_command, commands_command, help_command, info_command, plugintree_command, uptime_command,
                                                  hostinfo_command, cpuinfo_command, setprefix_command, getprefix_command, speedtest_command, addowner_command,
-                                                 owners_command, messages_command, servers_command, invite_command])
+                                                 owners_command, messages_command, servers_command, invite_command, nickname_command])
 
 def onCommand(message_in):
     if message_in.command == 'plugins':
@@ -265,7 +267,7 @@ def onCommand(message_in):
         ownerLst = ', '.join(owners)
         return message.message(body=ownerLst)
 
-    if message_in.command == SERVERS:
+    if message_in.command == SERVERSCMD:
         # Get server count.
         servercount = len(bot.client.servers)
         
@@ -280,6 +282,17 @@ def onCommand(message_in):
 
     if message_in.command == 'invite':
         return message.message(body=discord.utils.oauth_url(bot.client.user.id, adminPerm))
+
+    if message_in.command == NICKNAMECMD:
+        if message_in.channel.permissions_for(message_in.author).manage_nicknames:
+            # Change nickname.
+            bot.client.change_nickname(message_in.server.me, message_in.body.strip())
+            if message_in.server.me.nick:
+                return message.message("My new nickname in this server is **{}**".format(message_in.server.me.nick))
+            else:
+                return message.message("My nickname has been removed.")
+        else:
+            return message.message("You cannot change nicknames on this server.")
 
 class adminPerm:
     value = 8

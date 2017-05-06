@@ -16,6 +16,7 @@ import glob
 import importlib
 import time
 import sys
+import asyncio
 
 import discord
 from pluginbase import PluginBase
@@ -164,8 +165,9 @@ async def on_message(message_in):
             message_recv.author = message_in.author
             message_recv.server = message_in.server
             message_recv.mentions = message_in.mentions
+            message_recv.channel = message_in.channel
 
-            command_result = command.plugin.onCommand(message_recv)
+            command_result = await command.plugin.onCommand(message_recv)
 
             # No message, error.
             if command_result == None:
