@@ -50,8 +50,7 @@ async def onCommand(message_in):
         existingOffset = table.search(OffsetTable, 'id', '{}'.format(message_in.author.id))
         print(existingOffset)
         if existingOffset != None:
-            OffsetEntry = entry(message_in.author.id, database, 'offsets', dict(offset=existingOffset[2]))
-            OffsetEntry.delete()
+            existingOffset.edit(dict(id=message_in.author.id, offset=normalizedoffset))
 
         table.insert(OffsetTable, dict(id=message_in.author.id, offset=normalizedoffset))
         
