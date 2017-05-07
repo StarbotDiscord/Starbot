@@ -80,6 +80,7 @@ if __name__ == "__main__":
     print(newEntry.id)
 
     newEntry.edit(dict(histest="hi", hertest="grapes"))
+    newEntry.delete()
 
     # Log the time we started.
     bot.startTime = time.time()

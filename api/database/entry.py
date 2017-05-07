@@ -13,3 +13,6 @@ class entry:
 
     def edit(self, newData):
         SQLite.editInDatabase(self.db, self.table, self.id, newData)
+
+    def delete(self):
+        SQLite.deleteEntryInDatabase(self.db, self.table, self.id)

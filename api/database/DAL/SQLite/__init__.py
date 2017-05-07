@@ -59,3 +59,7 @@ def editInDatabase(db_in, table, id, dict_in):
         c.execute("UPDATE " + table.name + " SET " + key + "='" + value + "' WHERE id=" + str(id) + ";")
 
     db_in.connection.commit()
+
+def deleteEntryInDatabase(db_in, table, id):
+    c = db_in.connection.cursor()
+    c.execute('DELETE FROM ' + table.name + ' WHERE id=' + str(id))
