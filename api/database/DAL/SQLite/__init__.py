@@ -63,3 +63,9 @@ def editInDatabase(db_in, table, id, dict_in):
 def deleteEntryInDatabase(db_in, table, id):
     c = db_in.connection.cursor()
     c.execute('DELETE FROM ' + table.name + ' WHERE id=' + str(id))
+
+def searchInTable(db_in, table, searchTerm, searchFor):
+    c = db_in.connection.cursor()
+    cursor = c.execute('SELECT * FROM ' + table.name + ' WHERE ' + searchTerm + '=\'' + searchFor + '\';')
+    for row in cursor:
+        return row

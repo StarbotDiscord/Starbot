@@ -82,6 +82,11 @@ if __name__ == "__main__":
     newEntry.edit(dict(histest="hi", hertest="grapes"))
     newEntry.delete()
 
+    newEntry = table.insert(newTable, dict(mytest="bananas", hertest="apples"))
+    print(newTable.search('mytest', 'bananas'))
+    print(newTable.search('mytest', 'grapes'))
+
+
     # Log the time we started.
     bot.startTime = time.time()
 
