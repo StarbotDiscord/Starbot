@@ -68,4 +68,6 @@ def searchInTable(db_in, table, searchTerm, searchFor):
     c = db_in.connection.cursor()
     cursor = c.execute('SELECT * FROM ' + table.name + ' WHERE ' + searchTerm + '=\'' + searchFor + '\';')
     for row in cursor:
-        return row
+        print(row[0])
+        newEntry = entry(row[0], db_in, table, row)
+        return newEntry
