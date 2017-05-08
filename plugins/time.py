@@ -21,9 +21,12 @@ def onInit(plugin_in):
     # Set Commands
     setoffset_command = command.command(plugin_in, 'setoffset', shortdesc='Set your UTC offset.')
     time_command = command.command(plugin_in, 'time', shortdesc='Get local time.')
-    return plugin.plugin(plugin_in, 'time', [setoffset_command])
+    return plugin.plugin(plugin_in, 'time', [setoffset_command, time_command])
 
 async def onCommand(message_in):
+    database.init()
+    OffsetTable = table('offsets', tableTypes.pGlobal)
+    
     if message_in.command == 'setoffset':
         # Normalize offset
         offsetstr = message_in.body.strip()
@@ -44,19 +47,74 @@ async def onCommand(message_in):
         normalizedoffset = '{}{}:{}'.format(prefix, hours, minutes)
 
         # Set Offset
-        database.init()
-        OffsetTable = table('offsets', tableTypes.pGlobal)
 
         existingOffset = table.search(OffsetTable, 'id', '{}'.format(message_in.author.id))
-        print(existingOffset)
+
         if existingOffset != None:
             existingOffset.edit(dict(id=message_in.author.id, offset=normalizedoffset))
-
-        table.insert(OffsetTable, dict(id=message_in.author.id, offset=normalizedoffset))
+        else:
+            table.insert(OffsetTable, dict(id=message_in.author.id, offset=normalizedoffset))
         
         return message.message('Your UTC offset has been set to *{}!*'.format(normalizedoffset))
 
+    
+    if message_in.command == 'time':
+        memberOrOffset = message_in.body.strip()
+        print(memberOrOffset)
+        # Check whose time we need (or if we got an offset)
+        if not memberOrOffset:
+            member = message_in.author
+            print("Member set to message_in.author")
+        else:
+            # Try to get a user first
+            member = displayname.memberForName(message_in.body.strip(), message_in.server)
+            print("Finding Member...")
+        
+        if member:
+            # We got one
+            print("Member found!")
+            existingOffset = table.search(OffsetTable, 'id', '{}'.format(message_in.author.id))
+            offset = existingOffset.data.get[1]
+        else:
+            print("Member not found!")
+            offset = memberOrOffset
 
-#    if message_in.command == 'time':
+        if offset == None:
+            return message.message('Either the member didn\'t set an offset, or the offset provided was invalid')
 
-        # Check whose time we need
+        offset = offset.replace('+', '')
+
+        # Split time string by : and get hour/minute values
+        try:
+            hours, minutes = map(int, offset.split(':'))
+        except Exception:
+            try:
+                hours = int(offset)
+                minutes = 0
+            except Exception:
+                return message.message('If a member was provided, then Database Corruption, else Invalid offset format.')
+
+        msg = 'UTC'
+        # Get the time
+        t = datetime.datetime.utcnow()
+        # Apply offset
+        if hours > 0:
+            # Apply positive offset
+            msg += '+{}'.format(offset)
+            td = datetime.timedelta(hours=hours, minutes=minutes)
+            newTime = t + td
+        elif hours < 0:
+            # Apply negative offset
+            msg += '{}'.format(offset)
+            td = datetime.timedelta(hours=(-1*hours), minutes=(-1*minutes))
+            newTime = t - td
+        else:
+            # No offset
+            newTime = t
+
+        if member:
+            msg = '{}; where *{}* is, it\'s currently *{}*'.format(msg, displayname.name(member), newTime.strftime("%I:%M %p"))
+        else:
+            msg = '{} is currently *{}*'.format(msg, newTime.strftime("%I:%M %p"))
+        # Say message
+        return message.message(msg)
