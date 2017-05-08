@@ -77,7 +77,7 @@ async def onCommand(message_in):
             # No offset
             newTime = timeutc
 
-        return message.message('Your UTC offset has been set to *{}*, for which time is {}.'.format(normalizedoffset, newTime.strftime("%I:%M %p")))
+        return message.message('Your UTC offset has been set to *{}*, for which the time is {}.'.format(normalizedoffset, newTime.strftime("%I:%M %p")))
 
     
     if message_in.command == 'time':
@@ -121,12 +121,12 @@ async def onCommand(message_in):
 
         if hours > 0:
             # Apply positive offset
-            offsetmsg += 'UTC+{}'.format(offset)
+            offsetmsg = 'UTC+{}'.format(offset)
             timedelta = datetime.timedelta(hours=hours, minutes=minutes)
             newTime = timeutc + timedelta
         elif hours < 0:
             # Apply negative offset
-            offsetmsg += 'UTC{}'.format(offset)
+            offsetmsg = 'UTC{}'.format(offset)
             timedelta = datetime.timedelta(hours=(-1*hours), minutes=(-1*minutes))
             newTime = timeutc - timedelta
         else:
