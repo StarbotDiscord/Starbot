@@ -1,3 +1,8 @@
+# Copyright (c) 2017 CorpNewt
+# 
+# This software is released under the MIT License.
+# https://opensource.org/licenses/MIT
+
 def getReadableTimeBetween(first, last):
     # A helper function to make a readable string between two times
     timeBetween = int(last - first)

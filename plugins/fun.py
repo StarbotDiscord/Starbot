@@ -26,7 +26,7 @@ def onInit(plugin_in):
     beta_command = command.command(plugin_in, 'beta', shortdesc='Something went wrong™')
     return plugin.plugin(plugin_in, 'fun', [lenny_command, shrug_command, tableflip_command, fart_command, beta_command])
 
-def onCommand(message_in):
+async def onCommand(message_in):
     # Lenny.
     if message_in.command == 'lenny':
         # Create message.

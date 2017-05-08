@@ -12,16 +12,16 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
-import random
-from api import command, message, plugin
+import unittest
+from api import message, plugin
+from plugins import excuses
 
-def onInit(plugin_in):
-    excuse_command = command.command(plugin_in, 'excuse', shortdesc='Dish out excuses ;)')
-    return plugin.plugin(plugin_in, 'excuses', [excuse_command])
+class TestExcuseSuite(unittest.TestCase):
 
-async def onCommand(message_in):
-    if message_in.command == 'excuse':
-        # Give excuses
+    def testExcuseMsg(self):
+        msg = message.message(body="")
+        msg.command = "excuse"
+
         excuseList = ["I have an appointment with a robot.", 
         "I was abducted by robots.", 
         "I didn’t know what day it was because I was looking at the Robotic Calendar.",
@@ -31,13 +31,14 @@ async def onCommand(message_in):
         "My Robot Assistant blue-screened.",
         "A kernel panic erased my work.",
         "Somebody used up the data limit watching YouTube."]
-        randexcuse = random.randint(0, len(excuseList)-1)
-        
-        # Say sorry
         sorryList = ["Please excuse me,", "I'm sorry, but", "I hope you forgive me, because"]
-        randsorry = random.randint(0, len(sorryList)-1)
+        fullExcuseList = []
 
-        msg = '*{} {}*'.format(sorryList[randsorry], excuseList[randexcuse])
+        for sorry in sorryList:
+            for excuse in excuseList:
+                fullExcuseList.append('*{} {}*'.format(sorry, excuse))
+        
+        result=excuses.onCommand(msg)
 
-        # Return newly constructed message
-        return message.message(msg)
+        self.assertEqual(type(result), type(msg))
+        self.assertEqual(result.body in fullExcuseList, True)

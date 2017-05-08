@@ -27,7 +27,8 @@ from api.bot import bot
 from libs import progressBar, readableTime, displayname
 
 # Command names.
-SERVERS = "servers"
+SERVERSCMD = "servers"
+NICKNAMECMD = "nickname"
 
 def detectDuplicateCommands():
     duplicates = []
@@ -70,12 +71,14 @@ def onInit(plugin_in):
     addowner_command   = command.command(plugin_in, 'addowner', shortdesc='Add a bot owner', devcommand=True)
     owners_command     = command.command(plugin_in, 'owners', shortdesc='Print the bot owners', devcommand=True)
     messages_command   = command.command(plugin_in, 'messages', shortdesc="Show how many messages the bot has seen since start")
-    servers_command    = command.command(plugin_in, SERVERS, shortdesc="Show how many servers the bot is on")
+    servers_command    = command.command(plugin_in, SERVERSCMD, shortdesc="Show how many servers the bot is on")
+    invite_command     = command.command(plugin_in, 'invite', shortdesc="Invite the bot to your server!")
+    nickname_command   = command.command(plugin_in, NICKNAMECMD, shortdesc="Change the bot's nickname")
     return plugin.plugin(plugin_in, 'botutils', [plugins_command, commands_command, help_command, info_command, plugintree_command, uptime_command,
                                                  hostinfo_command, cpuinfo_command, setprefix_command, getprefix_command, speedtest_command, addowner_command,
-                                                 owners_command, messages_command, servers_command])
+                                                 owners_command, messages_command, servers_command, invite_command, nickname_command])
 
-def onCommand(message_in):
+async def onCommand(message_in):
     if message_in.command == 'plugins':
         pluginList = []
         for plugin in bot.plugins:
@@ -207,13 +210,14 @@ def onCommand(message_in):
         return message.message(body='```{}```'.format(cpuPercentString))
 
     if message_in.command == 'setprefix':
-        if message_in.author.id == '219683089457217536':
+        if db.isOwner(message_in.author.id) == True:
             prefix = message_in.body.split(' ', 1)[-1]
             db.setPrefix(message_in.server.id, prefix)
             return message.message(body='Prefix set to {}'.format(prefix))
+        else:
+            return message.message(body='Only my owner can set the prefix!')
 
     if message_in.command == 'getprefix':
-        if message_in.author.id == '219683089457217536':
             return message.message(body='Prefix is {}'.format(db.getPrefix(message_in.server.id)))
 
     if message_in.command == 'speedtest':
@@ -264,7 +268,7 @@ def onCommand(message_in):
         ownerLst = ', '.join(owners)
         return message.message(body=ownerLst)
 
-    if message_in.command == SERVERS:
+    if message_in.command == SERVERSCMD:
         # Get server count.
         servercount = len(bot.client.servers)
         
@@ -276,3 +280,21 @@ def onCommand(message_in):
 
     if message_in.command == 'messages':
         return message.message("I've witnessed *{} messages* since I started and *{} messages* overall!".format(bot.messagesSinceStart, db.getMessageCount(message_in.server.id)))
+
+    if message_in.command == 'invite':
+        return message.message(body=discord.utils.oauth_url(bot.client.user.id, adminPerm))
+
+    if message_in.command == NICKNAMECMD:
+        if message_in.channel.permissions_for(message_in.author).manage_nicknames:
+            # Change nickname.
+            await bot.client.change_nickname(message_in.server.me, message_in.body.strip())
+           # if message_in.server.me.nick:
+            #    return message.message("My new nickname in this server is **{}**".format(message_in.server.me.nick))
+            #else:
+             #   return message.message("My nickname has been removed.")
+            return message.message("My nickname has been changed.")
+        else:
+            return message.message("You cannot change nicknames on this server.")
+
+class adminPerm:
+    value = 8

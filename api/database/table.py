@@ -14,6 +14,7 @@
 
 from api.database import DAL
 from api.database.db import db
+from api.database.DAL import SQLite
 
 class table:
     name = None
@@ -26,7 +27,10 @@ class table:
         DAL.createTableIfNotExist(db, self.name)
 
     def insert(self, dataDict):
-        DAL.insertToDatabase(db, self, dataDict)
+        return DAL.insertToDatabase(db, self, dataDict)
+
+    def search(self, searchTerm, searchFor):
+        return SQLite.searchInTable(db, self, searchTerm, searchFor)
 
 class tableTypes:
     pServer = 1

@@ -16,6 +16,7 @@ import glob
 import importlib
 import time
 import sys
+import asyncio
 
 import discord
 from pluginbase import PluginBase
@@ -69,6 +70,23 @@ class fakeClient:
         pass
 
 if __name__ == "__main__":
+    from api import database
+    database.init()
+
+    from api.database.table import table, tableTypes
+    newTable = table('test', tableTypes.pGlobal)
+
+    newEntry = table.insert(newTable, dict(mytest="bananas", hertest="apples"))
+    print(newEntry.id)
+
+    newEntry.edit(dict(histest="hi", hertest="grapes"))
+    newEntry.delete()
+
+    newEntry = table.insert(newTable, dict(mytest="bananas", hertest="apples"))
+    print(newTable.search('mytest', 'bananas'))
+    print(newTable.search('mytest', 'grapes'))
+
+
     # Log the time we started.
     bot.startTime = time.time()
 
@@ -153,8 +171,9 @@ async def on_message(message_in):
             message_recv.author = message_in.author
             message_recv.server = message_in.server
             message_recv.mentions = message_in.mentions
+            message_recv.channel = message_in.channel
 
-            command_result = command.plugin.onCommand(message_recv)
+            command_result = await command.plugin.onCommand(message_recv)
 
             # No message, error.
             if command_result == None:

@@ -23,7 +23,7 @@ def onInit(plugin_in):
     eat_command = command.command(plugin_in, 'eat', shortdesc='Eat someone or something')
     return plugin.plugin(plugin_in, 'eat', [eat_command])
 
-def onCommand(message_in):
+async def onCommand(message_in):
     if message_in.command == 'eat':
         author = displayname.name(message_in.author)
         member = message_in.body.strip()

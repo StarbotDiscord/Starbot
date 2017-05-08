@@ -20,9 +20,9 @@ def onInit(plugin_in):
     google_command = command.command(plugin_in, 'google', shortdesc='Google it!')
     bing_command = command.command(plugin_in, 'bing', shortdesc='Uhh... Bing it?')
     duckduckgo_command = command.command(plugin_in, 'duckduckgo', shortdesc='Ask the duck.')
-    return plugin.plugin(plugin_in, 'fun', [google_command, bing_command, duckduckgo_command])
+    return plugin.plugin(plugin_in, 'search', [google_command, bing_command, duckduckgo_command])
 
-def onCommand(message_in):
+async def onCommand(message_in):
     query = message_in.body.strip()
 
     # Check if query is nothing
@@ -35,7 +35,7 @@ def onCommand(message_in):
     # Be kind, don't use lmgtfy/similar
     if message_in.command == 'google':
         msg = "Google search:"
-        url = "https://www.google.com/?q="
+        url = "https://www.google.com/#q="
     if message_in.command == 'bing':
         msg = "Bing search:"
         url = "https://www.bing.com/?q="

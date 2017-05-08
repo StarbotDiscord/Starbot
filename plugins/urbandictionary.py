@@ -18,8 +18,6 @@ import urllib.error
 import urllib.request
 
 from api import command, message, plugin, caching
-from libs import bigmessage
-
 
 # UD plugin
 def onInit(plugin_in):
@@ -27,7 +25,7 @@ def onInit(plugin_in):
     randefine_command = command.command(plugin_in, 'randefine', shortdesc='Define a random thing')
     return plugin.plugin(plugin_in, 'urbandictionary', [define_command, randefine_command])
 
-def onCommand(message_in):
+async def onCommand(message_in):
     # Define.
     if message_in.command == 'define':
         # Get the word to define.
@@ -58,7 +56,7 @@ def onCommand(message_in):
                 msg = '{}\n\n__Example(s):__\n\n*{}*'.format(msg, ourWord["example"])
 
         # Return message.
-        return bigmessage.create(msg)
+        return message.createBigMessage(msg)
 
     # Random define.
     if message_in.command == 'randefine':
@@ -78,4 +76,4 @@ def onCommand(message_in):
                 msg = '{}\n\n__Example(s):__\n\n*{}*'.format(msg, ourWord["example"])
 
         # Return message.
-        return bigmessage.create(msg)
+        return message.createBigMessage(msg)

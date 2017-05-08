@@ -23,7 +23,7 @@ def onInit(plugin_in):
     goldfish_command = command.command(plugin_in, 'goldfish', shortdesc='Post a random picture of a goldfish to the channel')
     return plugin.plugin(plugin_in, 'randimg', [goldfish_command])
 
-def onCommand(message_in):
+async def onCommand(message_in):
     # Goldfish
     if message_in.command == 'goldfish':
         try:

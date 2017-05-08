@@ -29,4 +29,4 @@ def createTableIfNotExist(db_in, tablename):
 
 def insertToDatabase(db_in, table, dict_in):
     if db.type == "SQLite":
-        SQLite.insertToDatabase(db_in, table, dict_in)
+        return SQLite.insertToDatabase(db_in, table, dict_in)
