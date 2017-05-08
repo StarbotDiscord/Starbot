@@ -59,8 +59,25 @@ async def onCommand(message_in):
         else:
             # Create new entry
             table.insert(OffsetTable, dict(id=message_in.author.id, offset=normalizedoffset))
+                # Get time right now
         
-        return message.message('Your UTC offset has been set to *{}!*'.format(normalizedoffset))
+        # Return time along with offset
+        timeutc = datetime.datetime.utcnow()
+        # Apply offset
+
+        if hours > 0:
+            # Apply positive offset
+            timedelta = datetime.timedelta(hours=hours, minutes=minutes)
+            newTime = timeutc + timedelta
+        elif hours < 0:
+            # Apply negative offset
+            timedelta = datetime.timedelta(hours=(-1*hours), minutes=(-1*minutes))
+            newTime = timeutc - timedelta
+        else:
+            # No offset
+            newTime = timeutc
+
+        return message.message('Your UTC offset has been set to *{}*, for which time is {}.'.format(normalizedoffset, newTime.strftime("%I:%M %p")))
 
     
     if message_in.command == 'time':
