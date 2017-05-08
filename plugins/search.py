@@ -20,7 +20,7 @@ def onInit(plugin_in):
     google_command = command.command(plugin_in, 'google', shortdesc='Google it!')
     bing_command = command.command(plugin_in, 'bing', shortdesc='Uhh... Bing it?')
     duckduckgo_command = command.command(plugin_in, 'duckduckgo', shortdesc='Ask the duck.')
-    return plugin.plugin(plugin_in, 'fun', [google_command, bing_command, duckduckgo_command])
+    return plugin.plugin(plugin_in, 'search', [google_command, bing_command, duckduckgo_command])
 
 async def onCommand(message_in):
     query = message_in.body.strip()
