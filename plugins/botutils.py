@@ -210,13 +210,14 @@ async def onCommand(message_in):
         return message.message(body='```{}```'.format(cpuPercentString))
 
     if message_in.command == 'setprefix':
-        if message_in.author.id == '219683089457217536':
+        if db.isOwner(message_in.author.id) == True:
             prefix = message_in.body.split(' ', 1)[-1]
             db.setPrefix(message_in.server.id, prefix)
             return message.message(body='Prefix set to {}'.format(prefix))
+        else:
+            return message.message(body='Only my owner can set the prefix!')
 
     if message_in.command == 'getprefix':
-        if message_in.author.id == '219683089457217536':
             return message.message(body='Prefix is {}'.format(db.getPrefix(message_in.server.id)))
 
     if message_in.command == 'speedtest':
