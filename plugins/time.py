@@ -24,11 +24,14 @@ def onInit(plugin_in):
     return plugin.plugin(plugin_in, 'time', [setoffset_command, time_command])
 
 async def onCommand(message_in):
+    # Initialize Database
+
     database.init()
     OffsetTable = table('offsets', tableTypes.pGlobal)
     
     if message_in.command == 'setoffset':
         # Normalize offset
+
         offsetstr = message_in.body.strip()
         
         if offsetstr[0] == '+':
@@ -46,13 +49,15 @@ async def onCommand(message_in):
                 return message.message('Incorrect Offset format. Has to be in +/-HH:MM!')
         normalizedoffset = '{}{}:{}'.format(prefix, hours, minutes)
 
-        # Set Offset
+        # Set Offset in Database
 
+        # Try to update Offset if it exists
         existingOffset = table.search(OffsetTable, 'id', '{}'.format(message_in.author.id))
 
         if existingOffset != None:
             existingOffset.edit(dict(id=message_in.author.id, offset=normalizedoffset))
         else:
+            # Create new entry
             table.insert(OffsetTable, dict(id=message_in.author.id, offset=normalizedoffset))
         
         return message.message('Your UTC offset has been set to *{}!*'.format(normalizedoffset))
@@ -60,27 +65,26 @@ async def onCommand(message_in):
     
     if message_in.command == 'time':
         memberOrOffset = message_in.body.strip()
-        print(memberOrOffset)
+        
         # Check whose time we need (or if we got an offset)
+        
         if not memberOrOffset:
             member = message_in.author
-            print("Member set to message_in.author")
         else:
             # Try to get a user first
-            member = displayname.memberForName(message_in.body.strip(), message_in.server)
-            print("Finding Member...")
+            member = displayname.memberForName(memberOrOffset, message_in.server)
         
         if member:
-            # We got one
-            print("Member found!")
-            existingOffset = table.search(OffsetTable, 'id', '{}'.format(message_in.author.id))
-            offset = existingOffset.data.get[1]
+            existingOffset = table.search(OffsetTable, 'id', '{}'.format(member.id))
+            
+            # Check if entry exists
+            try:
+                offset = existingOffset.data[1]
+            except Exception:
+                return message.message('*{}* didn\'t set an offset. Set an offset with `!setoffset (offset)`.'.format(displayname.name(member)))
         else:
-            print("Member not found!")
+            # Assume input is offset
             offset = memberOrOffset
-
-        if offset == None:
-            return message.message('Either the member didn\'t set an offset, or the offset provided was invalid')
 
         offset = offset.replace('+', '')
 
@@ -92,20 +96,20 @@ async def onCommand(message_in):
                 hours = int(offset)
                 minutes = 0
             except Exception:
-                return message.message('If a member was provided, then Database Corruption, else Invalid offset format.')
-
-        msg = 'UTC'
-        # Get the time
+                return message.message('Invalid offset format. Has to be in +/-HH:MM!')
+        
+        # Get time right now
         t = datetime.datetime.utcnow()
         # Apply offset
+
         if hours > 0:
             # Apply positive offset
-            msg += '+{}'.format(offset)
+            offsetmsg += 'UTC+{}'.format(offset)
             td = datetime.timedelta(hours=hours, minutes=minutes)
             newTime = t + td
         elif hours < 0:
             # Apply negative offset
-            msg += '{}'.format(offset)
+            offsetmsg += 'UTC{}'.format(offset)
             td = datetime.timedelta(hours=(-1*hours), minutes=(-1*minutes))
             newTime = t - td
         else:
@@ -113,8 +117,9 @@ async def onCommand(message_in):
             newTime = t
 
         if member:
-            msg = '{}; where *{}* is, it\'s currently *{}*'.format(msg, displayname.name(member), newTime.strftime("%I:%M %p"))
+            msg = '{}; where *{}* is, it\'s currently *{}*'.format(offsetmsg, displayname.name(member), newTime.strftime("%I:%M %p"))
         else:
-            msg = '{} is currently *{}*'.format(msg, newTime.strftime("%I:%M %p"))
+            msg = '{} is currently *{}*'.format(offsetmsg, newTime.strftime("%I:%M %p"))
         # Say message
         return message.message(msg)
+
