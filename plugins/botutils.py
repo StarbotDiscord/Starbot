@@ -291,6 +291,7 @@ async def onCommand(message_in):
             #    return message.message("My new nickname in this server is **{}**".format(message_in.server.me.nick))
             #else:
              #   return message.message("My nickname has been removed.")
+            return message.message("My nickname has been changed.")
         else:
             return message.message("You cannot change nicknames on this server.")
 
