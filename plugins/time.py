@@ -116,19 +116,19 @@ async def onCommand(message_in):
                 return message.message('Invalid offset format. Has to be in +/-HH:MM!')
         
         # Get time right now
-        t = datetime.datetime.utcnow()
+        timeutc = datetime.datetime.utcnow()
         # Apply offset
 
         if hours > 0:
             # Apply positive offset
             offsetmsg += 'UTC+{}'.format(offset)
-            td = datetime.timedelta(hours=hours, minutes=minutes)
-            newTime = t + td
+            timedelta = datetime.timedelta(hours=hours, minutes=minutes)
+            newTime = timeutc + timedelta
         elif hours < 0:
             # Apply negative offset
             offsetmsg += 'UTC{}'.format(offset)
-            td = datetime.timedelta(hours=(-1*hours), minutes=(-1*minutes))
-            newTime = t - td
+            timedelta = datetime.timedelta(hours=(-1*hours), minutes=(-1*minutes))
+            newTime = timeutc - timedelta
         else:
             # No offset
             newTime = t
