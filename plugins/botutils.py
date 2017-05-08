@@ -286,11 +286,11 @@ async def onCommand(message_in):
     if message_in.command == NICKNAMECMD:
         if message_in.channel.permissions_for(message_in.author).manage_nicknames:
             # Change nickname.
-            bot.client.change_nickname(message_in.server.me, message_in.body.strip())
-            if message_in.server.me.nick:
-                return message.message("My new nickname in this server is **{}**".format(message_in.server.me.nick))
-            else:
-                return message.message("My nickname has been removed.")
+            await bot.client.change_nickname(message_in.server.me, message_in.body.strip())
+           # if message_in.server.me.nick:
+            #    return message.message("My new nickname in this server is **{}**".format(message_in.server.me.nick))
+            #else:
+             #   return message.message("My nickname has been removed.")
         else:
             return message.message("You cannot change nicknames on this server.")
 
