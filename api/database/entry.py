@@ -10,6 +10,7 @@ class entry:
         self.id = input_id
         self.db = database
         self.table = table_in
+        self.data = data
 
     def edit(self, newData):
         SQLite.editInDatabase(self.db, self.table, self.id, newData)
