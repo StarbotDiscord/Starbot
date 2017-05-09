@@ -24,28 +24,45 @@ from api import command, message, plugin
 from api.wikia import Wikia
 import discord
 
-def onInit(plugin_in):
-    tinyurl_command = command.command(plugin_in, 'starwiki', shortdesc='Search the Star VS. Wikia')
-    return plugin.plugin(plugin_in, 'starwiki', [tinyurl_command])
+def doWiki(wiki, search):
+    starwiki = Wikia(wiki)
+    try:
+        results = starwiki.search(search)
+        page = starwiki.getPage(results[0]['id'])
+        section = page[0]
+    except:
+        return message.message("No result found for '{}'".format(search))
 
-async def onCommand(message_in):
-    if message_in.body == '':
-        return message.message(body='Usage:\nstarwiki [search term]')
-    else:
-        starwiki = Wikia('starvstheforcesofevil')
-        try:
-            results = starwiki.search(message_in.body.strip())
-            page = starwiki.getPage(results[0]['id'])
-            section = page[0]
-        except:
-            return message.message("No result found for '{}'".format(message_in.body))
+    if len(section['content']) < 1:
+        return message.message(body="No result found for '{}'".format(search))
 
-        if len(section['content']) < 1:
-            return message.message(body="No result found for '{}'".format(message_in.body))
-
-        embed = discord.Embed(color=discord.Color.green())
-        embed.set_author(name="Visit the full page here",
+    embed = discord.Embed(color=discord.Color.green())
+    embed.set_author(name="Visit the full page here",
                          url=results[0]['url'],
                          icon_url='http://slot1.images.wikia.nocookie.net/__cb1493894030/common/skins/common/images/wiki.png')
-        embed.add_field(name=section['title'], value=section['content'][0]['text'])
-        return message.message(embed=embed)
+    embed.add_field(name=section['title'], value=section['content'][0]['text'])
+    return message.message(embed=embed)
+
+def onInit(plugin_in):
+    starwiki_command = command.command(plugin_in, 'starwiki', shortdesc='Search the Star VS. Wikia')
+    wikia_command    = command.command(plugin_in, 'wikia',    shortdesc='Search Wikia!')
+    return plugin.plugin(plugin_in, 'starwiki', [starwiki_command, wikia_command])
+
+async def onCommand(message_in):
+    if message_in.command == 'starwiki':
+        if message_in.body == '':
+            return message.message(body='Usage:\nstarwiki [search term]')
+        else:
+            return doWiki('starvstheforcesofevil', message_in.body)
+
+    if message_in.command == 'wikia':
+        if message_in.body == '':
+            return message.message(body='Usage:\nwikia [wikia name] [search term]')
+
+        inputSplit = message_in.body.split(' ', 2)
+        print(inputSplit)
+
+        if len(inputSplit) != 3:
+            return message.message(body='Usage:\nwikia [wikia name] [search term]')
+
+        return doWiki(inputSplit[1], inputSplit[2])
