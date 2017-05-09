@@ -80,13 +80,13 @@ if __name__ == "__main__":
     plugin_base = PluginBase(package="plugins")
     plugin_source = plugin_base.make_plugin_source(searchpath=["./plugins"])
 
-    # Load each plugin.
-    for plugin in plugin_source.list_plugins():
-        initPlugin(plugin)
-
     # Create the Discord client.
     client = discord.Client()
     bot.client = client
+
+    # Load each plugin.
+    for plugin in plugin_source.list_plugins():
+        initPlugin(plugin)
 
     # Get our token to use.
     token = ""
@@ -195,28 +195,6 @@ async def on_message(message_in):
         bot.messagesSinceStart += 1
         count += 1
         db.setMessageCount(message_in.server.id, count)
-
-
-@client.event
-async def on_member_join(member):
-    # Welcome new user.
-    await client.send_message(member.server, content = "Welcome " + member.mention + " to **" + member.server.name + "**!")
-
-@client.event
-async def on_member_remove(member):
-    # Say goodbye to user.
-    await client.send_message(member.server, content = "Goodbye " + member.mention + ", **" + member.server.name + "** will miss you!")
-
-@client.event
-async def on_member_ban(member) :
-    # Announce ban.
-    await client.send_message(member.server, content = displayname.name(member) + " got banned from **" + member.server.name + "**.")
-
-@client.event
-async def on_member_unban(server, user):
-    # Announce unban.
-    await client.send_message(server, content = displayname.name(user) + " got unbanned from **" + server.name + "**.")
-
 
 async def process_message(target, message_in, msg):
     # If the message to send has a body
