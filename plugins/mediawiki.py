@@ -45,7 +45,6 @@ async def onCommand(message_in):
     
     title = wikidata["query"]["pages"][0]["title"]
     extract = wikidata["query"]["pages"][0]["extract"]
-    print('Current Length: {}'.format(len(extract)))
     
     # Cleanly cut extract to 900 characters
 
