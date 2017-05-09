@@ -22,7 +22,7 @@ def onInit(plugin_in):
     return plugin.plugin(plugin_in, 'wikipedia', [wikipedia_command])
 
 async def onCommand(message_in):
-    searchstring = urllib.parse.quote(message_in.body.strip())
+    searchstring = urllib.parse.quote(str.title(message_in.body.strip()))
     if not searchstring:
         return message.message("Usage: `!wikipedia [article name]")
     # Form URL
