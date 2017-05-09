@@ -39,10 +39,11 @@ def getJson(url, caller='', customName='', save=True):
         customName = url.split('/')[-1]
     fullFilename = '{}_{}'.format(caller, customName)
     cacheTry = db.getCachedFileS(fullFilename)
-    if cacheTry != '':
+    if save and cacheTry != "":
         return cacheTry
     else:
-        jsonString = urllib.request.urlopen(url).read().decode("utf-8")
+        jsonString = urllib.request.urlopen(urllib.request.Request(url, headers={
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.47 Safari/537.36'})).read().decode("utf-8")
         if save == True:
             writeString(jsonString, caller, customName)
         return jsonString
