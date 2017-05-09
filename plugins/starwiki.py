@@ -33,9 +33,12 @@ async def onCommand(message_in):
         return message.message(body='Usage:\nstarwiki [search term]')
     else:
         starwiki = Wikia('starvstheforcesofevil')
-        results = starwiki.search(message_in.body)
-        page = starwiki.getPage(results[0]['id'])
-        section = page[0]
+        try:
+            results = starwiki.search(message_in.body.strip())
+            page = starwiki.getPage(results[0]['id'])
+            section = page[0]
+        except:
+            return message.message("No result found for '{}'".format(message_in.body))
 
         if len(section['content']) < 1:
             return message.message(body="No result found for '{}'".format(message_in.body))
