@@ -37,6 +37,9 @@ async def onCommand(message_in):
         page = starwiki.getPage(results[0]['id'])
         section = page[0]
 
+        if len(section['content']) < 1:
+            return message.message(body="No result found for '{}'".format(message_in.body))
+
         embed = discord.Embed(color=discord.Color.green())
         embed.set_author(name="Visit the full page here",
                          url=results[0]['url'],
