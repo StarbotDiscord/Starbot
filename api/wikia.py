@@ -26,3 +26,11 @@ class Wikia:
         json_d = json.loads(jsonString)
 
         return json_d['sections']
+
+    def getDetails(self, page_id):
+        url = "http://{}.wikia.com/api/v1/Articles/Details?ids={}&abstract=100&width=200&height=200".format(self.wiki_name, page_id)
+
+        jsonString = urllib.request.urlopen(url).read().decode("utf-8")
+        json_d = json.loads(jsonString)
+
+        return json_d['items']

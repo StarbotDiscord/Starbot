@@ -30,7 +30,18 @@ def doWiki(wiki, search):
         results = starwiki.search(search)
         page = starwiki.getPage(results[0]['id'])
         section = page[0]
-    except:
+
+        id = results[0]['id']
+
+        details = starwiki.getDetails(results[0]['id'])
+
+        # Some really stupid hacks to get the main image
+        imageT = details[str(id)]['thumbnail']
+        imageStuff = imageT.split("window-crop", 1)
+        imageStuff2 = imageStuff[1].split("?")
+        image = imageStuff[0][:-1] + "?" + imageStuff2[1]
+    except Exception as e:
+        print(e)
         return message.message("No result found for '{}'".format(search))
 
     if len(section['content']) < 1:
@@ -41,6 +52,7 @@ def doWiki(wiki, search):
                          url=results[0]['url'],
                          icon_url='http://slot1.images.wikia.nocookie.net/__cb1493894030/common/skins/common/images/wiki.png')
     embed.add_field(name=section['title'], value=section['content'][0]['text'])
+    embed.set_image(url=image)
     return message.message(embed=embed)
 
 def onInit(plugin_in):
