@@ -73,20 +73,6 @@ if __name__ == "__main__":
     from api import database
     database.init()
 
-    from api.database.table import table, tableTypes
-    newTable = table('test', tableTypes.pGlobal)
-
-    newEntry = table.insert(newTable, dict(mytest="bananas", hertest="apples"))
-    print(newEntry.id)
-
-    newEntry.edit(dict(histest="hi", hertest="grapes"))
-    newEntry.delete()
-
-    newEntry = table.insert(newTable, dict(mytest="bananas", hertest="apples"))
-    print(newTable.search('mytest', 'bananas'))
-    print(newTable.search('mytest', 'grapes'))
-
-
     # Log the time we started.
     bot.startTime = time.time()
 
