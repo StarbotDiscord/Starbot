@@ -30,8 +30,9 @@ async def onCommand(message_in):
     formatargs = '?format=json&formatversion=2'
     actionarg = 'query'
     propargs = '&prop=extracts&exintro=&explaintext='
+    otherargs = '&redirects=1'
 
-    url = 'https://en.wikipedia.org/w/api.php{}&action={}{}&action=query&titles={}'.format(formatargs, actionarg, propargs, searchstring)
+    url = 'https://en.wikipedia.org/w/api.php{}&action={}{}{}&titles={}'.format(formatargs, actionarg, propargs, otherargs, searchstring)
     
     jsonString = caching.getJson(url, caller='wikipedia', customName=searchstring)
     wikidata = json.loads(jsonString)
