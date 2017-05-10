@@ -40,13 +40,6 @@ def prefix_get(id_server):
     else:
         return '!'
 
-# Log messages to database.
-
-
-def message_log(message):
-    database.init()
-    table_log = table('user_messages', tableTypes.pGlobal)
-    table.insert(table_log, dict(userid=message.author.id, username=message.author.name, message=message.content, serverid=message.server.id, servername=message.server.name))
 
 # Manage bot ownership.
 
@@ -60,13 +53,28 @@ def owners_check(id_user):
     else:
         return False
 
+# TODO: Make tables iterable.
 
-def owners_get():
-    database.init()
-    table_owners = table('owners', tableTypes.pGlobal)
+# def owners_get():
+#     database.init()
+#     table_owners = table('owners', tableTypes.pGlobal)
+#     owners = []
+#     for entry in table_owners:
+#         owners.append(entry.data[0])
+#     return owners
+
+
+def owners_get_old():
+    import sqlite3
+    conn = sqlite3.connect("bot.db3")
+    c = conn.cursor()
+    c.execute('CREATE TABLE IF NOT EXISTS owners (userid INTEGER)')
+    cur = c.execute('SELECT userid FROM owners')
     owners = []
-    for entry in table_owners:
-        owners.append(entry.data[0])
+    for row in list(cur):
+        owners.append(row[0])
+    conn.commit()
+    conn.close()
     return owners
 
 
@@ -77,24 +85,3 @@ def owners_add(id_user):
     if not entry_owner:
         table.insert(table_owners, dict(userid=id_user))
 
-# Manage message log size.
-
-
-def message_count_set(id_server, count):
-    database.init()
-    table_message_count = table('messagecounts', tableTypes.pGlobal)
-    entry_message_count = table.search(table_message_count, 'serverid', {}.format(id_server))
-    if entry_message_count:
-        entry_message_count.edit(dict(serverid=id_server, count=count))
-    else:
-        table.insert(table_message_count, dict(serverid=id_server, count=count))
-
-
-def message_count_get(id_server):
-    database.init()
-    table_message_count = table('messagecounts', tableTypes.pGlobal)
-    entry_message_count = table.search(table_message_count, 'serverid', {}.format(id_server))
-    if entry_message_count:
-        return entry_message_count.data[1]
-    else:
-        return 0
