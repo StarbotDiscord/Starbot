@@ -14,7 +14,6 @@
 
 from api import database
 from api.database.table import table, tableTypes
-import sqlite3.OperationalError
 # Manage stored prefixes in database.
 
 
@@ -24,7 +23,7 @@ def prefix_set(id_server, prefix):
 
     try:
         entry_prefix = table.search(table_prefix, 'serverid', '{}'.format(id_server))
-    except sqlite3.OperationalError:
+    except:
         # TODO: Narrow this and other Exception clauses.
         # Table must be empty.
         entry_prefix = None
