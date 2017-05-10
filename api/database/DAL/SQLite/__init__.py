@@ -24,23 +24,23 @@ def close(db_in):
 
 def createTableIfNotExist(db_in, tablename):
     c = db_in.connection.cursor()
-    c.execute('CREATE TABLE IF NOT EXISTS ' + tablename.replace("'", "\\'") + '(id INTEGER PRIMARY KEY);')
+    c.execute('CREATE TABLE IF NOT EXISTS %s(id INTEGER PRIMARY KEY);' % tablename)
 
 def insertToDatabase(db_in, table, dict_in):
     c = db_in.connection.cursor()
     keys = []
     values = []
     for key, value in dict_in.items():
-        keys.append(key.replace("'", "\\'"))
-        values.append("'" + value.replace("'", "\\'") + "'")
+        keys.append(key)
+        values.append("'" + value + "'")
 
     for key in keys:
         try:
-            c.execute('ALTER TABLE ' + table.name + ' ADD COLUMN ' + key)
+            c.execute('ALTER TABLE %s ADD COLUMN %s' % (table.name, key))
         except:
             pass
 
-    c.execute("INSERT INTO " + table.name.replace("'", "\\'") + "(" + ",".join(keys) + ") VALUES (" + ",".join(values) + ");")
+    c.execute('INSERT INTO %s(%s) VALUES (%s);' % (table.name, ",".join(keys), ",".join(values)))
     return_entry = entry(c.lastrowid, db_in, table, dict_in)
     db_in.connection.commit()
     return return_entry
@@ -52,21 +52,22 @@ def editInDatabase(db_in, table, id, dict_in):
     tableArray = []
     for key, value in dict_in.items():
         try:
-            c.execute('ALTER TABLE ' + table.name.replace("'", "\\'") + ' ADD COLUMN ' + key.replace("'", "\\'"))
+            c.execute('ALTER TABLE %s ADD COLUMN %s' % (table.name, key))
         except:
             pass
-        print("UPDATE " + table.name.replace("'", "\\'") + " SET " + key.replace("'", "\\'") + "=" + value.replace("'", "\\'") + " WHERE id=" + str(id).replace("'", "\\'") + ";")
-        c.execute("UPDATE " + table.name.replace("'", "\\'") + " SET " + key.replace("'", "\\'") + "='" + value.replace("'", "\\'") + "' WHERE id=" + str(id).replace("'", "\\'") + ";")
+        c.execute("UPDATE '%s' SET %s='%s' WHERE id=%s;" %
+                  (table.name, key, value, str(id)))
 
     db_in.connection.commit()
 
 def deleteEntryInDatabase(db_in, table, id):
     c = db_in.connection.cursor()
-    c.execute('DELETE FROM ' + table.name.replace("'", "\\'") + ' WHERE id=' + str(id).replace("'", "\\'"))
+    c.execute('DELETE FROM %s WHERE id=%s' % (table.name, str(id)))
 
 def searchInTable(db_in, table, searchTerm, searchFor):
     c = db_in.connection.cursor()
-    cursor = c.execute('SELECT * FROM ' + table.name.replace("'", "\\'") + ' WHERE ' + searchTerm.replace("'", "\\'") + '=\'' + searchFor.replace("'", "\\'") + '\';')
+    #cursor = c.execute('SELECT * FROM ' + table.name.replace("'", "''") + ' WHERE ' + searchTerm.replace("'", "''") + '=\'' + searchFor.replace("'", "''") + '\';')
+    cursor = c.execute("SELECT * FROM %s WHERE %s='%s';" % (table.name, searchTerm, searchFor))
     for row in cursor:
         print(row[0])
         newEntry = entry(row[0], db_in, table, row)

@@ -20,7 +20,8 @@ def onInit(plugin_in):
     google_command = command.command(plugin_in, 'google', shortdesc='Google it!')
     bing_command = command.command(plugin_in, 'bing', shortdesc='Uhh... Bing it?')
     duckduckgo_command = command.command(plugin_in, 'duckduckgo', shortdesc='Ask the duck.')
-    return plugin.plugin(plugin_in, 'search', [google_command, bing_command, duckduckgo_command])
+    aol_command = command.command(plugin_in, 'aol', shortdesc='Here you go, gramps')
+    return plugin.plugin(plugin_in, 'search', [google_command, bing_command, duckduckgo_command, aol_command])
 
 async def onCommand(message_in):
     query = message_in.body.strip()
@@ -42,6 +43,9 @@ async def onCommand(message_in):
     if message_in.command == 'duckduckgo':
         msg = "DuckDuckGo search:"
         url = "https://www.duckduckgo.com/?q="
+    if message_in.command == 'aol':
+        msg = "AOL Search:"
+        url = "https://search.aol.com/aol/search?q="
     
     # Form URL
     url = '{}{}'.format(url,query)
