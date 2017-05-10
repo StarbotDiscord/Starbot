@@ -16,4 +16,5 @@ from api.database import DAL
 from api.database.db import db
 
 def init():
-    DAL.open(db)
+    """Initalize SQLite Database."""
+    DAL.db_open(db)

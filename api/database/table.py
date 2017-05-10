@@ -24,13 +24,13 @@ class table:
         self.name = name_in
         self.table_type = type_in
 
-        DAL.createTableIfNotExist(db, self.name)
+        DAL.db_create_table(db, self.name)
 
     def insert(self, dataDict):
-        return DAL.insertToDatabase(db, self, dataDict)
+        return DAL.db_insert(db, self, dataDict)
 
     def search(self, searchTerm, searchFor):
-        return SQLite.searchInTable(db, self, searchTerm, searchFor)
+        return SQLite.db_search(db, self, searchTerm, searchFor)
 
 class tableTypes:
     pServer = 1
