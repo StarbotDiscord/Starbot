@@ -43,7 +43,10 @@ def db_insert(db_in, table, dict_in):
     for key, value in dict_in.items():
         keys.append(key)
         # Escape quotes
-        values.append("'" + str(value.replace("'", "''")) + "'")
+        if isinstance(value, str):
+            values.append("'" + value.replace("'", "''") + "'")
+        else:
+            values.append("'" + str(value) + "'")
 
     # Update entries for each key and value.
     for key in keys:
@@ -88,5 +91,4 @@ def db_search(db_in, table, search_key, search_query):
     search_query = search_query.replace("'", "''")  # Escape quotes
     cursor = connection.execute("SELECT * FROM %s WHERE %s='%s';" % (table.name, search_key, search_query))
     for row in cursor:
-        print(row[0])
         return entry(row[0], db_in, table, row)
