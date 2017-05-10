@@ -40,7 +40,7 @@ def insertToDatabase(db_in, table, dict_in):
     values = []
     for key, value in dict_in.items():
         keys.append(key)
-        values.append("'" + value + "'")
+        values.append("'" + value.replace("'", "''") + "'")
 
     # Update entries for each key and value.
     for key in keys:
@@ -67,7 +67,7 @@ def editInDatabase(db_in, table, id, dict_in):
     for key, value in dict_in.items():
         # Attempt to add column, fail silently if it exists.
         try:
-            c.execute('ALTER TABLE %s ADD COLUMN %s' % (table.name, key))
+            c.execute('ALTER TABLE %s ADD COLUMN %s' % (table.name, key.replace("'", "''")))
         except:
             pass
         # Update the entry in the database.
@@ -86,7 +86,7 @@ def deleteEntryInDatabase(db_in, table, id):
 def searchInTable(db_in, table, searchTerm, searchFor):
     # Select first entry that matches and return type entry.
     c = db_in.connection.cursor()
-    cursor = c.execute("SELECT * FROM %s WHERE %s='%s';" % (table.name, searchTerm, searchFor))
+    cursor = c.execute("SELECT * FROM %s WHERE %s='%s';" % (table.name, searchTerm, searchFor.replace("'", "''")))
     for row in cursor:
         print(row[0])
         newEntry = entry(row[0], db_in, table, row)
