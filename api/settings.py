@@ -14,14 +14,20 @@
 
 from api import database
 from api.database.table import table, tableTypes
-
+import sqlite3.OperationalError
 # Manage stored prefixes in database.
 
 
 def prefix_set(id_server, prefix):
     database.init()
     table_prefix = table('prefixes', tableTypes.pGlobal)
-    entry_prefix = table.search(table_prefix, 'serverid', '{}'.format(id_server))
+
+    try:
+        entry_prefix = table.search(table_prefix, 'serverid', '{}'.format(id_server))
+    except sqlite3.OperationalError:
+        # TODO: Narrow this and other Exception clauses.
+        # Table must be empty.
+        entry_prefix = None
 
     if entry_prefix:
         entry_prefix.edit(dict(serverid=id_server, prefix=prefix))
@@ -33,7 +39,12 @@ def prefix_set(id_server, prefix):
 def prefix_get(id_server):
     database.init()
     table_prefix = table('prefixes', tableTypes.pGlobal)
-    entry_prefix = table.search(table_prefix, 'serverid', '{}'.format(id_server))
+
+    try:
+        entry_prefix = table.search(table_prefix, 'serverid', '{}'.format(id_server))
+    except:
+        # Table must be empty.
+        entry_prefix = None
 
     if entry_prefix:
         return entry_prefix.data[1]

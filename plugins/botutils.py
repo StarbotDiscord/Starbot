@@ -234,7 +234,7 @@ async def onCommand(message_in):
             return message.message(body='You do not have permisison to run a speedtest.')
 
     if message_in.command == "addowner":
-        if len(settings.owners) != 0:
+        if len(settings.owners_get_old()) != 0:
             try:
                 if settings.owner_check(message_in.author.id):
                     member = message_in.body.strip()
