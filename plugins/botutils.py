@@ -74,9 +74,10 @@ def onInit(plugin_in):
     servers_command    = command.command(plugin_in, SERVERSCMD, shortdesc="Show how many servers the bot is on")
     invite_command     = command.command(plugin_in, 'invite', shortdesc="Invite the bot to your server!")
     nickname_command   = command.command(plugin_in, NICKNAMECMD, shortdesc="Change the bot's nickname")
+    ping_command       = command.command(plugin_in, 'ping', shortdesc='Pong!')
     return plugin.plugin(plugin_in, 'botutils', [plugins_command, commands_command, help_command, info_command, plugintree_command, uptime_command,
                                                  hostinfo_command, cpuinfo_command, setprefix_command, getprefix_command, speedtest_command, addowner_command,
-                                                 owners_command, messages_command, servers_command, invite_command, nickname_command])
+                                                 owners_command, messages_command, servers_command, invite_command, nickname_command, ping_command])
 
 async def onCommand(message_in):
     if message_in.command == 'plugins':
@@ -295,6 +296,8 @@ async def onCommand(message_in):
             return message.message("My nickname has been changed.")
         else:
             return message.message("You cannot change nicknames on this server.")
-
+        
+    if message_in.command == 'ping':
+        return message.message(body='PONG! Bot is up!')
 class adminPerm:
     value = 8
