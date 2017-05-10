@@ -21,7 +21,7 @@ import asyncio
 import discord
 from pluginbase import PluginBase
 
-from api import db, message
+from api import settings, message, logging
 from api import command as command_api
 from api.bot import bot
 from libs import displayname
@@ -122,14 +122,13 @@ async def on_message(message_in):
     isCommand = False
 
     # Get prefix.
-    db.logUserMessage(message_in)
-    prefix = db.getPrefix(message_in.server.id)
+    logging.message_log(message_in)
+    prefix = settings.prefix_get(message_in.server.id)
 
     # Should we die? Check for exit command.
     if message_in.content == prefix + "exit" or message_in.content == "{} exit".format(message_in.server.me.mention):
-        for owner in db.getOwners():
-            if str(message_in.author.id) == str(owner):
-                sys.exit(0)
+        if settings.owners_check(message.author.id):
+            sys.exit(0)
 
     # Check for cache contents command.
     if message_in.content.startswith(prefix + "cachecontents") or message_in.content.startswith("{} cachecontents".format(message_in.server.me.mention)):
@@ -162,13 +161,13 @@ async def on_message(message_in):
             command_result = await command.plugin.onCommand(message_recv)
 
             # No message, error.
-            if command_result == None:
+            if not command_result:
                 await client.send_message(message_in.channel,
                                           "**Beep boop - Something went wrong!**\n_Command did not return a result._")
 
             # Do list of messages, one after the other. If the message is more than 5 chunks long, PM it.
             elif type(command_result) is list:
-                if (len(command_result) > 5): # PM messages.
+                if len(command_result) > 5:  # PM messages.
                     # Send message saying that we are PMing the messages.
                     await client.send_message(message_in.channel,
                                               "Because the output of that command is **{} pages** long, I'm just going to PM the result to you.".format(len(command_result)))
@@ -191,14 +190,14 @@ async def on_message(message_in):
 
     # Increment message counters if not command.
     if not isCommand:
-        count = db.getMessageCount(message_in.server.id)
+        count = logging.message_count_get(message_in.server.id)
         bot.messagesSinceStart += 1
         count += 1
-        db.setMessageCount(message_in.server.id, count)
+        logging.message_count_set(message_in.server.id, count)
 
 async def process_message(target, message_in, msg):
     # If the message to send has a body
-    if msg.body != None:
+    if msg.body:
         # Remove @everyone and @here from messages.
         zerospace = "​"
         msg.body = msg.body.replace("@everyone", "@{}everyone".format(zerospace)).replace("@here", "@{}here".format(zerospace))

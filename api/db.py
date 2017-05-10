@@ -12,6 +12,8 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
+# TODO: Move caching commands into caching.py and remove old DB API
+
 import sqlite3
 
 def cacheFile(filename, data):
