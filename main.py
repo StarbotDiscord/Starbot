@@ -112,14 +112,14 @@ async def on_ready():
 @client.event
 async def on_message(message_in):
     # Ignore messages that aren't from a server and from ourself.
-    if message_in.server == None:
+    if not message_in.server:
         return
     if message_in.author.id == client.user.id:
         return
-    if message_in.author.bot == True:
+    if message_in.author.bot:
         return
 
-    isCommand = False
+    is_command = False
 
     # Get prefix.
     logging.message_log(message_in)
@@ -127,7 +127,7 @@ async def on_message(message_in):
 
     # Should we die? Check for exit command.
     if message_in.content == prefix + "exit" or message_in.content == "{} exit".format(message_in.server.me.mention):
-        if settings.owners_check(message.author.id):
+        if settings.owners_check(message_in.author.id):
             sys.exit(0)
 
     # Check for cache contents command.
@@ -141,7 +141,7 @@ async def on_message(message_in):
         # Do we have a command?
         if command_api.is_command(message_in, prefix, command):
             # Prevent message count increment.
-            isCommand = True
+            is_command = True
 
             # Send typing message.
             await client.send_typing(message_in.channel)
@@ -149,8 +149,9 @@ async def on_message(message_in):
             # Build message object.
             message_recv = message.message
             message_recv.command = command.name
-            if (message_in.content.startswith("{} ".format(message_in.server.me.mention))):
-                message_recv.body = message_in.content.split("{} ".format(message_in.server.me.mention) + command.name)[1]
+            if message_in.content.startswith("{} ".format(message_in.server.me.mention)):
+                message_recv.body = message_in.content.split("{} ".format(message_in.server.me.mention) + 
+                                                             command.name)[1]
             else:
                 message_recv.body = message_in.content.split(prefix + command.name)[1]
             message_recv.author = message_in.author
@@ -189,7 +190,7 @@ async def on_message(message_in):
                     await client.delete_message(message_in)
 
     # Increment message counters if not command.
-    if not isCommand:
+    if not is_command:
         count = logging.message_count_get(message_in.server.id)
         bot.messagesSinceStart += 1
         count += 1
