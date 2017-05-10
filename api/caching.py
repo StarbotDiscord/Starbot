@@ -19,7 +19,8 @@ import urllib.error
 import urllib
 import ssl
 
-from api import db
+from api import database
+from api.database.table import table, tableTypes
 
 def getCaller():
     frm = inspect.stack()[2]
@@ -30,23 +31,38 @@ def getCaller():
 #=============================
 
 def writeString(string, plugin, filename):
-    db.cacheFileS('{}_{}'.format(plugin, filename), string)
+    database.init()
+    table_strcache = table('strcache', tableTypes.pGlobal)
+    filename = '{}_{}'.format(plugin, filename)
+    try:
+        entry_strcache = table.search(table_strcache, 'filename', filename)
+    except:
+        # TODO: Narrow this and other Exception clauses.
+        # Table must be empty.
+        entry_strcache = None
+    if entry_strcache:
+        entry_strcache.edit(dict(filename=filename, text=string))
+    else:
+        table.insert(table_strcache, dict(filename=filename, text=string))
+
 
 def getJson(url, caller='', customName='', save=True):
     if caller == '':
         getCaller()
     if customName == '':
         customName = url.split('/')[-1]
-    fullFilename = '{}_{}'.format(caller, customName)
-    cacheTry = db.getCachedFileS(fullFilename)
-    if save and cacheTry != "":
-        return cacheTry
-    else:
-        jsonString = urllib.request.urlopen(urllib.request.Request(url, headers={
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.47 Safari/537.36'})).read().decode("utf-8")
-        if save == True:
-            writeString(jsonString, caller, customName)
-        return jsonString
+    filename = '{}_{}'.format(caller, customName)
+    # Get cached String
+    database.init()
+    table_strcache = table('strcache', tableTypes.pGlobal)
+    try:
+        entry_strcache = table.search(table_strcache, 'filename', filename)
+        return entry_strcache.data[2]
+    except:
+        json_string = urllib.request.urlopen(urllib.request.Request(url)).read().decode("utf-8")
+        if save:
+            writeString(json_string, caller, customName)
+        return json_string
 
 
 def downloadToCache(url, filename, caller='', sslEnabled=True):
