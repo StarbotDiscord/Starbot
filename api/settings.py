@@ -81,7 +81,7 @@ def owners_check(id_user):
 #     return owners
 
 
-def owners_get_old():
+def owners_get():
     import sqlite3
     conn = sqlite3.connect("bot.db3")
     c = conn.cursor()
