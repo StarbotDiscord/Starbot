@@ -13,7 +13,7 @@ class entry:
         self.data = data
 
     def edit(self, newData):
-        SQLite.editInDatabase(self.db, self.table, self.id, newData)
+        SQLite.db_entry_edit(self.db, self.table, self.id, newData)
 
     def delete(self):
-        SQLite.deleteEntryInDatabase(self.db, self.table, self.id)
+        SQLite.db_entry_delete(self.db, self.table, self.id)
