@@ -21,7 +21,13 @@ from api.database.table import table, tableTypes
 def message_count_set(id_server, count):
     database.init()
     table_message_count = table('messagecounts', tableTypes.pGlobal)
-    entry_message_count = table.search(table_message_count, 'serverid', '{}'.format(id_server))
+    try:
+        entry_message_count = table.search(table_message_count, 'serverid', '{}'.format(id_server))
+    except:
+        # TODO: Narrow this and other Exception clauses.
+        # Table must be empty.
+        entry_message_count = None
+
     if entry_message_count:
         entry_message_count.edit(dict(serverid=id_server, count=count))
     else:
@@ -31,7 +37,13 @@ def message_count_set(id_server, count):
 def message_count_get(id_server):
     database.init()
     table_message_count = table('messagecounts', tableTypes.pGlobal)
-    entry_message_count = table.search(table_message_count, 'serverid', '{}'.format(id_server))
+    try:
+        entry_message_count = table.search(table_message_count, 'serverid', '{}'.format(id_server))
+    except:
+        # TODO: Narrow this and other Exception clauses.
+        # Table must be empty.
+        entry_message_count = None
+
     if entry_message_count:
         return entry_message_count.data[1]
     else:
@@ -42,6 +54,5 @@ def message_count_get(id_server):
 def message_log(msg):
     database.init()
     table_log = table('user_messages', tableTypes.pGlobal)
-    table.insert(table_log, dict(userid=msg.author.id, username=msg.author.name,
-                                 message=msg.content, serverid=msg.server.id, servername=msg.server.name))
+    table.insert(table_log, dict(userid=msg.author.id, username=msg.author.name, message=msg.content, serverid=msg.server.id, servername=msg.server.name))
 

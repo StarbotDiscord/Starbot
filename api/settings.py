@@ -42,6 +42,7 @@ def prefix_get(id_server):
     try:
         entry_prefix = table.search(table_prefix, 'serverid', '{}'.format(id_server))
     except:
+        # TODO: Narrow this and other Exception clauses.
         # Table must be empty.
         entry_prefix = None
 
@@ -57,7 +58,13 @@ def prefix_get(id_server):
 def owners_check(id_user):
     database.init()
     table_owners = table('owners', tableTypes.pGlobal)
-    entry_owner = table.search(table_owners, 'userid', '{}'.format(id_user))
+    try:
+        entry_owner = table.search(table_owners, 'userid', '{}'.format(id_user))
+    except:
+        # TODO: Narrow this and other Exception clauses.
+        # Table must be empty.
+        entry_owner = None
+
     if entry_owner:
         return True
     else:
@@ -91,7 +98,13 @@ def owners_get_old():
 def owners_add(id_user):
     database.init()
     table_owners = table('owners', tableTypes.pGlobal)
-    entry_owner = table.search(table_owners, 'userid', '{}'.format(id_user))
+    try:
+        entry_owner = table.search(table_owners, 'userid', '{}'.format(id_user))
+    except:
+        # TODO: Narrow this and other Exception clauses.
+        # Table must be empty.
+        entry_owner = None
+
     if not entry_owner:
         table.insert(table_owners, dict(userid=id_user))
 
