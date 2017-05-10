@@ -21,7 +21,7 @@ from api.database.table import table, tableTypes
 def message_count_set(id_server, count):
     database.init()
     table_message_count = table('messagecounts', tableTypes.pGlobal)
-    entry_message_count = table.search(table_message_count, 'serverid', {}.format(id_server))
+    entry_message_count = table.search(table_message_count, 'serverid', '{}'.format(id_server))
     if entry_message_count:
         entry_message_count.edit(dict(serverid=id_server, count=count))
     else:
@@ -31,7 +31,7 @@ def message_count_set(id_server, count):
 def message_count_get(id_server):
     database.init()
     table_message_count = table('messagecounts', tableTypes.pGlobal)
-    entry_message_count = table.search(table_message_count, 'serverid', {}.format(id_server))
+    entry_message_count = table.search(table_message_count, 'serverid', '{}'.format(id_server))
     if entry_message_count:
         return entry_message_count.data[1]
     else:
