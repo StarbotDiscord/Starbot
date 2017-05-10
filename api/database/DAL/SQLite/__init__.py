@@ -15,18 +15,26 @@
 import sqlite3
 from api.database.entry import entry
 
+
 def open(db_in):
+    # Open the database.
     db_in.type = "SQLite"
     db_in.connection = sqlite3.connect("bot.db3")
 
+
 def close(db_in):
+    # Close the database.
     db_in.connection.close()
 
+
 def createTableIfNotExist(db_in, tablename):
+    # Create a new table in the database unless it already exists.
     c = db_in.connection.cursor()
     c.execute('CREATE TABLE IF NOT EXISTS %s(id INTEGER PRIMARY KEY);' % tablename)
 
+
 def insertToDatabase(db_in, table, dict_in):
+    # Create new entry in database.
     c = db_in.connection.cursor()
     keys = []
     values = []
@@ -34,7 +42,9 @@ def insertToDatabase(db_in, table, dict_in):
         keys.append(key)
         values.append("'" + value + "'")
 
+    # Update entries for each key and value.
     for key in keys:
+        # Attempt to add column, fail silently if it exists.
         try:
             c.execute('ALTER TABLE %s ADD COLUMN %s' % (table.name, key))
         except:
@@ -45,28 +55,37 @@ def insertToDatabase(db_in, table, dict_in):
     db_in.connection.commit()
     return return_entry
 
+
 def editInDatabase(db_in, table, id, dict_in):
+    # Edit existing database entry.
     c = db_in.connection.cursor()
     keys = []
     values = []
     tableArray = []
+
+    # Update entries for each key and value.
     for key, value in dict_in.items():
+        # Attempt to add column, fail silently if it exists.
         try:
             c.execute('ALTER TABLE %s ADD COLUMN %s' % (table.name, key))
         except:
             pass
+        # Update the entry in the database.
         c.execute("UPDATE '%s' SET %s='%s' WHERE id=%s;" %
                   (table.name, key, value, str(id)))
 
     db_in.connection.commit()
 
+
 def deleteEntryInDatabase(db_in, table, id):
+    # Delete database entry.
     c = db_in.connection.cursor()
     c.execute('DELETE FROM %s WHERE id=%s' % (table.name, str(id)))
 
+
 def searchInTable(db_in, table, searchTerm, searchFor):
+    # Select first entry that matches and return type entry.
     c = db_in.connection.cursor()
-    #cursor = c.execute('SELECT * FROM ' + table.name.replace("'", "''") + ' WHERE ' + searchTerm.replace("'", "''") + '=\'' + searchFor.replace("'", "''") + '\';')
     cursor = c.execute("SELECT * FROM %s WHERE %s='%s';" % (table.name, searchTerm, searchFor))
     for row in cursor:
         print(row[0])
