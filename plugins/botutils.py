@@ -236,11 +236,11 @@ async def onCommand(message_in):
     if message_in.command == "addowner":
         if len(settings.owners_get()) != 0:
             try:
-                if settings.owner_check(message_in.author.id):
+                if settings.owners_check(message_in.author.id):
                     member = message_in.body.strip()
                     new_member = displayname.memberForName(member, message_in.server)
 
-                    if settings.owner_check(new_member.id):
+                    if settings.owners_check(new_member.id):
                         return message.message(body="User is already an owner.")
                     elif new_member.bot:
                         return message.message(body="Bots cannot be owners.")
