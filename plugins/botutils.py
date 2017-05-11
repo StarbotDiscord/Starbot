@@ -22,7 +22,7 @@ import discord
 import psutil
 import pyspeedtest
 
-from api import db, command, message, plugin, git
+from api import settings, command, message, plugin, git
 from api.bot import bot
 from libs import progressBar, readableTime, displayname
 
@@ -189,7 +189,7 @@ async def onCommand(message_in):
         cpuPercentString = '{}\n'.format(platform.processor())
 
         # First, check to see if we can accurately determine the number of physical cores. If not, omit the core count.
-        if psutil.cpu_count(logical=False) == None:
+        if not psutil.cpu_count(logical=False):
             if psutil.cpu_count() > 1:
                 cpuPercentString += '{} threads of {}'.format(psutil.cpu_count(), platform.machine())
             else:
@@ -211,18 +211,18 @@ async def onCommand(message_in):
         return message.message(body='```{}```'.format(cpuPercentString))
 
     if message_in.command == 'setprefix':
-        if db.isOwner(message_in.author.id) == True:
+        if settings.owners_check(message_in.author.id):
             prefix = message_in.body.split(' ', 1)[-1]
-            db.setPrefix(message_in.server.id, prefix)
+            settings.prefix_set(message_in.server.id, prefix)
             return message.message(body='Prefix set to {}'.format(prefix))
         else:
             return message.message(body='Only my owner can set the prefix!')
 
     if message_in.command == 'getprefix':
-            return message.message(body='Prefix is {}'.format(db.getPrefix(message_in.server.id)))
+            return message.message(body='Prefix is {}'.format(settings.prefix_get(message_in.server.id)))
 
     if message_in.command == 'speedtest':
-        if db.isOwner(message_in.author.id) == True:
+        if settings.owners_check(message_in.author.id):
             st = pyspeedtest.SpeedTest()
             msg = '**Speed Test Results:**\n'
             msg += '```\n'
@@ -234,18 +234,18 @@ async def onCommand(message_in):
             return message.message(body='You do not have permisison to run a speedtest.')
 
     if message_in.command == "addowner":
-        if len(db.getOwners()) != 0:
+        if len(settings.owners_get_old()) != 0:
             try:
-                if db.isOwner(message_in.author.id) == True:
+                if settings.owner_check(message_in.author.id):
                     member = message_in.body.strip()
-                    memberCheck = displayname.memberForName(member, message_in.server)
+                    new_member = displayname.memberForName(member, message_in.server)
 
-                    if db.isOwner(memberCheck.id):
+                    if settings.owner_check(new_member.id):
                         return message.message(body="User is already an owner.")
-                    elif memberCheck.bot:
+                    elif new_member.bot:
                         return message.message(body="Bots cannot be owners.")
                     else:
-                        db.addOwner(memberCheck.id)
+                        settings.owners_add(new_member.id)
                         return message.message(body="Added owner successfully.")
                 else:
                     return message.message(body="You aren't an owner of the bot.")
@@ -253,21 +253,21 @@ async def onCommand(message_in):
                 print(e)
                 return message.message(body="Invalid user.")
         else:
-            db.addOwner(message_in.author.id)
+            settings.owners_add(message_in.author.id)
             return message.message(body="You have successfully claimed yourself as the first owner!")
 
     if message_in.command == 'owners':
         owners = []
-        if len(db.getOwners()) == 0:
+        if len(settings.owners_get()) == 0:
             return message.message(body='I have no owners')
-        for owner in db.getOwners():
+        for owner in settings.owners_get_old():
             user = displayname.memberForID(str(owner), message_in.server)
-            if user != None:
+            if user:
                 owners.append(str(user.name))
             else:
                 owners.append(str(owner))
-        ownerLst = ', '.join(owners)
-        return message.message(body=ownerLst)
+        owner_list = ', '.join(owners)
+        return message.message(body=owner_list)
 
     if message_in.command == SERVERSCMD:
         # Get server count.
@@ -283,7 +283,8 @@ async def onCommand(message_in):
         return message.message("I've witnessed *{} messages* since I started and *{} messages* overall!".format(bot.messagesSinceStart, db.getMessageCount(message_in.server.id)))
 
     if message_in.command == 'invite':
-        return message.message(body=discord.utils.oauth_url(bot.client.user.id, adminPerm))
+        perm_admin = 8
+        return message.message(body=discord.utils.oauth_url(bot.client.user.id, perm_admin))
 
     if message_in.command == NICKNAMECMD:
         if message_in.channel.permissions_for(message_in.author).manage_nicknames:
