@@ -234,13 +234,13 @@ async def onCommand(message_in):
             return message.message(body='You do not have permisison to run a speedtest.')
 
     if message_in.command == "addowner":
-        if len(settings.owners_get_old()) != 0:
+        if len(settings.owners_get()) != 0:
             try:
-                if settings.owner_check(message_in.author.id):
+                if settings.owners_check(message_in.author.id):
                     member = message_in.body.strip()
                     new_member = displayname.memberForName(member, message_in.server)
 
-                    if settings.owner_check(new_member.id):
+                    if settings.owners_check(new_member.id):
                         return message.message(body="User is already an owner.")
                     elif new_member.bot:
                         return message.message(body="Bots cannot be owners.")
@@ -260,7 +260,7 @@ async def onCommand(message_in):
         owners = []
         if len(settings.owners_get()) == 0:
             return message.message(body='I have no owners')
-        for owner in settings.owners_get_old():
+        for owner in settings.owners_get():
             user = displayname.memberForID(str(owner), message_in.server)
             if user:
                 owners.append(str(user.name))
