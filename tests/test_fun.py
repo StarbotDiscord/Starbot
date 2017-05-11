@@ -27,14 +27,14 @@ class TestFunSuite(unittest.TestCase):
     def testFunLennyEmptyMsg(self):
         msg = message.message(body="")
         msg.command = "lenny"
-        result = fun.onCommand(msg)
+        result = yield from fun.onCommand(msg)
         self.assertEqual(type(result), type(msg))
         self.assertEqual(result.body, "( ͡° ͜ʖ ͡°)")
 
     def testFunLennyMsg(self):
         msg = message.message(body="hi")
         msg.command = "lenny"
-        result = fun.onCommand(msg)
+        result = yield from fun.onCommand(msg)
         self.assertEqual(type(result), type(msg))
         self.assertEqual(result.body, "( ͡° ͜ʖ ͡°)\nhi")
 
@@ -43,14 +43,14 @@ class TestFunSuite(unittest.TestCase):
     def testFunShrugEmptyMsg(self):
         msg = message.message(body="")
         msg.command = "shrug"
-        result = fun.onCommand(msg)
+        result = yield from fun.onCommand(msg)
         self.assertEqual(type(result), type(msg))
         self.assertEqual(result.body, "¯\_(ツ)_/¯")
 
     def testFunShrugMsg(self):
         msg = message.message(body="hi")
         msg.command = "shrug"
-        result = fun.onCommand(msg)
+        result = yield from fun.onCommand(msg)
         self.assertEqual(type(result), type(msg))
         self.assertEqual(result.body, "¯\_(ツ)_/¯\nhi")
 
@@ -59,7 +59,7 @@ class TestFunSuite(unittest.TestCase):
     def testFunFartMsg(self):
         msg = message.message(body="")
         msg.command = "fart"
-        result = fun.onCommand(msg)
+        result = yield from fun.onCommand(msg)
         fartList = ["Poot", "Prrrrt", "Thhbbthbbbthhh", "Plllleerrrrffff", "Toot", "Blaaaaahnk", "Squerk"]
         self.assertEqual(type(result), type(msg))
         self.assertEqual(result.body in fartList, True)
@@ -69,7 +69,7 @@ class TestFunSuite(unittest.TestCase):
     def testFunBetaMsg(self):
         msg = message.message(body="")
         msg.command = "beta"
-        result = fun.onCommand(msg)
+        result = yield from fun.onCommand(msg)
         self.assertEqual(type(result), type(msg))
         self.assertEqual(result.body, 'It looks like something went wrong')
         self.assertEqual(result.file, 'beta.jpg')

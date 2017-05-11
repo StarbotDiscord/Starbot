@@ -41,7 +41,7 @@ class TestEatSuite(unittest.TestCase):
         msg = message.message(body="")
         msg.command = "eat"
         msg.server = server
-        result = eat.onCommand(msg)
+        result = yield from eat.onCommand(msg)
         nothingList = [ '*None*, you sit quietly and eat *nothing*...',
                         '*None*, you\'re *sure* there was something to eat, so you just chew on nothingness...',
                         '*None*, there comes a time when you need to realize that you\'re just chewing nothing for the sake of chewing.  That time is now.']

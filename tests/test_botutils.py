@@ -32,7 +32,7 @@ class TestBotutilsSuite(unittest.TestCase):
 
         msg = message.message(body="")
         msg.command = "plugins"
-        result = botutils.onCommand(msg)
+        result = yield from botutils.onCommand(msg)
         self.assertEqual(type(result), type(msg))
 
 
@@ -44,7 +44,7 @@ class TestBotutilsSuite(unittest.TestCase):
 
         msg = message.message(body="")
         msg.command = "commands"
-        result = botutils.onCommand(msg)
+        result = yield from botutils.onCommand(msg)
         self.assertEqual(type(result), type(msg))
 
     def testBotutilsHelp(self):
@@ -55,25 +55,25 @@ class TestBotutilsSuite(unittest.TestCase):
 
         msg = message.message(body="")
         msg.command = "help"
-        result = botutils.onCommand(msg)
+        result = yield from botutils.onCommand(msg)
         self.assertEqual(type(result), type(msg))
 
     def testBotutilsInfo(self):
         msg = message.message(body="")
         msg.command = "info"
-        result = botutils.onCommand(msg)
+        result = yield from botutils.onCommand(msg)
         self.assertEqual(type(result), type(msg))
 
     def testBotutilsPlugintree(self):
         msg = message.message(body="")
         msg.command = "plugintree"
-        result = botutils.onCommand(msg)
+        result = yield from botutils.onCommand(msg)
         self.assertEqual(type(result), type(msg))
 
     def testBotutilsUptime(self):
         msg = message.message(body="")
         msg.command = "uptime"
-        result = botutils.onCommand(msg)
+        result = yield from botutils.onCommand(msg)
         self.assertEqual(type(result), type(msg))
 
     def testBotutilsHostinfo(self):
@@ -84,11 +84,11 @@ class TestBotutilsSuite(unittest.TestCase):
         msg.command = "hostinfo"
         msg.server = server
 
-        result = botutils.onCommand(msg)
+        result = yield from botutils.onCommand(msg)
         self.assertEqual(type(result), type(msg))
 
     def testBotutilsCpuinfo(self):
         msg = message.message(body="")
         msg.command = "cpuinfo"
-        result = botutils.onCommand(msg)
+        result = yield from botutils.onCommand(msg)
         self.assertEqual(type(result), type(msg))

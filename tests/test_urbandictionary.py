@@ -26,19 +26,19 @@ class TestUrbanDictionarySuite(unittest.TestCase):
         emptyList = []
         msg = message.message(body="test")
         msg.command = "define"
-        result = urbandictionary.onCommand(msg)
+        result = yield from urbandictionary.onCommand(msg)
         self.assertEqual(type(result), type(emptyList))
 
     def testUDDefineEmpty(self):
         emptyList = []
         msg = message.message(body="")
         msg.command = "define"
-        result = urbandictionary.onCommand(msg)
+        result = yield from urbandictionary.onCommand(msg)
         self.assertEqual(type(result), type(msg))
 
     def testUDRandefine(self):
         emptyList = []
         msg = message.message(body="")
         msg.command = "randefine"
-        result = urbandictionary.onCommand(msg)
+        result = yield from urbandictionary.onCommand(msg)
         self.assertEqual(type(result), type(emptyList))

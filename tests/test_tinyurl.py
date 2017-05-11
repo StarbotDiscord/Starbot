@@ -26,7 +26,7 @@ class TestTinyurlSuite(unittest.TestCase):
         emptyList = []
         msg = message.message(body="https://www.google.com/")
         msg.command = "tinyurl"
-        result = tinyurl.onCommand(msg)
+        result = yield from tinyurl.onCommand(msg)
         self.assertEqual(type(result), type(msg))
         self.assertEqual(result.body, "http://tinyurl.com/cqvga")
 
@@ -34,7 +34,7 @@ class TestTinyurlSuite(unittest.TestCase):
         emptyList = []
         msg = message.message(body="test")
         msg.command = "tinyurl"
-        result = tinyurl.onCommand(msg)
+        result = yield from tinyurl.onCommand(msg)
         self.assertEqual(type(result), type(msg))
         self.assertEqual(result.body, "That website doesn't seem to exist")
 
@@ -42,5 +42,5 @@ class TestTinyurlSuite(unittest.TestCase):
         emptyList = []
         msg = message.message(body="")
         msg.command = "tinyurl"
-        result = tinyurl.onCommand(msg)
+        result = yield from tinyurl.onCommand(msg)
         self.assertEqual(type(result), type(msg))

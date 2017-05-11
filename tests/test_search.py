@@ -21,14 +21,14 @@ class TestSearchSuite(unittest.TestCase):
     def testSearchEmptyMsg(self):
         msg = message.message(body="")
         msg.command = "google"
-        result = search.onCommand(msg)
+        result = yield from search.onCommand(msg)
         self.assertEqual(type(result), type(msg))
         self.assertEqual(result.body, 'I need a topic to search for!')
 
     def testSearchGoogle(self):
         msg = message.message(body="hello world")
         msg.command = "google"
-        result = search.onCommand(msg)
+        result = yield from search.onCommand(msg)
         self.assertEqual(type(result), type(msg))
         print(result)
         self.assertEqual(result.body, 'Google search: https://www.google.com/#q=hello%20world')
@@ -36,13 +36,13 @@ class TestSearchSuite(unittest.TestCase):
     def testSearchDuckDuckGo(self):
         msg = message.message(body="hello world")
         msg.command = "duckduckgo"
-        result=search.onCommand(msg)
+        result = yield from search.onCommand(msg)
         self.assertEqual(type(result), type(msg))
         self.assertEqual(result.body, "DuckDuckGo search: https://www.duckduckgo.com/?q=hello%20world")
 
     def testSearchBing(self):
         msg = message.message(body="hello world")
         msg.command = "bing"
-        result=search.onCommand(msg)
+        result = yield from search.onCommand(msg)
         self.assertEqual(type(result), type(msg))
         self.assertEqual(result.body, "Bing search: https://www.bing.com/?q=hello%20world")

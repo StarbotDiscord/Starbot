@@ -38,7 +38,7 @@ class TestExcuseSuite(unittest.TestCase):
             for excuse in excuseList:
                 fullExcuseList.append('*{} {}*'.format(sorry, excuse))
         
-        result=excuses.onCommand(msg)
+        result = yield from excuses.onCommand(msg)
 
         self.assertEqual(type(result), type(msg))
         self.assertEqual(result.body in fullExcuseList, True)
