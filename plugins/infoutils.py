@@ -50,9 +50,9 @@ async def onCommand(message_in):
         server_embed.add_field(name="Roles", value=str(len(server.roles)), inline=True)
 
         # Add channel count and default channel.
-        voice_channels = [c.name for c in server.channels if str(c.type) == "voice"]
-        text_channels = [c.name for c in server.channels if str(c.type) == "text"]
-        server_embed.add_field(name="Channels", value="{} text, {} voice".format(len(text_channels), len(voice_channels)))
+        channels_voice = [c.name for c in server.channels if str(c.type) == "voice"]
+        channels_text = [c.name for c in server.channels if str(c.type) == "text"]
+        server_embed.add_field(name="Channels", value="{} text, {} voice".format(len(channels_text), len(channels_voice)))
         server_embed.add_field(name="Default Channel", value=server.default_channel.mention, inline=True)
 
         # Add region and AFK.
@@ -70,7 +70,7 @@ async def onCommand(message_in):
         server_embed.set_footer(text="Server ID: {}".format(server.id))
         return message.message("**Server Info:**", embed=server_embed)
 
-    if message_in.command == EMOTEINFOCMD:       
+    if message_in.command == EMOTEINFOCMD:
         # Get emotes.
         emotelist = ""
         for emote in sorted(message_in.server.emojis, key=SortEmote):
@@ -83,7 +83,7 @@ async def onCommand(message_in):
         # Check that we have perms to create an invite. If not, return error.
         if not message_in.server.default_channel.permissions_for(message_in.server.me).create_instant_invite:
             return message.message("Whoops I don't have permission to create instant invites for this server.")
-        
+
         # Create invite and return message.
         invite = await bot.client.create_invite(message_in.server.default_channel, unique=False)
         return message.message("Use this link to invite people to this server: {}".format(invite.url))
