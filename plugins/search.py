@@ -29,7 +29,7 @@ async def onCommand(message_in):
     # Check if query is nothing
     if not query:
         return message.message('I need a topic to search for!')
-    
+
     # Normalize query
     query = urllib.parse.quote(query)
 
@@ -46,9 +46,9 @@ async def onCommand(message_in):
     if message_in.command == 'aol':
         msg = "AOL Search:"
         url = "https://search.aol.com/aol/search?q="
-    
+
     # Form URL
-    url = '{}{}'.format(url,query)
+    url = '{}{}'.format(url, query)
 
     # Form and return message
     return message.message('{} {}'.format(msg, url))
