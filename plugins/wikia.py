@@ -11,37 +11,31 @@
 #    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
-
-
-#import api.wikia
-#starwiki = api.wikia.Wikia('starvstheforcesofevil')
-#results = starwiki.search('Star Butterfly')
-#print(results)
-#print(results[0]['id'])
-#print(starwiki.getPage(results[0]['id'])[0]['title'])
+'''Use the Wikia API to get Definitions'''
 
 from api import command, message, plugin
 from api.wikia import Wikia
 import discord
 
-def doWiki(wiki, search):
+def wikia_get(wiki, search):
+    '''Fetch and return data from Wikia'''
     starwiki = Wikia(wiki)
     try:
         results = starwiki.search(search)
         page = starwiki.getPage(results[0]['id'])
         section = page[0]
 
-        id = results[0]['id']
+        resultid = results[0]['id']
 
         details = starwiki.getDetails(results[0]['id'])
 
         # Some really stupid hacks to get the main image
-        imageT = details[str(id)]['thumbnail']
-        imageStuff = imageT.split("window-crop", 1)
-        imageStuff2 = imageStuff[1].split("?")
-        image = imageStuff[0][:-1] + "?" + imageStuff2[1]
-    except Exception as e:
-        print(e)
+        img_thumb = details[str(resultid)]['thumbnail']
+        img_stuff = img_thumb.split("window-crop", 1)
+        img_stuff2 = img_stuff[1].split("?")
+        img = img_stuff[0][:-1] + "?" + img_stuff2[1]
+    except Exception as exc:
+        print(exc)
         return message.message("No result found for '{}'".format(search))
 
     if len(section['content']) < 1:
@@ -49,10 +43,10 @@ def doWiki(wiki, search):
 
     embed = discord.Embed(color=discord.Color.green())
     embed.set_author(name="Visit the full page here",
-                         url=results[0]['url'],
-                         icon_url='http://slot1.images.wikia.nocookie.net/__cb1493894030/common/skins/common/images/wiki.png')
+                     url=results[0]['url'],
+                     icon_url='http://slot1.images.wikia.nocookie.net/__cb1493894030/common/skins/common/images/wiki.png')
     embed.add_field(name=section['title'], value=section['content'][0]['text'])
-    embed.set_image(url=image)
+    embed.set_image(url=img)
     return message.message(embed=embed)
 
 def onInit(plugin_in):
@@ -65,16 +59,16 @@ async def onCommand(message_in):
         if message_in.body == '':
             return message.message(body='Usage:\nstarwiki [search term]')
         else:
-            return doWiki('starvstheforcesofevil', message_in.body)
+            return wikia_get('starvstheforcesofevil', message_in.body)
 
     if message_in.command == 'wikia':
         if message_in.body == '':
             return message.message(body='Usage:\nwikia [wikia name] [search term]')
 
-        inputSplit = message_in.body.split(' ', 2)
-        print(inputSplit)
+        input_split = message_in.body.split(' ', 2)
+        print(input_split)
 
-        if len(inputSplit) != 3:
+        if len(input_split) != 3:
             return message.message(body='Usage:\nwikia [wikia name] [search term]')
 
-        return doWiki(inputSplit[1], inputSplit[2])
+        return wikia_get(input_split[1], input_split[2])
