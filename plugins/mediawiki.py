@@ -35,7 +35,7 @@ async def onCommand(message_in):
     url = 'https://en.wikipedia.org/w/api.php{}&action={}{}{}&titles={}'
     url = url.format(formatargs, actionarg, propargs, otherargs, searchstring)
 
-    wikidata_json = caching.getJson(url, caller='wikipedia', customName=searchstring)
+    wikidata_json = caching.json_get(url, caller='wikipedia', name_custom=searchstring)
     wikidata = json.loads(wikidata_json)
 
     try:

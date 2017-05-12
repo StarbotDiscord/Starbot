@@ -32,13 +32,13 @@ async def onCommand(message_in):
             except ValueError:
                 return message.message(body='Input of `{}` is not a valid number'.format(message_in.body))
 
-            data = json.loads(caching.getJson("https://xkcd.com/{}/info.0.json".format(message_in.body.strip()),
+            data = json.loads(caching.json_get("https://xkcd.com/{}/info.0.json".format(message_in.body.strip()),
                                               caller='xkcd',
-                                              customName='{}.json'.format(message_in.body.strip())))
+                                              name_custom='{}.json'.format(message_in.body.strip())))
         else:
-            data = json.loads(caching.getJson("https://xkcd.com/info.0.json", caller='xkcd', save=False))
+            data = json.loads(caching.json_get("https://xkcd.com/info.0.json", caller='xkcd', save=False))
 
-        caching.downloadToCache(data['img'], '{}.png'.format(data['num']), caller='xkcd')
+        caching.cache_download(data['img'], '{}.png'.format(data['num']), caller='xkcd')
 
         return message.message(body='**{}/{}/{} - {}**\n_{}_'.format(data['month'], data['day'], data['year'],
                                                                      data['safe_title'], data['alt']),

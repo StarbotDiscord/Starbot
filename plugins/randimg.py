@@ -32,6 +32,6 @@ async def onCommand(message_in):
             return message.message(body='There was an issue connecting to goldfish API.'.format(message_in.body))
 
         imageName = f.split('/')
-        caching.downloadToCache(f, imageName[-1], caller='goldfish')
+        caching.cache_download(f, imageName[-1], caller='goldfish')
 
         return message.message(file='cache/goldfish_' + imageName[-1])

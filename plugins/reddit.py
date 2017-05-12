@@ -30,7 +30,7 @@ def onInit(plugin_in):
 async def onCommand(message_in):
     if message_in.command == STARCMD:
         # Get JSON from Reddit API.
-        r_json = caching.getJson("https://www.reddit.com/r/StarVSTheForcesOfEvil/top.json?sort=top&t=week&limit=100",
+        r_json = caching.json_get("https://www.reddit.com/r/StarVSTheForcesOfEvil/top.json?sort=top&t=week&limit=100",
                                  save=False)
         posts = json.loads(r_json)["data"]["children"]
 
@@ -58,7 +58,7 @@ async def onCommand(message_in):
 
         if url:
             url_parsed = urllib.parse.urlparse(url)
-            caching.downloadToCache(url, url_parsed.path.split("/")[-1], caller=STARCMD)
+            caching.cache_download(url, url_parsed.path.split("/")[-1], caller=STARCMD)
 
             return message.message(post["title"], file="cache/{}_{}".format(STARCMD, url_parsed.path.split("/")[-1]))
         else:

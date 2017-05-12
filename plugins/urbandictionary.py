@@ -39,7 +39,7 @@ async def onCommand(message_in):
         rword = word.replace(" ", "+")
         msg = 'I couldn\'t find a definition for "{}"...'.format(word)
 
-        f = caching.getJson("http://api.urbandictionary.com/v0/define?term={}".format(rword), caller='define', customName=rword)
+        f = caching.json_get("http://api.urbandictionary.com/v0/define?term={}".format(rword), caller='define', name_custom=rword)
 
         #try:
         #    f = urllib.request.urlopen("http://api.urbandictionary.com/v0/define?term={}".format(rword)).read().decode("utf-8")
