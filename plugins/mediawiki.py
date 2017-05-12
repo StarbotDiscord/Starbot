@@ -32,32 +32,33 @@ async def onCommand(message_in):
     propargs = '&prop=extracts&exintro=&explaintext='
     otherargs = '&redirects=1'
 
-    url = 'https://en.wikipedia.org/w/api.php{}&action={}{}{}&titles={}'.format(formatargs, actionarg, propargs, otherargs, searchstring)
-    
-    jsonString = caching.getJson(url, caller='wikipedia', customName=searchstring)
-    wikidata = json.loads(jsonString)
+    url = 'https://en.wikipedia.org/w/api.php{}&action={}{}{}&titles={}'
+    url = url.format(formatargs, actionarg, propargs, otherargs, searchstring)
+
+    wikidata_json = caching.getJson(url, caller='wikipedia', customName=searchstring)
+    wikidata = json.loads(wikidata_json)
 
     try:
         missing = wikidata["query"]["pages"][0]["missing"]
-    except:
+    except KeyError:
         missing = False
-    if missing == True:
-        return message.message("Article doesn't exist on Wikipedia!")
-    
+    if missing:
+        return message.message("Article {} doesn't exist on Wikipedia!".format(searchstring))
+
     title = wikidata["query"]["pages"][0]["title"]
     extract = wikidata["query"]["pages"][0]["extract"]
-    
+
     # Cleanly cut extract to 900 characters
 
     if len(extract) >= 900:
         extract = extract[:900]
         extract = extract.rsplit('\n', 1)[0] # Cut to nearest paragraph.
         extract = extract.rsplit('.', 1)[0] + '.' # Cut to nearest sentence.
-    
+
     # Form Embed card
 
     embed = discord.Embed(color=discord.Color.green())
     embed.set_author(name=title)
     embed.add_field(name='From Wikipedia, The free Encyclopedia', value=extract)
-    
+
     return message.message(embed=embed)
