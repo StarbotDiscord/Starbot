@@ -15,7 +15,7 @@
 from api import command, message, plugin, database
 from api.bot import bot
 from api.database.table import table, tableTypes
-from api.database.entry import entry
+from libs import displayname
 
 # Command names.
 SETWELCOMECMD = "setwelcome"
@@ -45,10 +45,9 @@ async def on_member_unban(server, user):
     await bot.client.send_message(server, content = displayname.name(user) + " got unbanned from **" + server.name + "**.")
 
 
-
 async def onCommand(message_in):
     # Initialize database.
     database.init()
-    OffsetTable = table("greetings", tableTypes.pServer)
+    table_greetings = table("greetings", tableTypes.pServer)
 
 
