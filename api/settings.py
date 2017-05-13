@@ -1,23 +1,25 @@
 #    Copyright 2017 Starbot Discord Project
-# 
+#
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
 #    You may obtain a copy of the License at
-# 
+#
 #        http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
 #    Unless required by applicable law or agreed to in writing, software
 #    distributed under the License is distributed on an "AS IS" BASIS,
 #    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
+'''Functions for commonly used database items'''
 from api import database
 from api.database.table import table, tableTypes
 # Manage stored prefixes in database.
 
 
 def prefix_set(id_server, prefix):
+    '''Set a server\'s prefix.'''
     database.init()
     table_prefix = table('prefixes', tableTypes.pGlobal)
 
@@ -36,6 +38,7 @@ def prefix_set(id_server, prefix):
 
 
 def prefix_get(id_server):
+    '''Get a server\'s prefix.'''
     database.init()
     table_prefix = table('prefixes', tableTypes.pGlobal)
 
@@ -56,6 +59,7 @@ def prefix_get(id_server):
 
 
 def owners_check(id_user):
+    '''Check if a user is an owner'''
     database.init()
     table_owners = table('owners', tableTypes.pGlobal)
     try:
@@ -82,11 +86,12 @@ def owners_check(id_user):
 
 
 def owners_get():
+    '''Return an array of owner IDs from the database'''
     import sqlite3
     conn = sqlite3.connect("bot.db3")
-    c = conn.cursor()
-    c.execute('CREATE TABLE IF NOT EXISTS owners (userid INTEGER)')
-    cur = c.execute('SELECT userid FROM owners')
+    cursor = conn.cursor()
+    cursor.execute('CREATE TABLE IF NOT EXISTS owners (userid INTEGER)')
+    cur = cursor.execute('SELECT userid FROM owners')
     owners = []
     for row in list(cur):
         owners.append(row[0])
@@ -96,6 +101,7 @@ def owners_get():
 
 
 def owners_add(id_user):
+    '''Add an owner to the database'''
     database.init()
     table_owners = table('owners', tableTypes.pGlobal)
     try:
@@ -107,4 +113,3 @@ def owners_add(id_user):
 
     if not entry_owner:
         table.insert(table_owners, dict(userid=id_user))
-
