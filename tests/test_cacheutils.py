@@ -18,25 +18,23 @@ from plugins import cacheutils
 
 class TestCacheSuite(unittest.TestCase):
 
-    def testSrcutilsImport(self):
+    def test_srcutils_import(self):
         result = cacheutils.onInit(__import__('api.plugin'))
         self.assertEqual(type(result), plugin.Plugin)
 
-
-
-    def testCacheutilsCachecount(self):
+    def test_cacheutils_cachecount(self):
         msg = message.Message(body="")
         msg.command = "cachecount"
         result = yield from cacheutils.onCommand(msg)
         self.assertEqual(type(result), type(msg))
 
-    def testCacheutilsCaches(self):
+    def test_cacheutils_caches(self):
         msg = message.Message(body="")
         msg.command = "caches"
         result = yield from cacheutils.onCommand(msg)
         self.assertEqual(type(result), type(msg))
 
-    def testCachecountTotalcache(self):
+    def test_cachecount_totalcache(self):
         msg = message.Message(body="")
         msg.command = "totalcache"
         result = yield from cacheutils.onCommand(msg)

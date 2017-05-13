@@ -13,13 +13,13 @@
 #    limitations under the License.
 
 import unittest
-from api import message, plugin
+from api import message
 from plugins import eat
-from tests import fake_server
+from tests.fake_server import Server
 
 class TestEatSuite(unittest.TestCase):
 
-#    def testEatMsg(self):
+#    def test_testEatMsg(self):
 #        server = fake_server
 #        server.me = 'StarBot'
 #        msg = message.Message(body="Food")
@@ -35,16 +35,17 @@ class TestEatSuite(unittest.TestCase):
 #        self.assertEqual(result.body in nothingList, True)
         
 
-    def testEatEmptyMsg(self):
-        server = fake_server
+    def test_eat_empty_msg(self):
+        server = Server
         server.me = 'StarBot'
         msg = message.Message(body="")
         msg.command = "eat"
         msg.server = server
         result = yield from eat.onCommand(msg)
-        nothingList = [ '*None*, you sit quietly and eat *nothing*...',
+        nothing_list = ['*None*, you sit quietly and eat *nothing*...',
                         '*None*, you\'re *sure* there was something to eat, so you just chew on nothingness...',
-                        '*None*, there comes a time when you need to realize that you\'re just chewing nothing for the sake of chewing.  That time is now.']
+                        '*None*, there comes a time when you need to realize that you\'re just chewing nothing\
+                        for the sake of chewing.  That time is now.']
         print(result.body)
         self.assertEqual(type(result), type(msg))
-        self.assertEqual(result.body in nothingList, True)
+        self.assertEqual(result.body in nothing_list, True)

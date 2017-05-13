@@ -18,19 +18,17 @@ from plugins import comics
 
 class TestFunSuite(unittest.TestCase):
 
-    def testComicsImport(self):
+    def test_comics_import(self):
         result = comics.onInit(__import__('api.plugin'))
         self.assertEqual(type(result), plugin.Plugin)
 
-
-
-    def testComicsXKCDEmptyID(self):
+    def test_comics_xkcd_empty_id(self):
         msg = message.Message(body="")
         msg.command = "xkcd"
         result = yield from comics.onCommand(msg)
         self.assertEqual(type(result), type(msg))
 
-    def testComicsXKCDWithID(self):
+    def test_comics_xkcd_with_id(self):
         msg = message.Message(body="303")
         msg.command = "xkcd"
         result = yield from comics.onCommand(msg)

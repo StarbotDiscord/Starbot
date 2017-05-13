@@ -18,55 +18,47 @@ from plugins import fun
 
 class TestFunSuite(unittest.TestCase):
 
-    def testFunImport(self):
+    def test_fun_import(self):
         result = fun.onInit(__import__('api.plugin'))
         self.assertEqual(type(result), plugin.Plugin)
 
-
-
-    def testFunLennyEmptyMsg(self):
+    def test_fun_lenny_empty_msg(self):
         msg = message.Message(body="")
         msg.command = "lenny"
         result = yield from fun.onCommand(msg)
         self.assertEqual(type(result), type(msg))
         self.assertEqual(result.body, "( ͡° ͜ʖ ͡°)")
 
-    def testFunLennyMsg(self):
+    def test_fun_lenny_msg(self):
         msg = message.Message(body="hi")
         msg.command = "lenny"
         result = yield from fun.onCommand(msg)
         self.assertEqual(type(result), type(msg))
         self.assertEqual(result.body, "( ͡° ͜ʖ ͡°)\nhi")
 
-
-
-    def testFunShrugEmptyMsg(self):
+    def test_fun_shrug_empty_msg(self):
         msg = message.Message(body="")
         msg.command = "shrug"
         result = yield from fun.onCommand(msg)
         self.assertEqual(type(result), type(msg))
-        self.assertEqual(result.body, "¯\_(ツ)_/¯")
+        self.assertEqual(result.body, r"¯\_(ツ)_/¯")
 
-    def testFunShrugMsg(self):
+    def test_fun_shrug_msg(self):
         msg = message.Message(body="hi")
         msg.command = "shrug"
         result = yield from fun.onCommand(msg)
         self.assertEqual(type(result), type(msg))
-        self.assertEqual(result.body, "¯\_(ツ)_/¯\nhi")
+        self.assertEqual(result.body, r"¯\_(ツ)_/¯\nhi")
 
-
-
-    def testFunFartMsg(self):
+    def test_fun_fart_msg(self):
         msg = message.Message(body="")
         msg.command = "fart"
         result = yield from fun.onCommand(msg)
-        fartList = ["Poot", "Prrrrt", "Thhbbthbbbthhh", "Plllleerrrrffff", "Toot", "Blaaaaahnk", "Squerk"]
+        msg_list = ["Poot", "Prrrrt", "Thhbbthbbbthhh", "Plllleerrrrffff", "Toot", "Blaaaaahnk", "Squerk"]
         self.assertEqual(type(result), type(msg))
-        self.assertEqual(result.body in fartList, True)
+        self.assertEqual(result.body in msg_list, True)
 
-
-
-    def testFunBetaMsg(self):
+    def test_fun_beta_msg(self):
         msg = message.Message(body="")
         msg.command = "beta"
         result = yield from fun.onCommand(msg)
