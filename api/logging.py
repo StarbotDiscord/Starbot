@@ -19,6 +19,7 @@ from api.database.table import table, tableTypes
 
 
 def message_count_set(id_server, count):
+    '''Set the current message count.'''
     database.init()
     table_message_count = table('messagecounts', tableTypes.pGlobal)
     try:
@@ -35,6 +36,7 @@ def message_count_set(id_server, count):
 
 
 def message_count_get(id_server):
+    '''Get the current message count.'''
     database.init()
     table_message_count = table('messagecounts', tableTypes.pGlobal)
     try:
@@ -52,7 +54,8 @@ def message_count_get(id_server):
 # Log messages to database.
 
 def message_log(msg):
+    '''Log a message into the database.'''
     database.init()
     table_log = table('user_messages', tableTypes.pGlobal)
-    table.insert(table_log, dict(userid=msg.author.id, username=msg.author.name, message=msg.content, serverid=msg.server.id, servername=msg.server.name))
-
+    table.insert(table_log, dict(userid=msg.author.id, username=msg.author.name, message=msg.content,
+                                 serverid=msg.server.id, servername=msg.server.name))
