@@ -100,8 +100,8 @@ async def onCommand(message_in):
         return message.message(body='```{}```'.format('\n'.join(cmd_list)))
 
     if message_in.command == 'info':
-        sha = git.getCommit()
-        track = git.getBranch()
+        sha = git.git_commit()
+        track = git.git_branch()
         if track == 'master':
             embed = discord.Embed(color=discord.Color.red())
         elif track == 'unstable':
