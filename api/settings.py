@@ -14,17 +14,17 @@
 
 '''Functions for commonly used database items'''
 from api import database
-from api.database.table import table, tableTypes
+from api.database.table import Table, TableTypes
 # Manage stored prefixes in database.
 
 
 def prefix_set(id_server, prefix):
     '''Set a server\'s prefix.'''
     database.init()
-    table_prefix = table('prefixes', tableTypes.pGlobal)
+    table_prefix = Table('prefixes', TableTypes.pGlobal)
 
     try:
-        entry_prefix = table.search(table_prefix, 'serverid', '{}'.format(id_server))
+        entry_prefix = Table.search(table_prefix, 'serverid', '{}'.format(id_server))
     except:
         # TODO: Narrow this and other Exception clauses.
         # Table must be empty.
@@ -34,16 +34,16 @@ def prefix_set(id_server, prefix):
         entry_prefix.edit(dict(serverid=id_server, prefix=prefix))
     else:
         # Create new entry
-        table.insert(table_prefix, dict(serverid=id_server, prefix=prefix))
+        Table.insert(table_prefix, dict(serverid=id_server, prefix=prefix))
 
 
 def prefix_get(id_server):
     '''Get a server\'s prefix.'''
     database.init()
-    table_prefix = table('prefixes', tableTypes.pGlobal)
+    table_prefix = Table('prefixes', TableTypes.pGlobal)
 
     try:
-        entry_prefix = table.search(table_prefix, 'serverid', '{}'.format(id_server))
+        entry_prefix = Table.search(table_prefix, 'serverid', '{}'.format(id_server))
     except:
         # TODO: Narrow this and other Exception clauses.
         # Table must be empty.
@@ -61,9 +61,9 @@ def prefix_get(id_server):
 def owners_check(id_user):
     '''Check if a user is an owner'''
     database.init()
-    table_owners = table('owners', tableTypes.pGlobal)
+    table_owners = Table('owners', TableTypes.pGlobal)
     try:
-        entry_owner = table.search(table_owners, 'userid', '{}'.format(id_user))
+        entry_owner = Table.search(table_owners, 'userid', '{}'.format(id_user))
     except:
         # TODO: Narrow this and other Exception clauses.
         # Table must be empty.
@@ -103,13 +103,13 @@ def owners_get():
 def owners_add(id_user):
     '''Add an owner to the database'''
     database.init()
-    table_owners = table('owners', tableTypes.pGlobal)
+    table_owners = Table('owners', TableTypes.pGlobal)
     try:
-        entry_owner = table.search(table_owners, 'userid', '{}'.format(id_user))
+        entry_owner = Table.search(table_owners, 'userid', '{}'.format(id_user))
     except:
         # TODO: Narrow this and other Exception clauses.
         # Table must be empty.
         entry_owner = None
 
     if not entry_owner:
-        table.insert(table_owners, dict(userid=id_user))
+        Table.insert(table_owners, dict(userid=id_user))

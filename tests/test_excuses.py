@@ -19,7 +19,7 @@ from plugins import excuses
 class TestExcuseSuite(unittest.TestCase):
 
     def testExcuseMsg(self):
-        msg = message.message(body="")
+        msg = message.Message(body="")
         msg.command = "excuse"
 
         excuseList = ["I have an appointment with a robot.", 

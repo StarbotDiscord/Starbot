@@ -20,7 +20,7 @@ import urllib
 import ssl
 
 from api import database
-from api.database.table import table, tableTypes
+from api.database.table import Table, TableTypes
 
 def caller_get():
     '''Get the caller of the parent function.'''
@@ -34,17 +34,17 @@ def caller_get():
 def json_store(string, plugin, filename):
     '''Store a json in the database.'''
     database.init()
-    table_strcache = table('strcache', tableTypes.pGlobal)
+    table_strcache = Table('strcache', TableTypes.pGlobal)
     filename = '{}_{}'.format(plugin, filename)
     try:
-        entry_strcache = table.search(table_strcache, 'filename', filename)
+        entry_strcache = Table.search(table_strcache, 'filename', filename)
     except:
         # Table must be empty.
         entry_strcache = None
     if entry_strcache:
         entry_strcache.edit(dict(filename=filename, text=string))
     else:
-        table.insert(table_strcache, dict(filename=filename, text=string))
+        Table.insert(table_strcache, dict(filename=filename, text=string))
 
 
 def json_get(url, caller='', name_custom='', save=True):
@@ -56,9 +56,9 @@ def json_get(url, caller='', name_custom='', save=True):
     filename = '{}_{}'.format(caller, name_custom)
     # Get cached String
     database.init()
-    table_strcache = table('strcache', tableTypes.pGlobal)
+    table_strcache = Table('strcache', TableTypes.pGlobal)
     try:
-        entry_strcache = table.search(table_strcache, 'filename', filename)
+        entry_strcache = Table.search(table_strcache, 'filename', filename)
         json_string = entry_strcache.data[2]
     except AttributeError:
         json_string = urllib.request.urlopen(urllib.request.Request(url)).read().decode("utf-8")

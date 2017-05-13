@@ -18,13 +18,13 @@ import json
 import discord
 
 def onInit(plugin_in):
-    wikipedia_command = command.command(plugin_in, 'wikipedia', shortdesc='Search Wikipedia, The Free Encyclopedia')
-    return plugin.plugin(plugin_in, 'wikipedia', [wikipedia_command])
+    wikipedia_command = command.Command(plugin_in, 'wikipedia', shortdesc='Search Wikipedia, The Free Encyclopedia')
+    return plugin.Plugin(plugin_in, 'wikipedia', [wikipedia_command])
 
 async def onCommand(message_in):
     searchstring = urllib.parse.quote(str.title(message_in.body.strip()))
     if not searchstring:
-        return message.message("Usage: `!wikipedia [article name]")
+        return message.Message("Usage: `!wikipedia [article name]")
     # Form URL
 
     formatargs = '?format=json&formatversion=2'
@@ -43,7 +43,7 @@ async def onCommand(message_in):
     except KeyError:
         missing = False
     if missing:
-        return message.message("Article {} doesn't exist on Wikipedia!".format(searchstring))
+        return message.Message("Article {} doesn't exist on Wikipedia!".format(searchstring))
 
     title = wikidata["query"]["pages"][0]["title"]
     extract = wikidata["query"]["pages"][0]["extract"]
@@ -61,4 +61,4 @@ async def onCommand(message_in):
     embed.set_author(name=title)
     embed.add_field(name='From Wikipedia, The free Encyclopedia', value=extract)
 
-    return message.message(embed=embed)
+    return message.Message(embed=embed)

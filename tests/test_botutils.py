@@ -26,11 +26,11 @@ class TestBotutilsSuite(unittest.TestCase):
 
     def testBotutilsPlugins(self):
         result = botutils.onInit(__import__('api.plugin'))
-        bot.bot.plugins.append(result)
+        bot.Bot.plugins.append(result)
         for command in result.commands:
-            bot.bot.commands.append(command)
+            bot.Bot.commands.append(command)
 
-        msg = message.message(body="")
+        msg = message.Message(body="")
         msg.command = "plugins"
         result = yield from botutils.onCommand(msg)
         self.assertEqual(type(result), type(msg))
@@ -38,40 +38,40 @@ class TestBotutilsSuite(unittest.TestCase):
 
     def testBotutilsCommands(self):
         result = botutils.onInit(__import__('api.plugin'))
-        bot.bot.plugins.append(result)
+        bot.Bot.plugins.append(result)
         for command in result.commands:
-            bot.bot.commands.append(command)
+            bot.Bot.commands.append(command)
 
-        msg = message.message(body="")
+        msg = message.Message(body="")
         msg.command = "commands"
         result = yield from botutils.onCommand(msg)
         self.assertEqual(type(result), type(msg))
 
     def testBotutilsHelp(self):
         result = botutils.onInit(__import__('api.plugin'))
-        bot.bot.plugins.append(result)
+        bot.Bot.plugins.append(result)
         for command in result.commands:
-            bot.bot.commands.append(command)
+            bot.Bot.commands.append(command)
 
-        msg = message.message(body="")
+        msg = message.Message(body="")
         msg.command = "help"
         result = yield from botutils.onCommand(msg)
         self.assertEqual(type(result), type(msg))
 
     def testBotutilsInfo(self):
-        msg = message.message(body="")
+        msg = message.Message(body="")
         msg.command = "info"
         result = yield from botutils.onCommand(msg)
         self.assertEqual(type(result), type(msg))
 
     def testBotutilsPlugintree(self):
-        msg = message.message(body="")
+        msg = message.Message(body="")
         msg.command = "plugintree"
         result = yield from botutils.onCommand(msg)
         self.assertEqual(type(result), type(msg))
 
     def testBotutilsUptime(self):
-        msg = message.message(body="")
+        msg = message.Message(body="")
         msg.command = "uptime"
         result = yield from botutils.onCommand(msg)
         self.assertEqual(type(result), type(msg))
@@ -80,7 +80,7 @@ class TestBotutilsSuite(unittest.TestCase):
         server = fake_server
         server.me = 'StarBot'
 
-        msg = message.message(body="")
+        msg = message.Message(body="")
         msg.command = "hostinfo"
         msg.server = server
 
@@ -88,7 +88,7 @@ class TestBotutilsSuite(unittest.TestCase):
         self.assertEqual(type(result), type(msg))
 
     def testBotutilsCpuinfo(self):
-        msg = message.message(body="")
+        msg = message.Message(body="")
         msg.command = "cpuinfo"
         result = yield from botutils.onCommand(msg)
         self.assertEqual(type(result), type(msg))

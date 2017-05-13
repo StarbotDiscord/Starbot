@@ -25,13 +25,13 @@ class TestFunSuite(unittest.TestCase):
 
 
     def testComicsXKCDEmptyID(self):
-        msg = message.message(body="")
+        msg = message.Message(body="")
         msg.command = "xkcd"
         result = yield from comics.onCommand(msg)
         self.assertEqual(type(result), type(msg))
 
     def testComicsXKCDWithID(self):
-        msg = message.message(body="303")
+        msg = message.Message(body="303")
         msg.command = "xkcd"
         result = yield from comics.onCommand(msg)
         self.assertEqual(type(result), type(msg))

@@ -24,8 +24,8 @@ from api import command, message, plugin, caching
 STARCMD = "star"
 
 def onInit(plugin_in):
-    star_command = command.command(plugin_in, STARCMD, shortdesc="Star")
-    return plugin.plugin(plugin_in, "reddit", [star_command])
+    star_command = command.Command(plugin_in, STARCMD, shortdesc="Star")
+    return plugin.Plugin(plugin_in, "reddit", [star_command])
 
 async def onCommand(message_in):
     if message_in.command == STARCMD:
@@ -60,7 +60,7 @@ async def onCommand(message_in):
             url_parsed = urllib.parse.urlparse(url)
             caching.cache_download(url, url_parsed.path.split("/")[-1], caller=STARCMD)
 
-            return message.message(post["title"], file="cache/{}_{}".format(STARCMD, url_parsed.path.split("/")[-1]))
+            return message.Message(post["title"], file="cache/{}_{}".format(STARCMD, url_parsed.path.split("/")[-1]))
         else:
             # No URL could be found, return error message.
-            return message.message("Whoops! I couldn't find any posts.")
+            return message.Message("Whoops! I couldn't find any posts.")

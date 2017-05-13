@@ -17,8 +17,8 @@ from api import command, message, plugin
 
 def onInit(plugin_in):
     '''List commands for plugin.'''
-    excuse_command = command.command(plugin_in, 'excuse', shortdesc='Dish out excuses ;)')
-    return plugin.plugin(plugin_in, 'excuses', [excuse_command])
+    excuse_command = command.Command(plugin_in, 'excuse', shortdesc='Dish out excuses ;)')
+    return plugin.Plugin(plugin_in, 'excuses', [excuse_command])
 
 async def onCommand(message_in):
     '''Run plugin commands.'''
@@ -42,4 +42,4 @@ async def onCommand(message_in):
         msg = '*{} {}*'.format(sorry_list[randsorry], excuse_list[randexcuse])
 
         # Return newly constructed message
-        return message.message(msg)
+        return message.Message(msg)

@@ -25,19 +25,19 @@ class TestCacheSuite(unittest.TestCase):
 
 
     def testCacheutilsCachecount(self):
-        msg = message.message(body="")
+        msg = message.Message(body="")
         msg.command = "cachecount"
         result = yield from cacheutils.onCommand(msg)
         self.assertEqual(type(result), type(msg))
 
     def testCacheutilsCaches(self):
-        msg = message.message(body="")
+        msg = message.Message(body="")
         msg.command = "caches"
         result = yield from cacheutils.onCommand(msg)
         self.assertEqual(type(result), type(msg))
 
     def testCachecountTotalcache(self):
-        msg = message.message(body="")
+        msg = message.Message(body="")
         msg.command = "totalcache"
         result = yield from cacheutils.onCommand(msg)
         self.assertEqual(type(result), type(msg))

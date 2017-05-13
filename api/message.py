@@ -14,7 +14,7 @@
 '''Message class and message splitting'''
 import textwrap
 
-class message:
+class Message:
     '''Store data about a message.'''
     def __init__(self, body='', file='', embed=None, delete=False, mentions=None, channel=None):
         self.command = None
@@ -41,7 +41,7 @@ def msg_split(msg, characters: int = 2000):
     # Create message list objects.
     msg_list = []
     for msg in text_list:
-        msg_list.append(message(msg))
+        msg_list.append(Message(msg))
 
     # Return the list.
     return msg_list

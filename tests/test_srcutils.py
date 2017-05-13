@@ -25,19 +25,19 @@ class TestFunSuite(unittest.TestCase):
 
 
     def testSrcutilsSource(self):
-        msg = message.message(body="")
+        msg = message.Message(body="")
         msg.command = "source"
         result = yield from srcutils.onCommand(msg)
         self.assertEqual(type(result), type(msg))
 
     def testSrcutilsDocs(self):
-        msg = message.message(body="")
+        msg = message.Message(body="")
         msg.command = "docs"
         result = yield from srcutils.onCommand(msg)
         self.assertEqual(type(result), type(msg))
 
     def testSrcutilsTests(self):
-        msg = message.message(body="")
+        msg = message.Message(body="")
         msg.command = "tests"
         result = yield from srcutils.onCommand(msg)
         self.assertEqual(type(result), type(msg))

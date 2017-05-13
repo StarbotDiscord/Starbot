@@ -20,8 +20,8 @@ from api import command, caching, message, plugin
 
 
 def onInit(plugin_in):
-    goldfish_command = command.command(plugin_in, 'goldfish', shortdesc='Post a random picture of a goldfish to the channel')
-    return plugin.plugin(plugin_in, 'randimg', [goldfish_command])
+    goldfish_command = command.Command(plugin_in, 'goldfish', shortdesc='Post a random picture of a goldfish to the channel')
+    return plugin.Plugin(plugin_in, 'randimg', [goldfish_command])
 
 async def onCommand(message_in):
     # Goldfish
@@ -29,9 +29,9 @@ async def onCommand(message_in):
         try:
             f = urllib.request.urlopen("http://goldfishapi.azurewebsites.net/goldfish/rand.php").read().decode("utf-8")
         except urllib.error.URLError as e:
-            return message.message(body='There was an issue connecting to goldfish API.'.format(message_in.body))
+            return message.Message(body='There was an issue connecting to goldfish API.'.format(message_in.body))
 
         imageName = f.split('/')
         caching.cache_download(f, imageName[-1], caller='goldfish')
 
-        return message.message(file='cache/goldfish_' + imageName[-1])
+        return message.Message(file='cache/goldfish_' + imageName[-1])

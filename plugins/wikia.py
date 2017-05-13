@@ -36,10 +36,10 @@ def wikia_get(wiki, search):
         img = img_stuff[0][:-1] + "?" + img_stuff2[1]
     except Exception as exc:
         print(exc)
-        return message.message("No result found for '{}'".format(search))
+        return message.Message("No result found for '{}'".format(search))
 
     if len(section['content']) < 1:
-        return message.message(body="No result found for '{}'".format(search))
+        return message.Message(body="No result found for '{}'".format(search))
 
     embed = discord.Embed(color=discord.Color.green())
     embed.set_author(name="Visit the full page here",
@@ -47,28 +47,28 @@ def wikia_get(wiki, search):
                      icon_url='http://slot1.images.wikia.nocookie.net/__cb1493894030/common/skins/common/images/wiki.png')
     embed.add_field(name=section['title'], value=section['content'][0]['text'])
     embed.set_image(url=img)
-    return message.message(embed=embed)
+    return message.Message(embed=embed)
 
 def onInit(plugin_in):
-    starwiki_command = command.command(plugin_in, 'starwiki', shortdesc='Search the Star VS. Wikia')
-    wikia_command    = command.command(plugin_in, 'wikia',    shortdesc='Search Wikia!')
-    return plugin.plugin(plugin_in, 'starwiki', [starwiki_command, wikia_command])
+    starwiki_command = command.Command(plugin_in, 'starwiki', shortdesc='Search the Star VS. Wikia')
+    wikia_command    = command.Command(plugin_in, 'wikia',    shortdesc='Search Wikia!')
+    return plugin.Plugin(plugin_in, 'starwiki', [starwiki_command, wikia_command])
 
 async def onCommand(message_in):
     if message_in.command == 'starwiki':
         if message_in.body == '':
-            return message.message(body='Usage:\nstarwiki [search term]')
+            return message.Message(body='Usage:\nstarwiki [search term]')
         else:
             return wikia_get('starvstheforcesofevil', message_in.body)
 
     if message_in.command == 'wikia':
         if message_in.body == '':
-            return message.message(body='Usage:\nwikia [wikia name] [search term]')
+            return message.Message(body='Usage:\nwikia [wikia name] [search term]')
 
         input_split = message_in.body.split(' ', 2)
         print(input_split)
 
         if len(input_split) != 3:
-            return message.message(body='Usage:\nwikia [wikia name] [search term]')
+            return message.Message(body='Usage:\nwikia [wikia name] [search term]')
 
         return wikia_get(input_split[1], input_split[2])

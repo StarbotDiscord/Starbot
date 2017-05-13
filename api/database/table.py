@@ -13,10 +13,10 @@
 #    limitations under the License.
 
 from api.database import DAL
-from api.database.db import db
+from api.database.db import Db
 from api.database.DAL import SQLite
 
-class table:
+class Table:
     name = None
     table_type = None
 
@@ -24,14 +24,14 @@ class table:
         self.name = name_in
         self.table_type = type_in
 
-        DAL.db_create_table(db, self.name)
+        DAL.db_create_table(Db, self.name)
 
     def insert(self, dataDict):
-        return DAL.db_insert(db, self, dataDict)
+        return DAL.db_insert(Db, self, dataDict)
 
     def search(self, searchTerm, searchFor):
-        return SQLite.db_search(db, self, searchTerm, searchFor)
+        return SQLite.db_search(Db, self, searchTerm, searchFor)
 
-class tableTypes:
+class TableTypes:
     pServer = 1
     pGlobal = 2

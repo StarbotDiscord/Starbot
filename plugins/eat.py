@@ -21,8 +21,8 @@ from libs import displayname
 # Eating plugin
 def onInit(plugin_in):
     '''List commands for plugin.'''
-    eat_command = command.command(plugin_in, 'eat', shortdesc='Eat someone or something')
-    return plugin.plugin(plugin_in, 'eat', [eat_command])
+    eat_command = command.Command(plugin_in, 'eat', shortdesc='Eat someone or something')
+    return plugin.Plugin(plugin_in, 'eat', [eat_command])
 
 async def onCommand(message_in):
     '''Run plugin commands.'''
@@ -69,4 +69,4 @@ async def onCommand(message_in):
                         'you attempt to bite into *{}*, but you\'re clumsier than you remember - and fail...'.format(member)]
 
         randnum = random.randint(0, len(msg_list) - 1)
-        return message.message('*{}*, {}'.format(author, msg_list[randnum]))
+        return message.Message('*{}*, {}'.format(author, msg_list[randnum]))

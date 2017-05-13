@@ -21,9 +21,9 @@ from api import command, message, plugin, caching
 
 # UD plugin
 def onInit(plugin_in):
-    define_command = command.command(plugin_in, 'define', shortdesc='Define X')
-    randefine_command = command.command(plugin_in, 'randefine', shortdesc='Define a random thing')
-    return plugin.plugin(plugin_in, 'urbandictionary', [define_command, randefine_command])
+    define_command = command.Command(plugin_in, 'define', shortdesc='Define X')
+    randefine_command = command.Command(plugin_in, 'randefine', shortdesc='Define a random thing')
+    return plugin.Plugin(plugin_in, 'urbandictionary', [define_command, randefine_command])
 
 async def onCommand(message_in):
     # Define.
@@ -33,7 +33,7 @@ async def onCommand(message_in):
 
         # Check to see if word is empty.
         if not word:
-            return message.message('Usage: `{}define [word]`'.format('!')) # TODO: prefix variable
+            return message.Message('Usage: `{}define [word]`'.format('!')) # TODO: prefix variable
 
         # Get definition.
         rword = word.replace(" ", "+")
@@ -44,7 +44,7 @@ async def onCommand(message_in):
         #try:
         #    f = urllib.request.urlopen("http://api.urbandictionary.com/v0/define?term={}".format(rword)).read().decode("utf-8")
         #except urllib.error.URLError as e:
-        #    return message.message(body='There was an issue connecting to UD'.format(message_in.body))
+        #    return message.Message(body='There was an issue connecting to UD'.format(message_in.body))
 
         # Decode JSON and format definition.
         theJSON = json.loads(f)["list"]
@@ -64,7 +64,7 @@ async def onCommand(message_in):
         try:
             f = urllib.request.urlopen("http://api.urbandictionary.com/v0/random").read().decode("utf-8")
         except urllib.error.URLError as e:
-            return message.message(body='There was an issue connecting to UD'.format(message_in.body))
+            return message.Message(body='There was an issue connecting to UD'.format(message_in.body))
 
         # Decode JSON and format definition.
         theJSON = json.loads(f)["list"]

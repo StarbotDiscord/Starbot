@@ -126,8 +126,8 @@ class NumericStringParser(object):
 
 def onInit(plugin_in):
     #create the basics of our plugin
-    calc_command = command.command(plugin_in, 'calc', shortdesc='Calculate given input')
-    return plugin.plugin(plugin_in, 'calc', [calc_command])
+    calc_command = command.Command(plugin_in, 'calc', shortdesc='Calculate given input')
+    return plugin.Plugin(plugin_in, 'calc', [calc_command])
 
 def onCommand(message_in):
     """Do some math."""
@@ -136,7 +136,7 @@ def onCommand(message_in):
 
     if formula == None:
         msg = 'Usage: `{}calc [formula]`'.format('!')
-        return message.message(body=msg)
+        return message.Message(body=msg)
 
     try:
         nsp = NumericStringParser()
@@ -154,8 +154,8 @@ def onCommand(message_in):
         msg += "term    :: factor [ multop factor ]*\n"
         msg += "expr    :: term [ addop term ]*```"
         # msg = Nullify.clean(msg)
-        return message.message(body=msg)
+        return message.Message(body=msg)
 
     msg = '`{}` = `{}`'.format(formula, answer)
     # Say message
-    return message.message(body=msg)
+    return message.Message(body=msg)

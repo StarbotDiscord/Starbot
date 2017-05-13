@@ -20,34 +20,34 @@ from api import command
 class TestCommandSuite(unittest.TestCase):
 
     def testCommandBasicArgs(self):
-        commandTest = command.command(unittest, 'testplugin')
+        commandTest = command.Command(unittest, 'testplugin')
         self.assertEqual(commandTest.name, 'testplugin')
         self.assertEqual(commandTest.plugin, unittest)
         self.assertEqual(commandTest.shortdesc, 'no description')
         self.assertEqual(commandTest.devcommand, False)
 
     def testCommandOverwrite(self):
-        commandTest = command.command(unittest, 'testplugin')
+        commandTest = command.Command(unittest, 'testplugin')
         self.assertEqual(commandTest.name, 'testplugin')
         self.assertEqual(commandTest.plugin, unittest)
         self.assertEqual(commandTest.shortdesc, 'no description')
         self.assertEqual(commandTest.devcommand, False)
 
-        commandTest = command.command(unittest, 'testplugin', shortdesc='python testing is fun!')
+        commandTest = command.Command(unittest, 'testplugin', shortdesc='python testing is fun!')
         self.assertEqual(commandTest.name, 'testplugin')
         self.assertEqual(commandTest.plugin, unittest)
         self.assertEqual(commandTest.shortdesc, 'python testing is fun!')
         self.assertEqual(commandTest.devcommand, False)
 
     def testCommandArgs(self):
-        commandTest = command.command(unittest, 'testplugin', shortdesc='python testing is fun!', devcommand=True)
+        commandTest = command.Command(unittest, 'testplugin', shortdesc='python testing is fun!', devcommand=True)
         self.assertEqual(commandTest.name, 'testplugin')
         self.assertEqual(commandTest.plugin, unittest)
         self.assertEqual(commandTest.shortdesc, 'python testing is fun!')
         self.assertEqual(commandTest.devcommand, True)
 
     def testCommandChangeArgs(self):
-        commandTest = command.command(unittest, 'testplugin', shortdesc='python testing is fun!')
+        commandTest = command.Command(unittest, 'testplugin', shortdesc='python testing is fun!')
         self.assertEqual(commandTest.name, 'testplugin')
         self.assertEqual(commandTest.plugin, unittest)
         self.assertEqual(commandTest.shortdesc, 'python testing is fun!')

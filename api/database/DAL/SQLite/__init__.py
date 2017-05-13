@@ -14,7 +14,7 @@
 """SQLite Abstraction layer for Starbot's database API."""
 
 import sqlite3
-from api.database.entry import entry
+from api.database.entry import Entry
 
 
 def db_open(db_in):
@@ -57,7 +57,7 @@ def db_insert(db_in, table, dict_in):
             pass
 
     connection.execute('INSERT INTO %s(%s) VALUES (%s);' % (table.name, ",".join(keys), ",".join(values)))
-    return_entry = entry(connection.lastrowid, db_in, table, dict_in)
+    return_entry = Entry(connection.lastrowid, db_in, table, dict_in)
     db_in.connection.commit()
     return return_entry
 
@@ -91,4 +91,4 @@ def db_search(db_in, table, search_key, search_query):
     search_query = search_query.replace("'", "''")  # Escape quotes
     cursor = connection.execute("SELECT * FROM %s WHERE %s='%s';" % (table.name, search_key, search_query))
     for row in cursor:
-        return entry(row[0], db_in, table, row)
+        return Entry(row[0], db_in, table, row)

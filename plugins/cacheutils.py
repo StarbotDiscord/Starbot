@@ -23,25 +23,25 @@ def onInit(plugin_in):
     desc_cachecount = desc_base + 'for a command'
     desc_caches = desc_base + 'per command'
     desc_totalcache = desc_base + 'stored'
-    cachecount_command = command.command(plugin_in, 'cachecount', shortdesc=desc_cachecount, devcommand=True)
-    caches_command = command.command(plugin_in, 'caches', shortdesc=desc_caches, devcommand=True)
-    totalcache_command = command.command(plugin_in, 'totalcache', shortdesc=desc_totalcache, devcommand=True)
-    return plugin.plugin(plugin_in, 'cacheutils', [cachecount_command, caches_command, totalcache_command])
+    cachecount_command = command.Command(plugin_in, 'cachecount', shortdesc=desc_cachecount, devcommand=True)
+    caches_command = command.Command(plugin_in, 'caches', shortdesc=desc_caches, devcommand=True)
+    totalcache_command = command.Command(plugin_in, 'totalcache', shortdesc=desc_totalcache, devcommand=True)
+    return plugin.Plugin(plugin_in, 'cacheutils', [cachecount_command, caches_command, totalcache_command])
 
 async def onCommand(message_in):
     '''Run plugin commands.'''
     if message_in.command == 'cachecount':
         if message_in.body == '':
-            return message.message(body='No plugin specified')
-        return message.message(body='```{}```'.format(len(glob.glob('cache/{}_*'.format(message_in.body.strip())))))
+            return message.Message(body='No plugin specified')
+        return message.Message(body='```{}```'.format(len(glob.glob('cache/{}_*'.format(message_in.body.strip())))))
 
     if message_in.command == 'caches':
         cache_str = ''
-        for cmd in bot.bot.commands:
+        for cmd in bot.Bot.commands:
             cmd_cache_size = len(glob.glob('cache/{}_*'.format(cmd.name)))
             if cmd_cache_size > 0:
                 cache_str += '{} - {}\n'.format(cmd.name, cmd_cache_size)
-        return message.message(body='```{}```'.format(cache_str))
+        return message.Message(body='```{}```'.format(cache_str))
 
     if message_in.command == 'totalcache':
-        return message.message(body='```{}```'.format(len(glob.glob('cache/*'))))
+        return message.Message(body='```{}```'.format(len(glob.glob('cache/*'))))

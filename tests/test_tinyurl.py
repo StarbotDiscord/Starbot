@@ -24,7 +24,7 @@ class TestTinyurlSuite(unittest.TestCase):
 
     def testTinyurlValidURL(self):
         emptyList = []
-        msg = message.message(body="https://www.google.com/")
+        msg = message.Message(body="https://www.google.com/")
         msg.command = "tinyurl"
         result = yield from tinyurl.onCommand(msg)
         self.assertEqual(type(result), type(msg))
@@ -32,7 +32,7 @@ class TestTinyurlSuite(unittest.TestCase):
 
     def testTinyurlInvalidURL(self):
         emptyList = []
-        msg = message.message(body="test")
+        msg = message.Message(body="test")
         msg.command = "tinyurl"
         result = yield from tinyurl.onCommand(msg)
         self.assertEqual(type(result), type(msg))
@@ -40,7 +40,7 @@ class TestTinyurlSuite(unittest.TestCase):
 
     def testTinyurlEmptyURL(self):
         emptyList = []
-        msg = message.message(body="")
+        msg = message.Message(body="")
         msg.command = "tinyurl"
         result = yield from tinyurl.onCommand(msg)
         self.assertEqual(type(result), type(msg))

@@ -12,7 +12,7 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
-class command():
+class Command():
     '''Store information about a command'''
     def __init__(self, plugin, name, shortdesc='no description', devcommand=False):
         self.plugin = plugin

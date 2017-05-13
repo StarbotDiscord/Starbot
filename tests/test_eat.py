@@ -22,7 +22,7 @@ class TestEatSuite(unittest.TestCase):
 #    def testEatMsg(self):
 #        server = fake_server
 #        server.me = 'StarBot'
-#        msg = message.message(body="Food")
+#        msg = message.Message(body="Food")
 #        msg.command = "eat"
 #        msg.server = server
 #        result = eat.onCommand(msg)
@@ -38,7 +38,7 @@ class TestEatSuite(unittest.TestCase):
     def testEatEmptyMsg(self):
         server = fake_server
         server.me = 'StarBot'
-        msg = message.message(body="")
+        msg = message.Message(body="")
         msg.command = "eat"
         msg.server = server
         result = yield from eat.onCommand(msg)

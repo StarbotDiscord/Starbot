@@ -13,7 +13,7 @@
 #    limitations under the License.
 '''Provides the plugin class'''
 
-class plugin():
+class Plugin():
     '''Store information about a plugin'''
     def __init__(self, plugin, name, commands):
         self.plugin = plugin

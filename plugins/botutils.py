@@ -23,7 +23,7 @@ import psutil
 import pyspeedtest
 
 from api import settings, logging, command, message, plugin, git
-from api.bot import bot
+from api.bot import Bot
 from libs import progressBar, readableTime, displayname
 
 # Command names.
@@ -33,7 +33,7 @@ NICKNAMECMD = "nickname"
 def commands_detect_dups():
     duplicates = []
     commands_list = []
-    for plugin_in in bot.plugins:
+    for plugin_in in Bot.plugins:
         for command_in in plugin_in.commands:
             commands_list.append(command_in.name)
 
@@ -57,39 +57,39 @@ def convert_size(size_bytes):
     return '%s %s' % (s, size_name[i])
 
 def onInit(plugin_in):
-    plugins_command    = command.command(plugin_in, 'plugins', shortdesc='Print a list of plugins', devcommand=True)
-    commands_command   = command.command(plugin_in, 'commands', shortdesc='Print a list of commands')
-    help_command       = command.command(plugin_in, 'help', shortdesc='Redirects to !commands')
-    info_command       = command.command(plugin_in, 'info', shortdesc='Print some basic bot info')
-    plugintree_command = command.command(plugin_in, 'plugintree', shortdesc='Print a tree of plugins and commands', devcommand=True)
-    uptime_command     = command.command(plugin_in, 'uptime', shortdesc='Print the bot\'s uptime', devcommand=True)
-    hostinfo_command   = command.command(plugin_in, 'hostinfo', shortdesc='Prints information about the bots home', devcommand=True)
-    cpuinfo_command    = command.command(plugin_in, 'cpuinfo', shortdesc='Prints info about the system CPUs', devcommand=True)
-    setprefix_command  = command.command(plugin_in, 'setprefix', shortdesc='Set the server prefix', devcommand=True)
-    getprefix_command  = command.command(plugin_in, 'getprefix', shortdesc='Get the server prefix', devcommand=True)
-    speedtest_command  = command.command(plugin_in, 'speedtest', shortdesc='Run a speedtest', devcommand=True)
-    addowner_command   = command.command(plugin_in, 'addowner', shortdesc='Add a bot owner', devcommand=True)
-    owners_command     = command.command(plugin_in, 'owners', shortdesc='Print the bot owners', devcommand=True)
-    messages_command   = command.command(plugin_in, 'messages', shortdesc="Show how many messages the bot has seen since start")
-    servers_command    = command.command(plugin_in, SERVERSCMD, shortdesc="Show how many servers the bot is on")
-    invite_command     = command.command(plugin_in, 'invite', shortdesc="Invite the bot to your server!")
-    nickname_command   = command.command(plugin_in, NICKNAMECMD, shortdesc="Change the bot's nickname")
-    ping_command       = command.command(plugin_in, 'ping', shortdesc='Pong!')
-    return plugin.plugin(plugin_in, 'botutils', [plugins_command, commands_command, help_command, info_command, plugintree_command, uptime_command,
+    plugins_command    = command.Command(plugin_in, 'plugins', shortdesc='Print a list of plugins', devcommand=True)
+    commands_command   = command.Command(plugin_in, 'commands', shortdesc='Print a list of commands')
+    help_command       = command.Command(plugin_in, 'help', shortdesc='Redirects to !commands')
+    info_command       = command.Command(plugin_in, 'info', shortdesc='Print some basic bot info')
+    plugintree_command = command.Command(plugin_in, 'plugintree', shortdesc='Print a tree of plugins and commands', devcommand=True)
+    uptime_command     = command.Command(plugin_in, 'uptime', shortdesc='Print the bot\'s uptime', devcommand=True)
+    hostinfo_command   = command.Command(plugin_in, 'hostinfo', shortdesc='Prints information about the bots home', devcommand=True)
+    cpuinfo_command    = command.Command(plugin_in, 'cpuinfo', shortdesc='Prints info about the system CPUs', devcommand=True)
+    setprefix_command  = command.Command(plugin_in, 'setprefix', shortdesc='Set the server prefix', devcommand=True)
+    getprefix_command  = command.Command(plugin_in, 'getprefix', shortdesc='Get the server prefix', devcommand=True)
+    speedtest_command  = command.Command(plugin_in, 'speedtest', shortdesc='Run a speedtest', devcommand=True)
+    addowner_command   = command.Command(plugin_in, 'addowner', shortdesc='Add a bot owner', devcommand=True)
+    owners_command     = command.Command(plugin_in, 'owners', shortdesc='Print the bot owners', devcommand=True)
+    messages_command   = command.Command(plugin_in, 'messages', shortdesc="Show how many messages the bot has seen since start")
+    servers_command    = command.Command(plugin_in, SERVERSCMD, shortdesc="Show how many servers the bot is on")
+    invite_command     = command.Command(plugin_in, 'invite', shortdesc="Invite the bot to your server!")
+    nickname_command   = command.Command(plugin_in, NICKNAMECMD, shortdesc="Change the bot's nickname")
+    ping_command       = command.Command(plugin_in, 'ping', shortdesc='Pong!')
+    return plugin.Plugin(plugin_in, 'botutils', [plugins_command, commands_command, help_command, info_command, plugintree_command, uptime_command,
                                                  hostinfo_command, cpuinfo_command, setprefix_command, getprefix_command, speedtest_command, addowner_command,
                                                  owners_command, messages_command, servers_command, invite_command, nickname_command, ping_command])
 
 async def onCommand(message_in):
     if message_in.command == 'plugins':
         plugin_list = []
-        for plugin_in in bot.plugins:
+        for plugin_in in Bot.plugins:
             plugin_list.append(plugin_in.name)
-        return message.message(body='```{}```'.format(', '.join(plugin_list)))
+        return message.Message(body='```{}```'.format(', '.join(plugin_list)))
 
     if message_in.command == 'commands' or message_in.command == 'help':
         cmd_names = []
         cmd_descs = []
-        for botcommand in bot.commands:
+        for botcommand in Bot.commands:
             if botcommand.devcommand != True:
                 cmd_names.append(botcommand.name)
                 cmd_descs.append(botcommand.shortdesc)
@@ -97,7 +97,7 @@ async def onCommand(message_in):
         pad_len = len(max(cmd_names, key=len))
         for index, value in enumerate(cmd_names):
             cmd_list.append('{} - {}'.format(cmd_names[index].ljust(pad_len), cmd_descs[index]))
-        return message.message(body='```{}```'.format('\n'.join(cmd_list)))
+        return message.Message(body='```{}```'.format('\n'.join(cmd_list)))
 
     if message_in.command == 'info':
         sha = git.git_commit()
@@ -116,12 +116,12 @@ async def onCommand(message_in):
         embed.add_field(name="Bot Team Alpha", value="CorpNewt\nSydney Erickson\nGoldfish64")
         src = dict(name="Source Code", value="Interested in poking around inside the bot?\nClick on the link above!")
         embed.add_field(src)
-        return message.message(embed=embed)
+        return message.Message(embed=embed)
 
     if message_in.command == 'plugintree':
         dups = commands_detect_dups()
         plugin_string = '```\n'
-        for plugin_in in bot.plugins:
+        for plugin_in in Bot.plugins:
             plugin_string += '{}\n'.format(plugin_in.name)
             plugin_commands = len(plugin_in.commands)
             index = 0
@@ -138,12 +138,12 @@ async def onCommand(message_in):
                     else:
                         plugin_string += '└ {}\n'.format(command_in.name)
         plugin_string += '```'
-        return message.message(body=plugin_string)
+        return message.Message(body=plugin_string)
 
     if message_in.command == 'uptime':
         time_current = int(time.time())
-        time_str = readableTime.getReadableTimeBetween(bot.startTime, time_current)
-        return message.message(body='I\'ve been up for *{}*.'.format(time_str))
+        time_str = readableTime.getReadableTimeBetween(Bot.startTime, time_current)
+        return message.Message(body='I\'ve been up for *{}*.'.format(time_str))
 
     if message_in.command == 'hostinfo':
         # Get information about host environment.
@@ -190,7 +190,7 @@ async def onCommand(message_in):
         msg += 'Host uptime   : {}```'.format(readableTime.getReadableTimeBetween(psutil.boot_time(), time.time()))
 
         # Return completed message.
-        return message.message(body=msg)
+        return message.Message(body=msg)
 
     if message_in.command == 'cpuinfo':
         # Get CPU usage and create string for message.
@@ -219,18 +219,18 @@ async def onCommand(message_in):
             cpu_pct_str += 'CPU {}: {}\n'.format(str(index), progressBar.makeBar(cpu_pcts[index]))
 
         # Return completed message.
-        return message.message(body='```{}```'.format(cpu_pct_str))
+        return message.Message(body='```{}```'.format(cpu_pct_str))
 
     if message_in.command == 'setprefix':
         if settings.owners_check(message_in.author.id):
             prefix = message_in.body.split(' ', 1)[-1]
             settings.prefix_set(message_in.server.id, prefix)
-            return message.message(body='Prefix set to {}'.format(prefix))
+            return message.Message(body='Prefix set to {}'.format(prefix))
         else:
-            return message.message(body='Only my owner can set the prefix!')
+            return message.Message(body='Only my owner can set the prefix!')
 
     if message_in.command == 'getprefix':
-        return message.message(body='Prefix is {}'.format(settings.prefix_get(message_in.server.id)))
+        return message.Message(body='Prefix is {}'.format(settings.prefix_get(message_in.server.id)))
 
     if message_in.command == 'speedtest':
         if settings.owners_check(message_in.author.id):
@@ -240,9 +240,9 @@ async def onCommand(message_in):
             msg += '    Ping: {}\n'.format(round(speed.ping(), 2))
             msg += 'Download: {}MB/s\n'.format(round(speed.download()/1024/1024, 2))
             msg += '  Upload: {}MB/s```'.format(round(speed.upload()/1024/1024, 2))
-            return message.message(body=msg)
+            return message.Message(body=msg)
         else:
-            return message.message(body='You do not have permisison to run a speedtest.')
+            return message.Message(body='You do not have permisison to run a speedtest.')
 
     if message_in.command == "addowner":
         if settings.owners_get():
@@ -252,24 +252,24 @@ async def onCommand(message_in):
                     new_member = displayname.memberForName(member, message_in.server)
 
                     if settings.owners_check(new_member.id):
-                        return message.message(body="User is already an owner.")
+                        return message.Message(body="User is already an owner.")
                     elif new_member.bot:
-                        return message.message(body="Bots cannot be owners.")
+                        return message.Message(body="Bots cannot be owners.")
                     else:
                         settings.owners_add(new_member.id)
-                        return message.message(body="Added owner successfully.")
+                        return message.Message(body="Added owner successfully.")
                 else:
-                    return message.message(body="You aren't an owner of the bot.")
+                    return message.Message(body="You aren't an owner of the bot.")
             except AttributeError:
-                return message.message(body="Invalid user.")
+                return message.Message(body="Invalid user.")
         else:
             settings.owners_add(message_in.author.id)
-            return message.message(body="You have successfully claimed yourself as the first owner!")
+            return message.Message(body="You have successfully claimed yourself as the first owner!")
 
     if message_in.command == 'owners':
         owners = []
         if not settings.owners_get():
-            return message.message(body='I have no owners')
+            return message.Message(body='I have no owners')
         for owner in settings.owners_get():
             user = displayname.memberForID(str(owner), message_in.server)
             if user:
@@ -277,39 +277,39 @@ async def onCommand(message_in):
             else:
                 owners.append(str(owner))
         owner_list = ', '.join(owners)
-        return message.message(body=owner_list)
+        return message.Message(body=owner_list)
 
     if message_in.command == SERVERSCMD:
         # Get server count.
-        servercount = len(bot.client.servers)
+        servercount = len(Bot.client.servers)
 
         # Return message.
         if servercount == 1:
-            return message.message("I am a member of **{} server**!".format(servercount))
+            return message.Message("I am a member of **{} server**!".format(servercount))
         else:
-            return message.message("I am a member of **{} servers**!".format(servercount))
+            return message.Message("I am a member of **{} servers**!".format(servercount))
 
     if message_in.command == 'messages':
-        msg_count = bot.messagesSinceStart
+        msg_count = Bot.messagesSinceStart
         msg_count_server = logging.message_count_get(message_in.server.id)
         msg = "I've witnessed *{} messages* since I started and *{} messages* overall!"
-        return message.message(msg.format(msg_count, msg_count_server))
+        return message.Message(msg.format(msg_count, msg_count_server))
 
     if message_in.command == 'invite':
         perm_admin = 8
-        return message.message(body=discord.utils.oauth_url(bot.client.user.id, perm_admin))
+        return message.Message(body=discord.utils.oauth_url(Bot.client.user.id, perm_admin))
 
     if message_in.command == NICKNAMECMD:
         if message_in.channel.permissions_for(message_in.author).manage_nicknames:
             # Change nickname.
-            await bot.client.change_nickname(message_in.server.me, message_in.body.strip())
+            await Bot.client.change_nickname(message_in.server.me, message_in.body.strip())
            # if message_in.server.me.nick:
-            #    return message.message("My new nickname in this server is **{}**".format(message_in.server.me.nick))
+            #    return message.Message("My new nickname in this server is **{}**".format(message_in.server.me.nick))
             #else:
-             #   return message.message("My nickname has been removed.")
-            return message.message("My nickname has been changed.")
+             #   return message.Message("My nickname has been removed.")
+            return message.Message("My nickname has been changed.")
         else:
-            return message.message("You cannot change nicknames on this server.")
+            return message.Message("You cannot change nicknames on this server.")
 
     if message_in.command == 'ping':
-        return message.message(body='PONG! Bot is up!')
+        return message.Message(body='PONG! Bot is up!')

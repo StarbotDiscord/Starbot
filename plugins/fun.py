@@ -20,12 +20,12 @@ from api import command, message, plugin
 # Fun plugin
 def onInit(plugin_in):
     '''List commands for plugin.'''
-    lenny_command = command.command(plugin_in, 'lenny', shortdesc='Give some Lenny')
-    shrug_command = command.command(plugin_in, 'shrug', shortdesc='Shrug it off')
-    tableflip_command = command.command(plugin_in, 'tableflip', shortdesc='Flip a table')
-    fart_command = command.command(plugin_in, 'fart', shortdesc='PrincessZoey :P')
-    beta_command = command.command(plugin_in, 'beta', shortdesc='Something went wrong™')
-    return plugin.plugin(plugin_in, 'fun', [lenny_command, shrug_command, tableflip_command, fart_command, beta_command])
+    lenny_command = command.Command(plugin_in, 'lenny', shortdesc='Give some Lenny')
+    shrug_command = command.Command(plugin_in, 'shrug', shortdesc='Shrug it off')
+    tableflip_command = command.Command(plugin_in, 'tableflip', shortdesc='Flip a table')
+    fart_command = command.Command(plugin_in, 'fart', shortdesc='PrincessZoey :P')
+    beta_command = command.Command(plugin_in, 'beta', shortdesc='Something went wrong™')
+    return plugin.Plugin(plugin_in, 'fun', [lenny_command, shrug_command, tableflip_command, fart_command, beta_command])
 
 async def onCommand(message_in):
     '''Run plugin commands.'''
@@ -39,7 +39,7 @@ async def onCommand(message_in):
             msg += "\n" + message_in.body.strip()
 
         # Return message.
-        return message.message(msg, delete=True)
+        return message.Message(msg, delete=True)
 
     # Shrug.
     if message_in.command == 'shrug':
@@ -51,7 +51,7 @@ async def onCommand(message_in):
             msg += "\n" + message_in.body.strip()
 
         # Return message.
-        return message.message(msg, delete=True)
+        return message.Message(msg, delete=True)
 
     # Tableflip.
     if message_in.command == 'tableflip':
@@ -63,7 +63,7 @@ async def onCommand(message_in):
             msg += "\n" + message_in.body.strip()
 
         # Return message.
-        return message.message(msg, delete=True)
+        return message.Message(msg, delete=True)
 
     # Fart.
     if message_in.command == 'fart':
@@ -77,7 +77,7 @@ async def onCommand(message_in):
             msg += "\n" + message_in.body.strip()
 
         # Return fart message.
-        return message.message(msg, delete=True)
+        return message.Message(msg, delete=True)
 
     if message_in.command == 'beta':
-        return message.message(body='It looks like something went wrong', file="beta.jpg")
+        return message.Message(body='It looks like something went wrong', file="beta.jpg")

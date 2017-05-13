@@ -25,14 +25,14 @@ class TestFunSuite(unittest.TestCase):
 
 
     def testFunLennyEmptyMsg(self):
-        msg = message.message(body="")
+        msg = message.Message(body="")
         msg.command = "lenny"
         result = yield from fun.onCommand(msg)
         self.assertEqual(type(result), type(msg))
         self.assertEqual(result.body, "( ͡° ͜ʖ ͡°)")
 
     def testFunLennyMsg(self):
-        msg = message.message(body="hi")
+        msg = message.Message(body="hi")
         msg.command = "lenny"
         result = yield from fun.onCommand(msg)
         self.assertEqual(type(result), type(msg))
@@ -41,14 +41,14 @@ class TestFunSuite(unittest.TestCase):
 
 
     def testFunShrugEmptyMsg(self):
-        msg = message.message(body="")
+        msg = message.Message(body="")
         msg.command = "shrug"
         result = yield from fun.onCommand(msg)
         self.assertEqual(type(result), type(msg))
         self.assertEqual(result.body, "¯\_(ツ)_/¯")
 
     def testFunShrugMsg(self):
-        msg = message.message(body="hi")
+        msg = message.Message(body="hi")
         msg.command = "shrug"
         result = yield from fun.onCommand(msg)
         self.assertEqual(type(result), type(msg))
@@ -57,7 +57,7 @@ class TestFunSuite(unittest.TestCase):
 
 
     def testFunFartMsg(self):
-        msg = message.message(body="")
+        msg = message.Message(body="")
         msg.command = "fart"
         result = yield from fun.onCommand(msg)
         fartList = ["Poot", "Prrrrt", "Thhbbthbbbthhh", "Plllleerrrrffff", "Toot", "Blaaaaahnk", "Squerk"]
@@ -67,7 +67,7 @@ class TestFunSuite(unittest.TestCase):
 
 
     def testFunBetaMsg(self):
-        msg = message.message(body="")
+        msg = message.Message(body="")
         msg.command = "beta"
         result = yield from fun.onCommand(msg)
         self.assertEqual(type(result), type(msg))
