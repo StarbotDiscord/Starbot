@@ -56,7 +56,7 @@ async def onCommand(message_in):
                 msg = '{}\n\n__Example(s):__\n\n*{}*'.format(msg, ourWord["example"])
 
         # Return message.
-        return message.createBigMessage(msg)
+        return message.msg_split(msg)
 
     # Random define.
     if message_in.command == 'randefine':
@@ -76,4 +76,4 @@ async def onCommand(message_in):
                 msg = '{}\n\n__Example(s):__\n\n*{}*'.format(msg, ourWord["example"])
 
         # Return message.
-        return message.createBigMessage(msg)
+        return message.msg_split(msg)
