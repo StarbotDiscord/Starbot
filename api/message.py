@@ -28,7 +28,7 @@ class message:
         self.channel = channel
 
 # Breaks giant message into chunks.
-def msg_split(msg, characters : int = 2000):
+def msg_split(msg, characters: int = 2000):
     '''Split a big message into several smaller ones'''
     if not msg:
         return None
