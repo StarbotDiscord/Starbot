@@ -13,20 +13,20 @@
 #    limitations under the License.
 
 from api.database.DAL import SQLite
-from api.database.db import Db
+from api.database.db import DB
 
 def db_open(db_in):
-    if Db.type == "SQLite":
+    if DB.type == "SQLite":
         SQLite.db_open(db_in)
 
 def db_close(db_in):
-    if Db.type == "SQLite":
+    if DB.type == "SQLite":
         SQLite.close(db_in)
 
 def db_create_table(db_in, tablename):
-    if Db.type == "SQLite":
+    if DB.type == "SQLite":
         SQLite.db_create_table(db_in, tablename)
 
 def db_insert(db_in, table, dict_in):
-    if Db.type == "SQLite":
+    if DB.type == "SQLite":
         return SQLite.db_insert(db_in, table, dict_in)
