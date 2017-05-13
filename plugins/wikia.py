@@ -21,13 +21,13 @@ def wikia_get(wiki, search):
     '''Fetch and return data from Wikia'''
     starwiki = Wikia(wiki)
     try:
-        results = starwiki.search(search)
-        page = starwiki.getPage(results[0]['id'])
+        results = starwiki.wikia_search(search)
+        page = starwiki.wikia_getpage(results[0]['id'])
         section = page[0]
 
         resultid = results[0]['id']
 
-        details = starwiki.getDetails(results[0]['id'])
+        details = starwiki.wikia_getdetails(results[0]['id'])
 
         # Some really stupid hacks to get the main image
         img_thumb = details[str(resultid)]['thumbnail']
