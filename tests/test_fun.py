@@ -20,7 +20,7 @@ class TestFunSuite(unittest.TestCase):
 
     def testFunImport(self):
         result = fun.onInit(__import__('api.plugin'))
-        self.assertEqual(type(result), plugin.plugin)
+        self.assertEqual(type(result), plugin.Plugin)
 
 
 

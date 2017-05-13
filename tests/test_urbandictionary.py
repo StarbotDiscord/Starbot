@@ -20,7 +20,7 @@ class TestUrbanDictionarySuite(unittest.TestCase):
 
     def testUDImport(self):
         result = urbandictionary.onInit(__import__('api.plugin'))
-        self.assertEqual(type(result), plugin.plugin)
+        self.assertEqual(type(result), plugin.Plugin)
 
     def testUDDefine(self):
         emptyList = []

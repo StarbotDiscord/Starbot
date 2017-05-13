@@ -20,7 +20,7 @@ class TestFunSuite(unittest.TestCase):
 
     def testSrcutilsImport(self):
         result = srcutils.onInit(__import__('api.plugin'))
-        self.assertEqual(type(result), plugin.plugin)
+        self.assertEqual(type(result), plugin.Plugin)
 
 
 

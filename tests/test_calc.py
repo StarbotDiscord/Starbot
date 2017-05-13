@@ -22,7 +22,7 @@ class TestFunSuite(unittest.TestCase):
 
     def testCalcImport(self):
         result = calc.onInit(__import__('api.plugin'))
-        self.assertEqual(type(result), plugin.plugin)
+        self.assertEqual(type(result), plugin.Plugin)
 
     def testCalcEmptyEqu(self):
         msg = message.Message(body="")
