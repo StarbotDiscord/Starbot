@@ -23,7 +23,7 @@ from pluginbase import PluginBase
 
 from api import settings, message, logging
 from api import command as command_api
-from api.bot import bot
+from api.bot import Bot
 from libs import displayname
 
 def initPlugin(plugin, autoImport=True):
@@ -46,7 +46,7 @@ def initPlugin(plugin, autoImport=True):
         pass
 
     # Add plugin to list.
-    bot.plugins.append(plugin_info)
+    Bot.plugins.append(plugin_info)
 
     # Load each command in plugin.
     for command in plugin_info.commands:
@@ -59,13 +59,13 @@ def initPlugin(plugin, autoImport=True):
             pass
 
         # Add command to list of commands and print a success message.
-        bot.commands.append(command)
+        Bot.commands.append(command)
         print("Command `{}` registered successfully.".format(command.name))
 
     # Print success message.
     print("Plugin '{}' registered successfully.".format(plugin_info.name))
 
-class fakeClient:
+class FakeClient:
     def event(self):
         pass
 
@@ -74,7 +74,7 @@ if __name__ == "__main__":
     database.init()
 
     # Log the time we started.
-    bot.startTime = time.time()
+    Bot.startTime = time.time()
 
     # Get the source of plugins.
     plugin_base = PluginBase(package="plugins")
@@ -82,7 +82,7 @@ if __name__ == "__main__":
 
     # Create the Discord client.
     client = discord.Client()
-    bot.client = client
+    Bot.client = client
 
     # Load each plugin.
     for plugin in plugin_source.list_plugins():
@@ -94,7 +94,7 @@ if __name__ == "__main__":
         token = m.read().strip()
 else:
     client = discord.Client()
-    bot.client = client
+    Bot.client = client
 
 
 @client.event
@@ -137,7 +137,7 @@ async def on_message(message_in):
         await client.send_message(message_in.channel, "```{}```".format(cacheString))
 
     # Check each command loaded.
-    for command in bot.commands:
+    for command in Bot.commands:
         # Do we have a command?
         if command_api.is_command(message_in, prefix, command):
             # Prevent message count increment.
@@ -147,7 +147,7 @@ async def on_message(message_in):
             await client.send_typing(message_in.channel)
 
             # Build message object.
-            message_recv = message.message
+            message_recv = message.Message
             message_recv.command = command.name
             if message_in.content.startswith("{} ".format(message_in.server.me.mention)):
                 message_recv.body = message_in.content.split("{} ".format(message_in.server.me.mention) + 
@@ -192,7 +192,7 @@ async def on_message(message_in):
     # Increment message counters if not command.
     if not is_command:
         count = logging.message_count_get(message_in.server.id)
-        bot.messagesSinceStart += 1
+        Bot.messagesSinceStart += 1
         count += 1
         logging.message_count_set(message_in.server.id, count)
 

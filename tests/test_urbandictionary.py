@@ -18,27 +18,26 @@ from plugins import urbandictionary
 
 class TestUrbanDictionarySuite(unittest.TestCase):
 
-    def testUDImport(self):
+    def test_ud_import(self):
         result = urbandictionary.onInit(__import__('api.plugin'))
-        self.assertEqual(type(result), plugin.plugin)
+        self.assertEqual(type(result), plugin.Plugin)
 
-    def testUDDefine(self):
-        emptyList = []
-        msg = message.message(body="test")
+    def test_ud_define(self):
+        empty_list = []
+        msg = message.Message(body="test")
         msg.command = "define"
         result = yield from urbandictionary.onCommand(msg)
-        self.assertEqual(type(result), type(emptyList))
+        self.assertEqual(type(result), type(empty_list))
 
-    def testUDDefineEmpty(self):
-        emptyList = []
-        msg = message.message(body="")
+    def test_ud_define_empty(self):
+        msg = message.Message(body="")
         msg.command = "define"
         result = yield from urbandictionary.onCommand(msg)
         self.assertEqual(type(result), type(msg))
 
-    def testUDRandefine(self):
+    def test_ud_randefine(self):
         emptyList = []
-        msg = message.message(body="")
+        msg = message.Message(body="")
         msg.command = "randefine"
         result = yield from urbandictionary.onCommand(msg)
         self.assertEqual(type(result), type(emptyList))

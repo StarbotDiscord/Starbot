@@ -19,23 +19,23 @@ from api import command, plugin
 
 class TestCommandSuite(unittest.TestCase):
 
-    def testPluginBasicArgs(self):
-        commandTest = command.command(unittest, 'TestCommand')
-        pluginTest = plugin.plugin(unittest, 'TestPlugin', [commandTest])
-        self.assertEqual(pluginTest.plugin, unittest)
-        self.assertEqual(pluginTest.name, 'TestPlugin')
-        self.assertEqual(pluginTest.commands, [commandTest])
+    def test_plugin_basic_args(self):
+        cmd_test = command.Command(unittest, 'TestCommand')
+        plugin_test = plugin.Plugin(unittest, 'TestPlugin', [cmd_test])
+        self.assertEqual(plugin_test.plugin, unittest)
+        self.assertEqual(plugin_test.name, 'TestPlugin')
+        self.assertEqual(plugin_test.commands, [cmd_test])
 
-    def testPluginOverwrite(self):
-        commandTest = command.command(unittest, 'TestCommand')
-        pluginTest = plugin.plugin(unittest, 'TestPlugin', [commandTest])
-        self.assertEqual(pluginTest.plugin, unittest)
-        self.assertEqual(pluginTest.name, 'TestPlugin')
-        self.assertEqual(pluginTest.commands, [commandTest])
+    def test_plugin_overwrite(self):
+        cmd_test = command.Command(unittest, 'TestCommand')
+        plugin_test = plugin.Plugin(unittest, 'TestPlugin', [cmd_test])
+        self.assertEqual(plugin_test.plugin, unittest)
+        self.assertEqual(plugin_test.name, 'TestPlugin')
+        self.assertEqual(plugin_test.commands, [cmd_test])
 
-        commandTest2 = command.command(unittest, 'TestCommand', shortdesc='Description!')
-        pluginTest = plugin.plugin(unittest, 'TestPlugin', [commandTest2])
-        self.assertEqual(pluginTest.plugin, unittest)
-        self.assertEqual(pluginTest.name, 'TestPlugin')
-        self.assertEqual(pluginTest.commands, [commandTest2])
-        self.assertEqual(pluginTest.commands[0].shortdesc, 'Description!')
+        cmd_test2 = command.Command(unittest, 'TestCommand', shortdesc='Description!')
+        plugin_test = plugin.Plugin(unittest, 'TestPlugin', [cmd_test2])
+        self.assertEqual(plugin_test.plugin, unittest)
+        self.assertEqual(plugin_test.name, 'TestPlugin')
+        self.assertEqual(plugin_test.commands, [cmd_test2])
+        self.assertEqual(plugin_test.commands[0].shortdesc, 'Description!')

@@ -18,29 +18,26 @@ from plugins import tinyurl
 
 class TestTinyurlSuite(unittest.TestCase):
 
-    def testTinyurlImport(self):
+    def test_tinyurl_import(self):
         result = tinyurl.onInit(__import__('api.plugin'))
-        self.assertEqual(type(result), plugin.plugin)
+        self.assertEqual(type(result), plugin.Plugin)
 
-    def testTinyurlValidURL(self):
-        emptyList = []
-        msg = message.message(body="https://www.google.com/")
+    def test_tinyurl_valid_url(self):
+        msg = message.Message(body="https://www.google.com/")
         msg.command = "tinyurl"
         result = yield from tinyurl.onCommand(msg)
         self.assertEqual(type(result), type(msg))
         self.assertEqual(result.body, "http://tinyurl.com/cqvga")
 
-    def testTinyurlInvalidURL(self):
-        emptyList = []
-        msg = message.message(body="test")
+    def test_tinyurl_invalid_url(self):
+        msg = message.Message(body="test")
         msg.command = "tinyurl"
         result = yield from tinyurl.onCommand(msg)
         self.assertEqual(type(result), type(msg))
         self.assertEqual(result.body, "That website doesn't seem to exist")
 
-    def testTinyurlEmptyURL(self):
-        emptyList = []
-        msg = message.message(body="")
+    def test_tinyurl_empty_url(self):
+        msg = message.Message(body="")
         msg.command = "tinyurl"
         result = yield from tinyurl.onCommand(msg)
         self.assertEqual(type(result), type(msg))

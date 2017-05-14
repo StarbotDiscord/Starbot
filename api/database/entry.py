@@ -1,6 +1,6 @@
 from api.database.DAL import SQLite
 
-class entry:
+class Entry:
     id = None
     db = None
     table = None

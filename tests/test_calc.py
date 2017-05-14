@@ -18,26 +18,26 @@ from plugins import calc
 
 import asyncio
 
-class TestFunSuite(unittest.TestCase):
+class TestCalcSuite(unittest.TestCase):
 
-    def testCalcImport(self):
+    def test_calc_import(self):
         result = calc.onInit(__import__('api.plugin'))
-        self.assertEqual(type(result), plugin.plugin)
+        self.assertEqual(type(result), plugin.Plugin)
 
-    def testCalcEmptyEqu(self):
-        msg = message.message(body="")
+    def test_calc_empty_equ(self):
+        msg = message.Message(body="")
         msg.command = "calc"
         result = yield from calc.onCommand(msg)
         self.assertEqual(type(result), type(msg))
 
-    def testCalcInvalEqu(self):
-        msg = message.message(body="banana")
+    def test_calc_inval_equ(self):
+        msg = message.Message(body="banana")
         msg.command = "calc"
         result = yield from calc.onCommand(msg)
         self.assertEqual(type(result), type(msg))
 
-    def testCalcValidEqu(self):
-        msg = message.message(body="3+4")
+    def test_calc_valid_equ(self):
+        msg = message.Message(body="3+4")
         msg.command = "calc"
         result = yield from calc.onCommand(msg)
         self.assertEqual(type(result), type(msg))

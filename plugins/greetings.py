@@ -13,42 +13,41 @@
 #    limitations under the License.
 
 from api import command, message, plugin, database
-from api.bot import bot
-from api.database.table import table, tableTypes
-from api.database.entry import entry
+from api.bot import Bot
+from api.database.table import Table, TableTypes
+from libs import displayname
 
 # Command names.
 SETWELCOMECMD = "setwelcome"
 
 def onInit(plugin_in):
-    setwelcome_command = command.command(plugin_in, SETWELCOMECMD, shortdesc="Set the welcome message for the server.")
-    return plugin.plugin(plugin_in, "greetings", [setwelcome_command])
+    setwelcome_command = command.Command(plugin_in, SETWELCOMECMD, shortdesc="Set the welcome message for the server.")
+    return plugin.Plugin(plugin_in, "greetings", [setwelcome_command])
 
-@bot.client.event
+@Bot.client.event
 async def on_member_join(member):
     # Welcome new user.
-    await bot.client.send_message(member.server, content = "Welcome " + member.mention + " to **" + member.server.name + "**!")
+    await Bot.client.send_message(member.server, content = "Welcome " + member.mention + " to **" + member.server.name + "**!")
 
-@bot.client.event
+@Bot.client.event
 async def on_member_remove(member):
     # Say goodbye to user.
-    await bot.client.send_message(member.server, content = "Goodbye " + member.mention + ", **" + member.server.name + "** will miss you!")
+    await Bot.client.send_message(member.server, content = "Goodbye " + member.mention + ", **" + member.server.name + "** will miss you!")
 
-@bot.client.event
+@Bot.client.event
 async def on_member_ban(member) :
     # Announce ban.
-    await bot.client.send_message(member.server, content = displayname.name(member) + " got banned from **" + member.server.name + "**.")
+    await Bot.client.send_message(member.server, content = displayname.name(member) + " got banned from **" + member.server.name + "**.")
 
-@bot.client.event
+@Bot.client.event
 async def on_member_unban(server, user):
     # Announce unban.
-    await bot.client.send_message(server, content = displayname.name(user) + " got unbanned from **" + server.name + "**.")
-
+    await Bot.client.send_message(server, content = displayname.name(user) + " got unbanned from **" + server.name + "**.")
 
 
 async def onCommand(message_in):
     # Initialize database.
     database.init()
-    OffsetTable = table("greetings", tableTypes.pServer)
+    table_greetings = Table("greetings", TableTypes.pServer)
 
 

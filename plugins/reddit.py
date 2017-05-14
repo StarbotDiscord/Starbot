@@ -14,7 +14,6 @@
 
 import json
 import random
-import string
 import urllib.error
 import urllib.request
 import urllib.parse
@@ -25,14 +24,15 @@ from api import command, message, plugin, caching
 STARCMD = "star"
 
 def onInit(plugin_in):
-    star_command = command.command(plugin_in, STARCMD, shortdesc="Star")
-    return plugin.plugin(plugin_in, "reddit", [star_command])
+    star_command = command.Command(plugin_in, STARCMD, shortdesc="Star")
+    return plugin.Plugin(plugin_in, "reddit", [star_command])
 
 async def onCommand(message_in):
     if message_in.command == STARCMD:
         # Get JSON from Reddit API.
-        rawJson = caching.getJson("https://www.reddit.com/r/StarVSTheForcesOfEvil/top.json?sort=top&t=week&limit=100", save=False)
-        posts = json.loads(rawJson)["data"]["children"]
+        r_json = caching.json_get("https://www.reddit.com/r/StarVSTheForcesOfEvil/top.json?sort=top&t=week&limit=100",
+                                 save=False)
+        posts = json.loads(r_json)["data"]["children"]
 
         # Get random post.
         post = posts[random.randint(0, len(posts) - 1)]["data"]
@@ -47,22 +47,20 @@ async def onCommand(message_in):
                 url = post["preview"]["images"][0]["source"]["url"]
             else:
                 # Check if URL points to an image.
-                extList = ["jpg", "jpeg", "png", "gif", "tiff", "tif"]
+                ext_list = ["jpg", "jpeg", "png", "gif", "tiff", "tif"]
                 ext = post["url"].split(".")[-1]
-                if ext in extList:
+                if ext in ext_list:
                     url = post["url"]
-            
+
             # If we have a URL, exit.
             if url:
                 break
 
         if url:
-            theUrl = urllib.parse.urlparse(url)
-            caching.downloadToCache(url, theUrl.path.split("/")[-1], caller=STARCMD)
+            url_parsed = urllib.parse.urlparse(url)
+            caching.cache_download(url, url_parsed.path.split("/")[-1], caller=STARCMD)
 
-            
-
-            return message.message(post["title"], file="cache/{}_{}".format(STARCMD, theUrl.path.split("/")[-1]))
+            return message.Message(post["title"], file="cache/{}_{}".format(STARCMD, url_parsed.path.split("/")[-1]))
         else:
             # No URL could be found, return error message.
-            return message.message("Whoops! I couldn't find any posts.")
+            return message.Message("Whoops! I couldn't find any posts.")
