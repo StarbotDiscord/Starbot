@@ -1,8 +1,8 @@
-# ![StarIcon](https://68.media.tumblr.com/avatar_129c75279689_128.png) Starbot - an open source Discord bot
-
-[![TravisIcon](https://avatars.githubusercontent.com/u/6227399?size=100)](https://travis-ci.org/StarbotDiscord/Starbot)|[![ReadthedocsIcon](https://avatars2.githubusercontent.com/u/366329?v=3&s=100)](http://starbot.readthedocs.io/en/latest/)|[![JiraIcon](https://www.clearvision-cm.com/wp-content/themes/clearvision_v3/img/menu/atlassian.png)](https://sydstudios.atlassian.net/projects/SB/issues/)|[![DiscordIcon](https://screenshots.en.sftcdn.net/en/scrn/69730000/69730439/discord-01-100x100.png)](https://discord.gg/JEYSJxn)
-:-----:|:-----:|:-----:|:-----:
-[![Build Status](https://travis-ci.org/StarbotDiscord/Starbot.svg?branch=master)](https://travis-ci.org/StarbotDiscord/Starbot)|[![Doc Status](https://readthedocs.org/projects/starbot/badge/?version=latest)](http://starbot.readthedocs.io/en/latest/)|[Jira Tracker](https://sydstudios.atlassian.net/projects/SB/issues/)|[![DiscordIcon](https://discordapp.com/api/guilds/302626068848705536/widget.png)](https://discord.gg/JEYSJxn)
+<h2 align="center"><a href="http://dm29.deviantart.com/art/I-ve-Got-a-New-Wand-620381797"><img src="http://pre12.deviantart.net/b15e/th/pre/f/2016/192/c/3/i_ve_got_a_new_wand__by_dm29-da9cxnp.png" width="128px"></a><br> Starbot - an open source Discord bot<br>
+<a href="https://travis-ci.org/StarbotDiscord/Starbot"><img src="https://img.shields.io/travis/StarbotDiscord/Starbot.svg?style=flat-square"/></a>
+<a href="http://starbot.readthedocs.io/en/latest/"><img src="https://readthedocs.org/projects/starbot/badge/?version=latest&style=flat-square"/></a>
+<a href="https://sydstudios.atlassian.net/projects/SB/issues/"><img src="https://img.shields.io/badge/jira-starbot-brightgreen.svg?style=flat-square"/></a>
+<a href="https://discord.gg/JEYSJxn"><img src="https://img.shields.io/discord/302626068848705536.svg?style=flat-square" /></a></h2>
 
 ## What's Starbot about?
 Starbot is a plugin based bot for Discord. You should never have to edit the core of the bot or other plugins to add your awesome features! Due to the nature of the plugin system you can choose exactly what features the bot has.
