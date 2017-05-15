@@ -5,12 +5,12 @@
 <a href="https://discord.gg/JEYSJxn"><img src="https://img.shields.io/discord/302626068848705536.svg?style=flat-square" /></a></h2>
 
 ## What's Starbot about?
-Starbot is a plugin based bot for Discord. You should never have to edit the core of the bot or other plugins to add your awesome features! Due to the nature of the plugin system you can choose exactly what features the bot has.
+We have two goals for our bot: simple and powerful. The bot uses a plugin based system to allow you to write your own commands without ever touching the core of the bot. Just make a new file in the `plugins` folder and code away! We even have helpful APIs to handle databases, caching, and lots of other things for you. You can check these out [at our docs page.](http://starbot.readthedocs.io/en/latest/)
 
 ## How do I install Starbot?
 Installing Starbot is pretty simple.
 
-1. Use your package manager (or otherwise obtain) a copy of Python >=3.5, Git and Pip for Python 3
+1. Use your package manager (or otherwise obtain) a copy of Python >=3.5, Git, and Pip for Python 3
 2. `git clone https://github.com/StarbotDiscord/Starbot.git`
 3. `pip install discord.py pluginbase psutil pyparsing pyspeedtest tqdm`
 4. Git a bot token from the [Discord Developers page](https://discordapp.com/developers/applications/me)
