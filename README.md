@@ -3,7 +3,7 @@
 <p align="center">
 <a href="https://travis-ci.org/StarbotDiscord/Starbot"><img src="https://img.shields.io/travis/StarbotDiscord/Starbot.svg?style=flat-square"/></a>
 <a href="http://starbot.readthedocs.io/en/latest/"><img src="https://readthedocs.org/projects/starbot/badge/?version=latest&style=flat-square"/></a>
-<a href="https://sydstudios.atlassian.net/projects/SB/issues/"><img src="https://img.shields.io/badge/Jira-Starbot-brightgreen.svg?style=flat-square"/></a>
+<a href="https://sydstudios.atlassian.net/projects/SB/issues/"><img src="https://img.shields.io/badge/jira-starbot-brightgreen.svg?style=flat-square"/></a>
 <a href="https://discord.gg/JEYSJxn"><img src="https://img.shields.io/discord/302626068848705536.svg?style=flat-square" /></a>
 </p>
 
