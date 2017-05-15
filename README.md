@@ -1,4 +1,4 @@
-<h2 align="center"><img src="https://68.media.tumblr.com/avatar_129c75279689_128.png" width="128px"> Starbot - an open source Discord bot<br>
+<h2 align="center"><a href="http://dm29.deviantart.com/art/I-ve-Got-a-New-Wand-620381797"><img src="http://pre12.deviantart.net/b15e/th/pre/f/2016/192/c/3/i_ve_got_a_new_wand__by_dm29-da9cxnp.png" width="128px"></a> Starbot - an open source Discord bot<br>
 <a href="https://travis-ci.org/StarbotDiscord/Starbot"><img src="https://img.shields.io/travis/StarbotDiscord/Starbot.svg?style=flat-square"/></a>
 <a href="http://starbot.readthedocs.io/en/latest/"><img src="https://readthedocs.org/projects/starbot/badge/?version=latest&style=flat-square"/></a>
 <a href="https://sydstudios.atlassian.net/projects/SB/issues/"><img src="https://img.shields.io/badge/jira-starbot-brightgreen.svg?style=flat-square"/></a>
