@@ -8,17 +8,17 @@
 We have two goals for our bot: simple and powerful. The bot uses a plugin based system to allow you to write your own commands without ever touching the core of the bot. Just make a new file in the `plugins` folder and code away! We even have helpful APIs to handle databases, caching, and lots of other things for you. You can check these out [at our docs page.](http://starbot.readthedocs.io/en/latest/)
 
 ## How do I install Starbot?
-Installing Starbot is pretty simple.
 
-1. Use your package manager (or otherwise obtain) a copy of Python >=3.5, Git, and Pip for Python 3
-2. `git clone https://github.com/StarbotDiscord/Starbot.git`
-3. `pip install discord.py pluginbase psutil pyparsing pyspeedtest tqdm`
-4. Git a bot token from the [Discord Developers page](https://discordapp.com/developers/applications/me)
-5. Paste the token for the bot user into a file called `token.txt` in the folder with the bots code
-6. `./run.sh` to start the bot!
+<p align="center">
+<a href="https://github.com/StarbotDiscord/Starbot/wiki/Installing-on-Debian-Ubuntu"><img src="https://cdn.worldvectorlogo.com/logos/ubuntu-4.svg" height="100" hspace="15"/></a>
+<a href="https://github.com/StarbotDiscord/Starbot/wiki/Installing-on-Debian-Ubuntu"><img src="https://cdn.worldvectorlogo.com/logos/debian-2.svg" height="100" hspace="15"/></a>
+<a href="https://github.com/StarbotDiscord/Starbot/wiki/Installing-on-macOS"><img src="https://cdn.worldvectorlogo.com/logos/apple.svg" height="100" hspace="15"/></a>
+</p>
 
 ## I'd like to contribute!
 Contributing to Starbot is always welcome and pretty simple.
 If you encounter a bug, have a suggestion, etc then visit the Jira tracker using the link above and write out a ticket.
-If you want to write a plugin, check out the documentation above.
+
+If you want to write a plugin, check out [the documentation.](http://starbot.readthedocs.io/en/latest/)
+
 If you'd like to contribute to the core of the bot or have your plugin merged into the main bot, create a fork on GitHub and then pull request when you've made your changes.
