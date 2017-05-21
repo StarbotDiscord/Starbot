@@ -32,7 +32,7 @@ async def on_member_join(member):
 @Bot.client.event
 async def on_member_remove(member):
     # Say goodbye to user.
-    await Bot.client.send_message(member.server, content = "Goodbye " + member.mention + ", **" + member.server.name + "** will miss you!")
+    await Bot.client.send_message(member.server, content = "Goodbye *" + displayname.name(member) + "*, **" + member.server.name + "** will miss you!")
 
 @Bot.client.event
 async def on_member_ban(member) :
