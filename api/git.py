@@ -33,3 +33,10 @@ def git_branch():
         else:
             msg = "UNKNOWN"
     return msg
+
+def get_remote():
+    with open(".git/config") as f:
+        content = f.readlines()
+        for line in content:
+            if line.startswith('\turl'):
+                return line.split("url = ")[1].strip()
