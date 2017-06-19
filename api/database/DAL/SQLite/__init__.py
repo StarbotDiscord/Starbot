@@ -89,6 +89,15 @@ def db_search(db_in, table, search_key, search_query):
     """Select first entry that matches and return type entry."""
     connection = db_in.connection.cursor()
     search_query = search_query.replace("'", "''")  # Escape quotes
-    cursor = connection.execute("SELECT * FROM %s WHERE %s='%s';" % (table.name, search_key, search_query))
+    cursor = connection.execute("SELECT * FROM %s WHERE %s='%s';" %
+                                (table.name, search_key, search_query))
     for row in cursor:
         return Entry(row[0], db_in, table, row)
+
+def db_get_contents_of_table(db_in, table, rows):
+    connection = db_in.connection.cursor()
+    cursor = connection.execute("SELECT %s FROM %s" % (", ".join(rows), table.name))
+    results = []
+    for row in cursor:
+        results.append(row)
+    return results

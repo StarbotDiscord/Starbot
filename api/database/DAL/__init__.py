@@ -30,3 +30,7 @@ def db_create_table(db_in, tablename):
 def db_insert(db_in, table, dict_in):
     if DB.type == "SQLite":
         return SQLite.db_insert(db_in, table, dict_in)
+
+def db_get_contents_of_table(db_in, table, rows):
+    if DB.type == "SQLite":
+        return SQLite.db_get_contents_of_table(db_in, table, rows)

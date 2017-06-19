@@ -32,6 +32,9 @@ class Table:
     def search(self, searchTerm, searchFor):
         return SQLite.db_search(DB, self, searchTerm, searchFor)
 
+    def getContents(self, rows):
+        return DAL.db_get_contents_of_table(DB, self, rows)
+
 class TableTypes:
     pServer = 1
     pGlobal = 2
