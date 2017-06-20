@@ -298,7 +298,8 @@ async def onCommand(message_in):
         return message.Message(msg.format(msg_count, msg_count_server))
 
     if message_in.command == 'invite':
-        perm_admin = 8
+        class perm_admin:
+            value = 8
         return message.Message(body=discord.utils.oauth_url(Bot.client.user.id, perm_admin))
 
     if message_in.command == NICKNAMECMD:
