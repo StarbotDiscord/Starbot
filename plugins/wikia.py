@@ -59,11 +59,16 @@ async def onCommand(message_in):
         if message_in.body == '':
             return message.Message(body='Usage:\nstarwiki [search term]')
         else:
+            if message_in.body.startswith(" "):
+                message_in.body = message_in.body[1:]
             return wikia_get('starvstheforcesofevil', message_in.body)
 
     if message_in.command == 'wikia':
         if message_in.body == '':
             return message.Message(body='Usage:\nwikia [wikia name] [search term]')
+
+        if message_in.body.startswith(" "):
+                message_in.body = message_in.body[1:]
 
         input_split = message_in.body.split(' ', 2)
         print(input_split)
