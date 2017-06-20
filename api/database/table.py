@@ -35,6 +35,9 @@ class Table:
     def getContents(self, rows):
         return DAL.db_get_contents_of_table(DB, self, rows)
 
+    def getLatestID(self):
+        return DAL.db_get_latest_id(DB, self)
+
 class TableTypes:
     pServer = 1
     pGlobal = 2

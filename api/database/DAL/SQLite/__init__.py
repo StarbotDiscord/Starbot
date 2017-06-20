@@ -101,3 +101,9 @@ def db_get_contents_of_table(db_in, table, rows):
     for row in cursor:
         results.append(row)
     return results
+
+def db_get_latest_id(db_in, table):
+    connection = db_in.connection.cursor()
+    cursor = connection.execute("SELECT * FROM \"%s\" ORDER BY id DESC LIMIT 1" % (table.name))
+    for row in cursor:
+        return row[0]

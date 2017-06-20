@@ -18,44 +18,18 @@ from api import database
 from api.database.table import Table, TableTypes
 
 
-def message_count_set(id_server, count):
-    '''Set the current message count.'''
-    database.init()
-    table_message_count = Table('messagecounts', TableTypes.pGlobal)
-    try:
-        entry_message_count = Table.search(table_message_count, 'serverid', '{}'.format(id_server))
-    except:
-        # TODO: Narrow this and other Exception clauses.
-        # Table must be empty.
-        entry_message_count = None
-
-    if entry_message_count:
-        entry_message_count.edit(dict(serverid=id_server, count=count))
-    else:
-        Table.insert(table_message_count, dict(serverid=id_server, count=count))
-
-
-def message_count_get(id_server):
+def message_count_get(server_id):
     '''Get the current message count.'''
     database.init()
-    table_message_count = Table('messagecounts', TableTypes.pGlobal)
-    try:
-        entry_message_count = Table.search(table_message_count, 'serverid', '{}'.format(id_server))
-    except:
-        # TODO: Narrow this and other Exception clauses.
-        # Table must be empty.
-        entry_message_count = [0, 0]
-
-    if entry_message_count:
-        return int(entry_message_count.data[1])
-    else:
-        return 0
+    table_message_count = Table('user_messages_{}'.format(server_id), TableTypes.pGlobal)
+    return table_message_count.getLatestID()
 
 # Log messages to database.
 
-def message_log(msg):
+def message_log(msg, server_id):
     '''Log a message into the database.'''
     database.init()
-    table_log = Table('user_messages', TableTypes.pGlobal)
-    Table.insert(table_log, dict(userid=msg.author.id, username=msg.author.name, message=msg.content,
-                                 serverid=msg.server.id, servername=msg.server.name))
+    table_log = Table('user_messages_{}'.format(server_id), TableTypes.pGlobal)
+    Table.insert(table_log, dict(userid=msg.author.id, username=msg.author.name,
+                                 message=msg.content, serverid=msg.server.id,
+                                 servername=msg.server.name))

@@ -34,3 +34,8 @@ def db_insert(db_in, table, dict_in):
 def db_get_contents_of_table(db_in, table, rows):
     if DB.type == "SQLite":
         return SQLite.db_get_contents_of_table(db_in, table, rows)
+
+
+def db_get_latest_id(db_in, table):
+    if DB.type == "SQLite":
+        return SQLite.db_get_latest_id(db_in, table)
