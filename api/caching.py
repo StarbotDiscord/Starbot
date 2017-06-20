@@ -60,7 +60,7 @@ def json_get(url, caller='', name_custom='', save=True):
     try:
         entry_strcache = Table.search(table_strcache, 'filename', filename)
         json_string = entry_strcache.data[2]
-    except AttributeError:
+    except:
         json_string = urllib.request.urlopen(urllib.request.Request(url)).read().decode("utf-8")
         if save:
             json_store(json_string, caller, name_custom)
