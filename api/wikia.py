@@ -25,8 +25,7 @@ class Wikia:
         '''Search for a page on Wikia'''
         # TODO: make limits over 1 return an array
         search_term = term.replace(" ", "+")
-        url = "http://{}.wikia.com/api/v1/Search/List?query={}&limit=1&minArticleQuality=10&batch=1&namespaces=0%2C14"
-        url.format(self.wiki_name, search_term)
+        url = "http://{}.wikia.com/api/v1/Search/List?query={}&limit=1&minArticleQuality=10&batch=1&namespaces=0%2C14".format(self.wiki_name, search_term)
 
         json_string = urllib.request.urlopen(url).read().decode("utf-8")
         json_d = json.loads(json_string)
@@ -44,8 +43,7 @@ class Wikia:
 
     def wikia_getdetails(self, page_id):
         '''Get details of a wikia page based on a page ID'''
-        url = "http://{}.wikia.com/api/v1/Articles/Details?ids={}&abstract=100&width=200&height=200"
-        url.format(self.wiki_name, page_id)
+        url = "http://{}.wikia.com/api/v1/Articles/Details?ids={}&abstract=100&width=200&height=200".format(self.wiki_name, page_id)
 
         json_string = urllib.request.urlopen(url).read().decode("utf-8")
         json_d = json.loads(json_string)
