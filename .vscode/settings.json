@@ -1,6 +1,6 @@
 {
-    "python.linting.pylintEnabled": false,
+    "python.linting.pylintEnabled": true,
     "licenser.author": "Starbot Discord Project",
     "licenser.projectName": "Starbot",
-    "licenser.license": "AL2",
+    "licenser.license": "AL2"
 }

@@ -15,7 +15,7 @@
 import discord
 
 from api import command, message, plugin
-from api.bot import bot
+from api.bot import Bot
 from libs import displayname
 
 # Command names.
@@ -27,10 +27,10 @@ def SortEmote(e):
     return e.name
 
 def onInit(plugin_in):
-    serverinfo_command = command.command(plugin_in, SERVERINFOCMD, shortdesc="Show info about this server")
-    emoteinfo_command = command.command(plugin_in, EMOTEINFOCMD, shortdesc="Show the emotes on this server")
-    serverinvite_command = command.command(plugin_in, SERVERINVITECMD, shortdesc="Get an invite link to this server")
-    return plugin.plugin(plugin_in, "infoutils", [serverinfo_command, emoteinfo_command, serverinvite_command])
+    serverinfo_command = command.Command(plugin_in, SERVERINFOCMD, shortdesc="Show info about this server")
+    emoteinfo_command = command.Command(plugin_in, EMOTEINFOCMD, shortdesc="Show the emotes on this server")
+    serverinvite_command = command.Command(plugin_in, SERVERINVITECMD, shortdesc="Get an invite link to this server")
+    return plugin.Plugin(plugin_in, "infoutils", [serverinfo_command, emoteinfo_command, serverinvite_command])
 
 async def onCommand(message_in):
     if message_in.command == SERVERINFOCMD:
@@ -50,9 +50,9 @@ async def onCommand(message_in):
         server_embed.add_field(name="Roles", value=str(len(server.roles)), inline=True)
 
         # Add channel count and default channel.
-        voice_channels = [c.name for c in server.channels if str(c.type) == "voice"]
-        text_channels = [c.name for c in server.channels if str(c.type) == "text"]
-        server_embed.add_field(name="Channels", value="{} text, {} voice".format(len(text_channels), len(voice_channels)))
+        channels_voice = [c.name for c in server.channels if str(c.type) == "voice"]
+        channels_text = [c.name for c in server.channels if str(c.type) == "text"]
+        server_embed.add_field(name="Channels", value="{} text, {} voice".format(len(channels_text), len(channels_voice)))
         server_embed.add_field(name="Default Channel", value=server.default_channel.mention, inline=True)
 
         # Add region and AFK.
@@ -68,23 +68,23 @@ async def onCommand(message_in):
 
         # Add server ID to footer.
         server_embed.set_footer(text="Server ID: {}".format(server.id))
-        return message.message("**Server Info:**", embed=server_embed)
+        return message.Message("**Server Info:**", embed=server_embed)
 
-    if message_in.command == EMOTEINFOCMD:       
+    if message_in.command == EMOTEINFOCMD:
         # Get emotes.
         emotelist = ""
         for emote in sorted(message_in.server.emojis, key=SortEmote):
             emotelist += str(emote) + " "
 
         # Return message.
-        return message.message("**{}** emotes:\n{}".format(message_in.server.name, emotelist))
+        return message.Message("**{}** emotes:\n{}".format(message_in.server.name, emotelist))
 
     if message_in.command == SERVERINVITECMD:
         # Check that we have perms to create an invite. If not, return error.
         if not message_in.server.default_channel.permissions_for(message_in.server.me).create_instant_invite:
-            return message.message("Whoops I don't have permission to create instant invites for this server.")
-        
+            return message.Message("Whoops I don't have permission to create instant invites for this server.")
+
         # Create invite and return message.
-        invite = await bot.client.create_invite(message_in.server.default_channel, unique=False)
-        return message.message("Use this link to invite people to this server: {}".format(invite.url))
+        invite = await Bot.client.create_invite(message_in.server.default_channel, unique=False)
+        return message.Message("Use this link to invite people to this server: {}".format(invite.url))
         

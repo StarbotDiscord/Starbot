@@ -18,26 +18,24 @@ from plugins import srcutils
 
 class TestFunSuite(unittest.TestCase):
 
-    def testSrcutilsImport(self):
+    def test_srcutils_import(self):
         result = srcutils.onInit(__import__('api.plugin'))
-        self.assertEqual(type(result), plugin.plugin)
+        self.assertEqual(type(result), plugin.Plugin)
 
-
-
-    def testSrcutilsSource(self):
-        msg = message.message(body="")
+    def test_srcutils_source(self):
+        msg = message.Message(body="")
         msg.command = "source"
-        result = srcutils.onCommand(msg)
+        result = yield from srcutils.onCommand(msg)
         self.assertEqual(type(result), type(msg))
 
-    def testSrcutilsDocs(self):
-        msg = message.message(body="")
+    def test_srcutils_docs(self):
+        msg = message.Message(body="")
         msg.command = "docs"
-        result = srcutils.onCommand(msg)
+        result = yield from srcutils.onCommand(msg)
         self.assertEqual(type(result), type(msg))
 
-    def testSrcutilsTests(self):
-        msg = message.message(body="")
+    def test_srcutils_tests(self):
+        msg = message.Message(body="")
         msg.command = "tests"
-        result = srcutils.onCommand(msg)
+        result = yield from srcutils.onCommand(msg)
         self.assertEqual(type(result), type(msg))

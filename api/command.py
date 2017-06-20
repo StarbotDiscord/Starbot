@@ -12,7 +12,8 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
-class command():
+class Command():
+    '''Store information about a command'''
     def __init__(self, plugin, name, shortdesc='no description', devcommand=False):
         self.plugin = plugin
         self.name = name
@@ -20,7 +21,7 @@ class command():
         self.devcommand = devcommand
 
 def is_command(message_in, prefix, command):
-
+    '''Check if a given message is a command'''
     #First we check if the message starts with our prefix
     if message_in.content.startswith(prefix):
         pass
@@ -33,16 +34,12 @@ def is_command(message_in, prefix, command):
     else:
         return False
 
-
-
     # The first part of the message, before the first space
-    commandTry = message_in.content.split(' ')[0]
-
-
+    command_try = message_in.content.split(' ')
 
     # If the first part of the message is equal to the server prefix + the command name
     # This would be used for commands with arguments
-    if commandTry == prefix + command.name:
+    if command_try[0] == prefix + command.name:
         return True
 
     # If the entire inputted message is equal to a command
@@ -53,7 +50,7 @@ def is_command(message_in, prefix, command):
     # First check that the first word in the message is a mention for the bot, a.k.a. an @ ping
     # Then we check that the second word in the message is the name of a command
     # This would mean that the command has been used with arguments
-    elif message_in.content.split(' ')[0] == message_in.server.me.mention and message_in.content.split(' ')[1] == command.name:
+    elif command_try[0] == message_in.server.me.mention and command_try[1] == command.name:
         return True
 
     # First we check that the firct word in the message is a mention for the bot

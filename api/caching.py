@@ -19,9 +19,11 @@ import urllib.error
 import urllib
 import ssl
 
-from api import db
+from api import database
+from api.database.table import Table, TableTypes
 
-def getCaller():
+def caller_get():
+    '''Get the caller of the parent function.'''
     frm = inspect.stack()[2]
     mod = inspect.getmodule(frm[0])
     temp = mod.__name__
@@ -29,41 +31,58 @@ def getCaller():
 
 #=============================
 
-def writeString(string, plugin, filename):
-    db.cacheFileS('{}_{}'.format(plugin, filename), string)
-
-def getJson(url, caller='', customName='', save=True):
-    if caller == '':
-        getCaller()
-    if customName == '':
-        customName = url.split('/')[-1]
-    fullFilename = '{}_{}'.format(caller, customName)
-    cacheTry = db.getCachedFileS(fullFilename)
-    if save and cacheTry != "":
-        return cacheTry
+def json_store(string, plugin, filename):
+    '''Store a json in the database.'''
+    database.init()
+    table_strcache = Table('strcache', TableTypes.pGlobal)
+    filename = '{}_{}'.format(plugin, filename)
+    try:
+        entry_strcache = Table.search(table_strcache, 'filename', filename)
+    except:
+        # Table must be empty.
+        entry_strcache = None
+    if entry_strcache:
+        entry_strcache.edit(dict(filename=filename, text=string))
     else:
-        jsonString = urllib.request.urlopen(urllib.request.Request(url, headers={
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.47 Safari/537.36'})).read().decode("utf-8")
-        if save == True:
-            writeString(jsonString, caller, customName)
-        return jsonString
+        Table.insert(table_strcache, dict(filename=filename, text=string))
 
 
-def downloadToCache(url, filename, caller='', sslEnabled=True):
+def json_get(url, caller='', name_custom='', save=True):
+    '''Retrieve and cache a JSON.'''
     if caller == '':
-        getCaller()
-    fullFilename = 'cache/{}_{}'.format(caller, filename)
-    if os.path.isfile(fullFilename):
+        caller_get()
+    if name_custom == '':
+        name_custom = url.split('/')[-1]
+    filename = '{}_{}'.format(caller, name_custom)
+    # Get cached String
+    database.init()
+    table_strcache = Table('strcache', TableTypes.pGlobal)
+    try:
+        entry_strcache = Table.search(table_strcache, 'filename', filename)
+        json_string = entry_strcache.data[2]
+    except:
+        json_string = urllib.request.urlopen(urllib.request.Request(url)).read().decode("utf-8")
+        if save:
+            json_store(json_string, caller, name_custom)
+    return json_string
+
+
+def cache_download(url, filename, caller='', ssl_enabled=True):
+    '''Download a file to the cache'''
+    if caller == '':
+        caller_get()
+    filename_full = 'cache/{}_{}'.format(caller, filename)
+    if os.path.isfile(filename_full):
         return 1
     else:
         try:
-            if sslEnabled == True:
-                urllib.request.urlretrieve(url, fullFilename)
+            if ssl_enabled:
+                urllib.request.urlretrieve(url, filename_full)
             else:
                 ssl._create_default_https_context = ssl._create_unverified_context
-                urllib.request.urlretrieve(url, fullFilename)
+                urllib.request.urlretrieve(url, filename_full)
             return 1
-        except urllib.error.HTTPError as e:
+        except urllib.error.HTTPError:
             return -1
-        except urllib.error.URLError as e:
+        except urllib.error.URLError:
             return -2

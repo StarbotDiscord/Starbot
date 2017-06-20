@@ -13,7 +13,8 @@
 #    limitations under the License.
 
 from api.database import DAL
-from api.database.db import db
+from api.database.db import DB
 
 def init():
-    DAL.open(db)
+    """Initalize SQLite Database."""
+    DAL.db_open(DB)

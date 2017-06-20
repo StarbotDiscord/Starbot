@@ -27,13 +27,13 @@ A basic plugin - text manipulation
             'toupper',
             shortdesc='Convert text to upper case')
 
-        return plugin.plugin(plugin_in, 'texttools', [tolower_command])
+        return plugin.Plugin(plugin_in, 'texttools', [tolower_command])
 
     def onCommand(message_in):
         if message_in.command == 'tolower':
             msg = message_in.body.lower()
-            return message.message(body=msg)
+            return message.Message(body=msg)
 
         elif message_in.command == 'toupper':
             msg = message_in.body.upper()
-            return message.message(body=msg)
+            return message.Message(body=msg)

@@ -18,27 +18,27 @@ from plugins import excuses
 
 class TestExcuseSuite(unittest.TestCase):
 
-    def testExcuseMsg(self):
-        msg = message.message(body="")
+    def test_excuse_msg(self):
+        msg = message.Message(body="")
         msg.command = "excuse"
 
-        excuseList = ["I have an appointment with a robot.", 
-        "I was abducted by robots.", 
-        "I didn’t know what day it was because I was looking at the Robotic Calendar.",
-        "My robot threw up on my source code.", 
-        "I need to take my robot for a walk.",
-        "I had to get a cybernetic head and couldn't get anything done.",
-        "My Robot Assistant blue-screened.",
-        "A kernel panic erased my work.",
-        "Somebody used up the data limit watching YouTube."]
-        sorryList = ["Please excuse me,", "I'm sorry, but", "I hope you forgive me, because"]
-        fullExcuseList = []
+        excuse_list = ["I have an appointment with a robot.",
+                       "I was abducted by robots.",
+                       "I didn’t know what day it was because I was looking at the Robotic Calendar.",
+                       "My robot threw up on my source code.",
+                       "I need to take my robot for a walk.",
+                       "I had to get a cybernetic head and couldn't get anything done.",
+                       "My Robot Assistant blue-screened.",
+                       "A kernel panic erased my work.",
+                       "Somebody used up the data limit watching YouTube."]
+        sorry_list = ["Please excuse me,", "I'm sorry, but", "I hope you forgive me, because"]
+        msg_list = []
 
-        for sorry in sorryList:
-            for excuse in excuseList:
-                fullExcuseList.append('*{} {}*'.format(sorry, excuse))
-        
-        result=excuses.onCommand(msg)
+        for sorry in sorry_list:
+            for excuse in excuse_list:
+                msg_list.append('*{} {}*'.format(sorry, excuse))
+
+        result = yield from excuses.onCommand(msg)
 
         self.assertEqual(type(result), type(msg))
-        self.assertEqual(result.body in fullExcuseList, True)
+        self.assertEqual(result.body in msg_list, True)

@@ -21,9 +21,9 @@ import asyncio
 import discord
 from pluginbase import PluginBase
 
-from api import db, message
+from api import settings, message, logging
 from api import command as command_api
-from api.bot import bot
+from api.bot import Bot
 from libs import displayname
 
 def initPlugin(plugin, autoImport=True):
@@ -46,7 +46,7 @@ def initPlugin(plugin, autoImport=True):
         pass
 
     # Add plugin to list.
-    bot.plugins.append(plugin_info)
+    Bot.plugins.append(plugin_info)
 
     # Load each command in plugin.
     for command in plugin_info.commands:
@@ -59,13 +59,13 @@ def initPlugin(plugin, autoImport=True):
             pass
 
         # Add command to list of commands and print a success message.
-        bot.commands.append(command)
+        Bot.commands.append(command)
         print("Command `{}` registered successfully.".format(command.name))
 
     # Print success message.
     print("Plugin '{}' registered successfully.".format(plugin_info.name))
 
-class fakeClient:
+class FakeClient:
     def event(self):
         pass
 
@@ -74,7 +74,7 @@ if __name__ == "__main__":
     database.init()
 
     # Log the time we started.
-    bot.startTime = time.time()
+    Bot.startTime = time.time()
 
     # Get the source of plugins.
     plugin_base = PluginBase(package="plugins")
@@ -82,7 +82,7 @@ if __name__ == "__main__":
 
     # Create the Discord client.
     client = discord.Client()
-    bot.client = client
+    Bot.client = client
 
     # Load each plugin.
     for plugin in plugin_source.list_plugins():
@@ -94,7 +94,7 @@ if __name__ == "__main__":
         token = m.read().strip()
 else:
     client = discord.Client()
-    bot.client = client
+    Bot.client = client
 
 
 @client.event
@@ -112,24 +112,23 @@ async def on_ready():
 @client.event
 async def on_message(message_in):
     # Ignore messages that aren't from a server and from ourself.
-    if message_in.server == None:
+    if not message_in.server:
         return
     if message_in.author.id == client.user.id:
         return
-    if message_in.author.bot == True:
+    if message_in.author.bot:
         return
 
-    isCommand = False
+    is_command = False
 
     # Get prefix.
-    db.logUserMessage(message_in)
-    prefix = db.getPrefix(message_in.server.id)
+    logging.message_log(message_in, message_in.server.id)
+    prefix = settings.prefix_get(message_in.server.id)
 
     # Should we die? Check for exit command.
     if message_in.content == prefix + "exit" or message_in.content == "{} exit".format(message_in.server.me.mention):
-        for owner in db.getOwners():
-            if str(message_in.author.id) == str(owner):
-                sys.exit(0)
+        if settings.owners_check(message_in.author.id):
+            sys.exit(0)
 
     # Check for cache contents command.
     if message_in.content.startswith(prefix + "cachecontents") or message_in.content.startswith("{} cachecontents".format(message_in.server.me.mention)):
@@ -138,20 +137,21 @@ async def on_message(message_in):
         await client.send_message(message_in.channel, "```{}```".format(cacheString))
 
     # Check each command loaded.
-    for command in bot.commands:
+    for command in Bot.commands:
         # Do we have a command?
         if command_api.is_command(message_in, prefix, command):
             # Prevent message count increment.
-            isCommand = True
+            is_command = True
 
             # Send typing message.
             await client.send_typing(message_in.channel)
 
             # Build message object.
-            message_recv = message.message
+            message_recv = message.Message
             message_recv.command = command.name
-            if (message_in.content.startswith("{} ".format(message_in.server.me.mention))):
-                message_recv.body = message_in.content.split("{} ".format(message_in.server.me.mention) + command.name)[1]
+            if message_in.content.startswith("{} ".format(message_in.server.me.mention)):
+                message_recv.body = message_in.content.split("{} ".format(message_in.server.me.mention) + 
+                                                             command.name)[1]
             else:
                 message_recv.body = message_in.content.split(prefix + command.name)[1]
             message_recv.author = message_in.author
@@ -162,13 +162,13 @@ async def on_message(message_in):
             command_result = await command.plugin.onCommand(message_recv)
 
             # No message, error.
-            if command_result == None:
+            if not command_result:
                 await client.send_message(message_in.channel,
                                           "**Beep boop - Something went wrong!**\n_Command did not return a result._")
 
             # Do list of messages, one after the other. If the message is more than 5 chunks long, PM it.
             elif type(command_result) is list:
-                if (len(command_result) > 5): # PM messages.
+                if len(command_result) > 5:  # PM messages.
                     # Send message saying that we are PMing the messages.
                     await client.send_message(message_in.channel,
                                               "Because the output of that command is **{} pages** long, I'm just going to PM the result to you.".format(len(command_result)))
@@ -190,15 +190,14 @@ async def on_message(message_in):
                     await client.delete_message(message_in)
 
     # Increment message counters if not command.
-    if not isCommand:
-        count = db.getMessageCount(message_in.server.id)
-        bot.messagesSinceStart += 1
+    if not is_command:
+        count = logging.message_count_get(message_in.server.id)
+        Bot.messagesSinceStart += 1
         count += 1
-        db.setMessageCount(message_in.server.id, count)
 
 async def process_message(target, message_in, msg):
     # If the message to send has a body
-    if msg.body != None:
+    if msg.body:
         # Remove @everyone and @here from messages.
         zerospace = "​"
         msg.body = msg.body.replace("@everyone", "@{}everyone".format(zerospace)).replace("@here", "@{}here".format(zerospace))

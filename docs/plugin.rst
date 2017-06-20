@@ -17,6 +17,6 @@ A plugin can take the following arguments, of which *all* are mandatory:
 
     from api import plugin
 
-    new_plugin = plugin.plugin(plugin=plugin_in,
+    new_plugin = plugin.Plugin(plugin=plugin_in,
         name="testplugin"
         commands=[my_command, my_other_command])

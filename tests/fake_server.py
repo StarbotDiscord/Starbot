@@ -12,5 +12,5 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
-class server:
+class Server:
     me = '' #the username for the bot in this server

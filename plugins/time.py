@@ -14,21 +14,21 @@
 
 import datetime
 from api import command, message, plugin, database
-from api.database.table import table, tableTypes
-from api.database.entry import entry
+from api.database.table import Table, TableTypes
+from api.database.entry import Entry
 from libs import displayname
 
 def onInit(plugin_in):
     # Set Commands
-    setoffset_command = command.command(plugin_in, 'setoffset', shortdesc='Set your UTC offset.')
-    time_command = command.command(plugin_in, 'time', shortdesc='Get local time.')
-    return plugin.plugin(plugin_in, 'time', [setoffset_command, time_command])
+    setoffset_command = command.Command(plugin_in, 'setoffset', shortdesc='Set your UTC offset.')
+    time_command = command.Command(plugin_in, 'time', shortdesc='Get local time.')
+    return plugin.Plugin(plugin_in, 'time', [setoffset_command, time_command])
 
 async def onCommand(message_in):
     # Initialize Database
 
     database.init()
-    OffsetTable = table('offsets', tableTypes.pGlobal)
+    OffsetTable = Table('offsets', TableTypes.pGlobal)
     
     if message_in.command == 'setoffset':
         # Normalize offset
@@ -47,19 +47,19 @@ async def onCommand(message_in):
                 hours = int(offsetstr)
                 minutes = 0
             except Exception:
-                return message.message('Incorrect Offset format. Has to be in +/-HH:MM!')
+                return message.Message('Incorrect Offset format. Has to be in +/-HH:MM!')
         normalizedoffset = '{}{}:{}'.format(prefix, hours, minutes)
 
         # Set Offset in Database
 
         # Try to update Offset if it exists
-        existingOffset = table.search(OffsetTable, 'id', '{}'.format(message_in.author.id))
+        existingOffset = Table.search(OffsetTable, 'id', '{}'.format(message_in.author.id))
 
         if existingOffset != None:
             existingOffset.edit(dict(id=message_in.author.id, offset=normalizedoffset))
         else:
             # Create new entry
-            table.insert(OffsetTable, dict(id=message_in.author.id, offset=normalizedoffset))
+            Table.insert(OffsetTable, dict(id=message_in.author.id, offset=normalizedoffset))
                 # Get time right now
         
         # Return time along with offset
@@ -78,7 +78,7 @@ async def onCommand(message_in):
             # No offset
             newTime = timeutc
 
-        return message.message('Your UTC offset has been set to *{}*, for which the time is {}.'.format(normalizedoffset, newTime.strftime("%I:%M %p")))
+        return message.Message('Your UTC offset has been set to *{}*, for which the time is {}.'.format(normalizedoffset, newTime.strftime("%I:%M %p")))
 
     
     if message_in.command == 'time':
@@ -93,13 +93,13 @@ async def onCommand(message_in):
             member = displayname.memberForName(memberOrOffset, message_in.server)
         
         if member:
-            existingOffset = table.search(OffsetTable, 'id', '{}'.format(member.id))
+            existingOffset = Table.search(OffsetTable, 'id', '{}'.format(member.id))
             
             # Check if entry exists
             try:
                 offset = existingOffset.data[1]
             except Exception:
-                return message.message('*{}* didn\'t set an offset. Set an offset with `!setoffset (offset)`.'.format(displayname.name(member)))
+                return message.Message('*{}* didn\'t set an offset. Set an offset with `!setoffset (offset)`.'.format(displayname.name(member)))
         else:
             # Assume input is offset
             offset = memberOrOffset
@@ -114,7 +114,7 @@ async def onCommand(message_in):
                 hours = int(offset)
                 minutes = 0
             except Exception:
-                return message.message('Invalid offset format. Has to be in +/-HH:MM!')
+                return message.Message('Invalid offset format. Has to be in +/-HH:MM!')
         
         # Get time right now
         timeutc = datetime.datetime.utcnow()
@@ -139,5 +139,5 @@ async def onCommand(message_in):
         else:
             msg = '{} is currently *{}*'.format(offsetmsg, newTime.strftime("%I:%M %p"))
         # Say message
-        return message.message(msg)
+        return message.Message(msg)
 
