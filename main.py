@@ -122,7 +122,7 @@ async def on_message(message_in):
     is_command = False
 
     # Get prefix.
-    logging.message_log(message_in, message_in.server.id)
+    #logging.message_log(message_in, message_in.server.id)
     prefix = settings.prefix_get(message_in.server.id)
 
     # Should we die? Check for exit command.
@@ -191,6 +191,7 @@ async def on_message(message_in):
 
     # Increment message counters if not command.
     if not is_command:
+        logging.message_log(message_in, message_in.server.id)
         count = logging.message_count_get(message_in.server.id)
         Bot.messagesSinceStart += 1
         count += 1
