@@ -192,7 +192,6 @@ async def on_message(message_in):
     # Increment message counters if not command.
     if not is_command:
         count = logging.message_count_get(message_in.server.id)
-        print(count)
         Bot.messagesSinceStart += 1
         count += 1
 
