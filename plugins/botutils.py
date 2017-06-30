@@ -177,7 +177,7 @@ async def onCommand(message_in):
         stor_free = convert_size(stor.total - stor.used)
 
         # Format hostinfo with OS, CPU, RAM, storage, and other bot info.
-        msg = '***{}\'s*** **Home:**\n'.format(displayname.name(message_in.server.me))
+        msg = '***{}\'s*** **Home:**\n'.format(displayname.name(message_in.channel.me))
         msg += '```Host OS       : {}\n'.format(platform_current)
         msg += 'Host Python   : {}.{}.{} {}\n'.format(pyver_major, pyver_minor, pyver_micro, pyver_release)
         if not isinstance(cpu_threads, int):
@@ -292,8 +292,15 @@ async def onCommand(message_in):
             return message.Message("I am a member of **{} servers**!".format(servercount))
 
     if message_in.command == 'messages':
+        # Get server.
+        server = message_in.server
+
+        # If the server is null, show error.
+        if not server:
+            return message.Message("This is not a server. :wink:")
+
         msg_count = Bot.messagesSinceStart
-        msg_count_server = logging.message_count_get(message_in.server.id)
+        msg_count_server = logging.message_count_get(server.id)
         msg = "I've witnessed *{} messages* since I started and *{} messages* overall!"
         return message.Message(msg.format(msg_count, msg_count_server))
 
