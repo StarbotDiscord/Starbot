@@ -157,9 +157,9 @@ async def on_message(message_in):
             message_recv.command = command.name
             if message_in.content.startswith("{} ".format(me.mention)):
                 message_recv.body = message_in.content.split("{} ".format(me.mention) + 
-                                                             command.name)[1]
+                                                             command.name, 1)[1]
             else:
-                message_recv.body = message_in.content.split(prefix + command.name)[1]
+                message_recv.body = message_in.content.split(prefix + command.name, 1)[1]
             message_recv.author = message_in.author
             message_recv.server = message_in.server
             message_recv.mentions = message_in.mentions
