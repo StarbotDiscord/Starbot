@@ -17,6 +17,8 @@ from api import command, message, plugin
 from api.wikia import Wikia
 import discord
 
+import traceback
+
 def wikia_get(wiki, search):
     '''Fetch and return data from Wikia'''
     starwiki = Wikia(wiki)
@@ -36,6 +38,7 @@ def wikia_get(wiki, search):
         img = img_stuff[0][:-1] + "?" + img_stuff2[1]
     except Exception as exc:
         print(exc)
+        print(traceback.format_exc())
         return message.Message("No result found for '{}'".format(search))
 
     if len(section['content']) < 1:
@@ -59,6 +62,8 @@ async def onCommand(message_in):
         if message_in.body == '':
             return message.Message(body='Usage:\nstarwiki [search term]')
         else:
+            if message_in.body.startswith(" "):
+                message_in.body = message_in.body[1:]
             return wikia_get('starvstheforcesofevil', message_in.body)
 
     if message_in.command == 'wikia':

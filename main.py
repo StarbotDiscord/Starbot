@@ -112,8 +112,8 @@ async def on_ready():
 @client.event
 async def on_message(message_in):
     # Ignore messages that aren't from a server and from ourself.
-    if not message_in.server:
-        return
+    #if not message_in.server:
+     #   return
     if message_in.author.id == client.user.id:
         return
     if message_in.author.bot:
@@ -121,17 +121,23 @@ async def on_message(message_in):
 
     is_command = False
 
-    # Get prefix.
-    logging.message_log(message_in, message_in.server.id)
-    prefix = settings.prefix_get(message_in.server.id)
+    # Get prefix. If not on a server, no prefix is needed.
+    #logging.message_log(message_in, message_in.server.id)
+    if message_in.server:
+        prefix = settings.prefix_get(message_in.server.id)
+        me = message_in.server.me
+    else:
+        prefix = ""
+        me = message_in.channel.me
+
 
     # Should we die? Check for exit command.
-    if message_in.content == prefix + "exit" or message_in.content == "{} exit".format(message_in.server.me.mention):
+    if message_in.content == prefix + "exit" or message_in.content == "{} exit".format(me.mention):
         if settings.owners_check(message_in.author.id):
             sys.exit(0)
 
     # Check for cache contents command.
-    if message_in.content.startswith(prefix + "cachecontents") or message_in.content.startswith("{} cachecontents".format(message_in.server.me.mention)):
+    if message_in.content.startswith(prefix + "cachecontents") or message_in.content.startswith("{} cachecontents".format(me.mention)):
         cacheCount = glob.glob("cache/{}_*".format(message_in.content.split(' ')[-1]))
         cacheString = '\n'.join(cacheCount)
         await client.send_message(message_in.channel, "```{}```".format(cacheString))
@@ -149,11 +155,11 @@ async def on_message(message_in):
             # Build message object.
             message_recv = message.Message
             message_recv.command = command.name
-            if message_in.content.startswith("{} ".format(message_in.server.me.mention)):
-                message_recv.body = message_in.content.split("{} ".format(message_in.server.me.mention) + 
-                                                             command.name)[1]
+            if message_in.content.startswith("{} ".format(me.mention)):
+                message_recv.body = message_in.content.split("{} ".format(me.mention) + 
+                                                             command.name, 1)[1]
             else:
-                message_recv.body = message_in.content.split(prefix + command.name)[1]
+                message_recv.body = message_in.content.split(prefix + command.name, 1)[1]
             message_recv.author = message_in.author
             message_recv.server = message_in.server
             message_recv.mentions = message_in.mentions
@@ -186,11 +192,12 @@ async def on_message(message_in):
                 await process_message(message_in.channel, message_in, command_result)
 
                 # Do we delete the message afterwards?
-                if command_result.delete:
+                if message_in.server and command_result.delete:
                     await client.delete_message(message_in)
 
     # Increment message counters if not command.
-    if not is_command:
+    if message_in.server and not is_command:
+        logging.message_log(message_in, message_in.server.id)
         count = logging.message_count_get(message_in.server.id)
         Bot.messagesSinceStart += 1
         count += 1

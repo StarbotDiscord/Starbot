@@ -35,6 +35,9 @@ async def onCommand(message_in):
 
         offsetstr = message_in.body.strip()
         
+        if offsetstr == "":
+            return message.Message('Incorrect Offset format. Has to be in +/-HH:MM!')
+
         if offsetstr[0] == '+':
             prefix = '+'
         else:

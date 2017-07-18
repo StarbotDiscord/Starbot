@@ -22,24 +22,30 @@ def name(member : discord.Member):
         return name
     return None
 
-def memberForID(id, server):
-    for member in server.members:
+def memberForID(id, members, me):
+    # Check self first.
+    if me.id == id:
+        return me
+
+    # Check other members.
+    for member in members:
         if member.id == id:
             return member
     return None
 
-def memberForName(name, server):
-    # Check nick first - then name
-    for member in server.members:
-        if member.nick:
-            if member.nick.lower() == name.lower():
-                return member
-    for member in server.members:
-        if member.name.lower() == name.lower():
+def memberForName(name, members, me):
+    # Check self first.
+    if me.display_name.lower() == name.lower():
+        return me
+
+    # Check rest of members.
+    for member in members:
+        if member.display_name.lower() == name.lower():
             return member
+
     # No member yet - try ID
     memID = ''.join(list(filter(str.isdigit, name)))
-    newMem = memberForID(memID, server)
+    newMem = memberForID(memID, members, me)
     if newMem:
         return newMem
     return None

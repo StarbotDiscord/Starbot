@@ -37,6 +37,10 @@ async def onCommand(message_in):
         # Get server.
         server = message_in.server
 
+        # If the server is null, show error.
+        if not server:
+            return message.Message("This is not a server. :wink:")
+
         # Create blank embed.
         server_embed = discord.Embed(color=server.me.color)
 
@@ -71,20 +75,34 @@ async def onCommand(message_in):
         return message.Message("**Server Info:**", embed=server_embed)
 
     if message_in.command == EMOTEINFOCMD:
+        # Get server.
+        server = message_in.server
+
+        # If the server is null, show error.
+        if not server:
+            return message.Message("This is not a server. :wink:")
+
         # Get emotes.
         emotelist = ""
-        for emote in sorted(message_in.server.emojis, key=SortEmote):
+        for emote in sorted(server.emojis, key=SortEmote):
             emotelist += str(emote) + " "
 
         # Return message.
-        return message.Message("**{}** emotes:\n{}".format(message_in.server.name, emotelist))
+        return message.Message("**{}** emotes:\n{}".format(server.name, emotelist))
 
     if message_in.command == SERVERINVITECMD:
+        # Get server.
+        server = message_in.server
+
+        # If the server is null, show error.
+        if not server:
+            return message.Message("This is not a server. :wink:")
+
         # Check that we have perms to create an invite. If not, return error.
-        if not message_in.server.default_channel.permissions_for(message_in.server.me).create_instant_invite:
+        if not server.default_channel.permissions_for(server.me).create_instant_invite:
             return message.Message("Whoops I don't have permission to create instant invites for this server.")
 
         # Create invite and return message.
-        invite = await Bot.client.create_invite(message_in.server.default_channel, unique=False)
+        invite = await Bot.client.create_invite(server.default_channel, unique=False)
         return message.Message("Use this link to invite people to this server: {}".format(invite.url))
         
