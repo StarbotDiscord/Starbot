@@ -17,7 +17,7 @@ A message can take the following arguments:
 
     from api import message
 
-    new_message = message.message(body="Code runs faster when Chuck Norris watches it.",
+    new_message = message.Message(body="Code runs faster when Chuck Norris watches it.",
         file="imgs/funny_cat_photo.png",
         embed=embed)
 

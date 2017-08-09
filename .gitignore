@@ -2,6 +2,10 @@
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
 .idea
+
+# Do not store ropeproject config in VS Code
+.vscode/.ropeproject
+
 *.db3
 
 # Byte-compiled / optimized / DLL files

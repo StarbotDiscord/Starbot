@@ -18,7 +18,7 @@ A command can take the following arguments, of which *the first two* are mandato
 
     from api import plugin
 
-    new_command = plugin.plugin(plugin=plugin_in,
+    new_command = plugin.Plugin(plugin=plugin_in,
         name="my_command"
         shortdesc="look mom, i made a command!",
         devcommand=False)

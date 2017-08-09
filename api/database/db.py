@@ -12,9 +12,6 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
-class Bot:
-    startTime = 0
-    plugins = []
-    commands = []
-    messagesSinceStart = 0
-    client = None
+class DB:
+    type = "SQLite"
+    connection = None

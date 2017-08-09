@@ -1,13 +1,29 @@
+#    Copyright 2017 Starbot Discord Project
+# 
+#    Licensed under the Apache License, Version 2.0 (the "License");
+#    you may not use this file except in compliance with the License.
+#    You may obtain a copy of the License at
+# 
+#        http://www.apache.org/licenses/LICENSE-2.0
+# 
+#    Unless required by applicable law or agreed to in writing, software
+#    distributed under the License is distributed on an "AS IS" BASIS,
+#    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#    See the License for the specific language governing permissions and
+#    limitations under the License.
+
 import glob
 import importlib
 import time
 import sys
+import asyncio
 
 import discord
 from pluginbase import PluginBase
 
-from api import db, message
-from api.bot import bot
+from api import settings, message, logging
+from api import command as command_api
+from api.bot import Bot
 from libs import displayname
 
 def initPlugin(plugin, autoImport=True):
@@ -30,7 +46,7 @@ def initPlugin(plugin, autoImport=True):
         pass
 
     # Add plugin to list.
-    bot.plugins.append(plugin_info)
+    Bot.plugins.append(plugin_info)
 
     # Load each command in plugin.
     for command in plugin_info.commands:
@@ -43,30 +59,34 @@ def initPlugin(plugin, autoImport=True):
             pass
 
         # Add command to list of commands and print a success message.
-        bot.commands.append(command)
+        Bot.commands.append(command)
         print("Command `{}` registered successfully.".format(command.name))
 
     # Print success message.
     print("Plugin '{}' registered successfully.".format(plugin_info.name))
 
-class fakeClient:
+class FakeClient:
     def event(self):
         pass
 
 if __name__ == "__main__":
+    from api import database
+    database.init()
+
     # Log the time we started.
-    bot.startTime = time.time()
+    Bot.startTime = time.time()
 
     # Get the source of plugins.
     plugin_base = PluginBase(package="plugins")
     plugin_source = plugin_base.make_plugin_source(searchpath=["./plugins"])
 
+    # Create the Discord client.
+    client = discord.Client()
+    Bot.client = client
+
     # Load each plugin.
     for plugin in plugin_source.list_plugins():
         initPlugin(plugin)
-
-    # Create the Discord client.
-    client = discord.Client()
 
     # Get our token to use.
     token = ""
@@ -74,6 +94,7 @@ if __name__ == "__main__":
         token = m.read().strip()
 else:
     client = discord.Client()
+    Bot.client = client
 
 
 @client.event
@@ -91,136 +112,110 @@ async def on_ready():
 @client.event
 async def on_message(message_in):
     # Ignore messages that aren't from a server and from ourself.
-    if message_in.server == None:
-        return
+    #if not message_in.server:
+     #   return
     if message_in.author.id == client.user.id:
         return
+    if message_in.author.bot:
+        return
 
-    # Get prefix.
-    db.logUserMessage(message_in)
-    prefix = db.getPrefix(message_in.server.id)
+    is_command = False
+
+    # Get prefix. If not on a server, no prefix is needed.
+    #logging.message_log(message_in, message_in.server.id)
+    if message_in.server:
+        prefix = settings.prefix_get(message_in.server.id)
+        me = message_in.server.me
+    else:
+        prefix = ""
+        me = message_in.channel.me
+
 
     # Should we die? Check for exit command.
-    if message_in.content == prefix + "exit" or message_in.content == "{} exit".format(message_in.server.me.mention):
-        for owner in db.getOwners():
-            if str(message_in.author.id) == str(owner):
-                sys.exit(0)
-
-    # Should we reload a plugin? Check for reload plugin command.
-    if message_in.content.startswith(prefix + "reloadplugin") or message_in.content.startswith("{} reloadplugin".format(message_in.server.me.mention)):
-        if message_in.author.id == "219683089457217536" or message_in.author.id == "186373210495909889":
-            pass
-        else:
-            await client.send_message(message_in.channel, "You do not have permission to reload plugins.")
-        messageSplit = message_in.content.split(' ')
-        if len(messageSplit) == 2:
-
-            plugin_base2 = None
-            plugin_source2 = None
-
-            plugin_base2 = PluginBase(package="plugins")
-            plugin_source2 = plugin_base.make_plugin_source(searchpath=["./plugins"])
-            for plugin in plugin_source2.list_plugins():
-                plugin_temp = plugin_source2.load_plugin(plugin)
-                plugin_info = plugin_temp.onInit(plugin_temp)
-                if plugin_info.name == messageSplit[1].strip():
-                    for plugin in bot.plugins:
-                        if plugin.name == messageSplit[1].strip():
-                            importlib.reload(plugin.plugin)
-                            await client.send_message(message_in.channel, "Plugin reloaded!")
-                            return
-
-            await client.send_message(message_in.channel, "No plugin with that name was found.")
-        else:
-            await client.send_message(message_in.channel, "Invalid number of args.")
+    if message_in.content == prefix + "exit" or message_in.content == "{} exit".format(me.mention):
+        if settings.owners_check(message_in.author.id):
+            sys.exit(0)
 
     # Check for cache contents command.
-    if message_in.content.startswith(prefix + "cachecontents") or message_in.content.startswith("{} cachecontents".format(message_in.server.me.mention)):
+    if message_in.content.startswith(prefix + "cachecontents") or message_in.content.startswith("{} cachecontents".format(me.mention)):
         cacheCount = glob.glob("cache/{}_*".format(message_in.content.split(' ')[-1]))
         cacheString = '\n'.join(cacheCount)
         await client.send_message(message_in.channel, "```{}```".format(cacheString))
 
     # Check each command loaded.
-    for command in bot.commands:
+    for command in Bot.commands:
         # Do we have a command?
-        if message_in.content.split(' ')[0] == prefix + command.name or message_in.content == prefix + command.name or \
-                (message_in.content.split(' ')[0] == message_in.server.me.mention and message_in.content.split(' ')[1] == command.name) or \
-                message_in.content == message_in.server.me.mention + command.name:
+        if command_api.is_command(message_in, prefix, command):
+            # Prevent message count increment.
+            is_command = True
+
             # Send typing message.
             await client.send_typing(message_in.channel)
 
             # Build message object.
-            message_recv = message.message
+            message_recv = message.Message
             message_recv.command = command.name
-            if (message_in.content.startswith("{} ".format(message_in.server.me.mention))):
-                message_recv.body = message_in.content.split("{} ".format(message_in.server.me.mention) + command.name)[1]
+            if message_in.content.startswith("{} ".format(me.mention)):
+                message_recv.body = message_in.content.split("{} ".format(me.mention) + 
+                                                             command.name, 1)[1]
             else:
-                message_recv.body = message_in.content.split(prefix + command.name)[1]
+                message_recv.body = message_in.content.split(prefix + command.name, 1)[1]
             message_recv.author = message_in.author
             message_recv.server = message_in.server
-            command_result = command.plugin.onCommand(message_recv)
+            message_recv.mentions = message_in.mentions
+            message_recv.channel = message_in.channel
+
+            command_result = await command.plugin.onCommand(message_recv)
 
             # No message, error.
-            if command_result == None:
+            if not command_result:
                 await client.send_message(message_in.channel,
                                           "**Beep boop - Something went wrong!**\n_Command did not return a result._")
 
-            # Do list of messages, one after the other.
+            # Do list of messages, one after the other. If the message is more than 5 chunks long, PM it.
             elif type(command_result) is list:
-                for item in command_result:
-                    await process_message(message_in, item)
+                if len(command_result) > 5:  # PM messages.
+                    # Send message saying that we are PMing the messages.
+                    await client.send_message(message_in.channel,
+                                              "Because the output of that command is **{} pages** long, I'm just going to PM the result to you.".format(len(command_result)))
+
+                    # PM it.
+                    for item in command_result:
+                        await process_message(message_in.author, message_in, item)
+
+                else: # Send to channel.
+                    for item in command_result:
+                        await process_message(message_in.channel, message_in, item)
 
             # Do regular message.
             else:
-                await process_message(message_in, command_result)
+                await process_message(message_in.channel, message_in, command_result)
 
                 # Do we delete the message afterwards?
-                if command_result.delete:
+                if message_in.server and command_result.delete:
                     await client.delete_message(message_in)
 
+    # Increment message counters if not command.
+    if message_in.server and not is_command:
+        logging.message_log(message_in, message_in.server.id)
+        count = logging.message_count_get(message_in.server.id)
+        Bot.messagesSinceStart += 1
+        count += 1
 
-@client.event
-async def on_member_join(member):
-    # Welcome new user.
-    await client.send_message(member.server, content = "Welcome " + member.mention + " to **" + member.server.name + "**!")
+async def process_message(target, message_in, msg):
+    # If the message to send has a body
+    if msg.body:
+        # Remove @everyone and @here from messages.
+        zerospace = "​"
+        msg.body = msg.body.replace("@everyone", "@{}everyone".format(zerospace)).replace("@here", "@{}here".format(zerospace))
 
-@client.event
-async def on_member_remove(member):
-    # Say goodbye to user.
-    await client.send_message(member.server, content = "Goodbye " + member.mention + ", **" + member.server.name + "** will miss you!")
-
-@client.event
-async def on_member_ban(member) :
-    # Announce ban.
-    await client.send_message(member.server, content = displayname.name(member) + " got banned from **" + member.server.name + "**.")
-
-@client.event
-async def on_member_unban(server, user):
-    # Announce unban.
-    await client.send_message(server, content = displayname.name(user) + " got unbanned from **" + server.name + "**.")
-
-
-async def process_message(message_in, msg):
-    # Remove @everyone and @here from messages.
-    if msg.body != "" or msg.embed != None:
-        if msg.file != "":
-            pass
-        elif msg.embed != None:
-            if msg.body == "":
-                await client.send_message(message_in.channel, embed=msg.embed)
-            else:
-                zerospace = "​"
-                msg.body = msg.body.replace("@everyone", "@{}everyone".format(zerospace)).replace("@here", "@{}here".format(zerospace))
-                await client.send_message(message_in.channel, msg.body, embed=msg.embed)
-        else:
-            zerospace = "​"
-            msg.body = msg.body.replace("@everyone", "@{}everyone".format(zerospace)).replace("@here", "@{}here".format(zerospace))
-            await client.send_message(message_in.channel, msg.body)
+    # If the message to send includes a file
     if msg.file != "":
-        if msg.body != "":
-            await client.send_file(message_in.channel, msg.file, content=msg.body)
-        else:
-            await client.send_file(message_in.channel, msg.file)
+        # Send the file, along with any possible message
+        await client.send_file(target, msg.file, content=msg.body)
+    else:
+        # Send the message, along with a possible embed
+        await client.send_message(target, msg.body, embed=msg.embed)
 
 if __name__ == "__main__":
     # Start bot.
