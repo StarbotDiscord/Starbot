@@ -177,7 +177,7 @@ async def onCommand(message_in):
         stor_free = convert_size(stor.total - stor.used)
 
         # Format hostinfo with OS, CPU, RAM, storage, and other bot info.
-        msg = '***{}\'s*** **Home:**\n'.format(displayname.name(message_in.channel.me))
+        msg = '***{}\'s*** **Home:**\n'.format(displayname.name(message_in.server.me))
         msg += '```Host OS       : {}\n'.format(platform_current)
         msg += 'Host Python   : {}.{}.{} {}\n'.format(pyver_major, pyver_minor, pyver_micro, pyver_release)
         if not isinstance(cpu_threads, int):
