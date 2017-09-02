@@ -34,15 +34,15 @@ async def on_member_remove(member):
     # Say goodbye to user.
     await Bot.client.send_message(member.server, content = "Goodbye *" + displayname.name(member) + "*, **" + member.server.name + "** will miss you!")
 
-@Bot.client.event
-async def on_member_ban(member) :
+#@Bot.client.event
+#async def on_member_ban(member) :
     # Announce ban.
-    await Bot.client.send_message(member.server, content = displayname.name(member) + " got banned from **" + member.server.name + "**.")
+#    await Bot.client.send_message(member.server, content = displayname.name(member) + " got banned from **" + member.server.name + "**.")
 
-@Bot.client.event
-async def on_member_unban(server, user):
+#@Bot.client.event
+#async def on_member_unban(server, user):
     # Announce unban.
-    await Bot.client.send_message(server, content = displayname.name(user) + " got unbanned from **" + server.name + "**.")
+#    await Bot.client.send_message(server, content = displayname.name(user) + " got unbanned from **" + server.name + "**.")
 
 
 async def onCommand(message_in):
