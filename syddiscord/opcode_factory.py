@@ -24,3 +24,6 @@ def __gen_indentify(token):
     }
 }""".replace("TOKEN_DATA", token).replace("TIME", str(int(time.time())))
 	return data
+
+def __gen_send_message(content):
+    return "{\"content\": \"" + content + "\"}"

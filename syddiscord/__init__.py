@@ -6,6 +6,7 @@ try:
 except ImportError:
 	import _thread as thread
 import time
+import asyncio
 
 from syddiscord import opcode_factory
 
@@ -46,6 +47,8 @@ def connect(token_in):
 
 #-------------------------------------------------------------------------------
 
+new_message_func = None
+
 def __heartbeat(interval):
 	global first_heartbeat
 	print(interval)
@@ -72,6 +75,15 @@ def on_message(ws, message):
 	if(parsed_json["op"] == 11):
 		# Heartbeat acknowledged opcode
 		print("HEARTBEAT ACK")
+	if(parsed_json["op"] == 0):
+		# Post-login stuff
+		if(parsed_json["t"] == "MESSAGE_CREATE"):
+			# New message
+			print("------------------------------")
+			print(parsed_json["d"])
+			print("------------------------------")
+			if new_message_func != None:
+				thread.start_new_thread(new_message_func, (parsed_json["d"],))
 
 def on_error(ws, error):
 	print(error)
@@ -81,3 +93,14 @@ def on_close(ws):
 
 def on_open(ws):
 	print("### opened ###")
+
+#-------------------------------------------------------------------------------
+
+def send_message(content, channel):
+	gateway_url = "https://discordapp.com/api/v{}/channels/{}/messages?encoding=json".format(GATEWAY_VERSION, channel)
+	data = opcode_factory.__gen_send_message(content)
+	ua = 'SydDiscord {} (Sydney#0256)'.format(LIBRARY_VERSION)
+
+	req = urllib.request.Request(url=gateway_url,data=str.encode(data),headers={'User-Agent':ua,"Authorization":"Bot "+token})
+	json_data = urllib.request.urlopen(req).read()
+	print(json_data)
