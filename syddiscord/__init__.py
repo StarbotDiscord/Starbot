@@ -69,6 +69,9 @@ def __heartbeat(interval):
 
 def on_message(ws, message):
 	global s
+	global myself
+	global channels
+	global guilds
 	print(message)
 	parsed_json = json.loads(message)
 	s = parsed_json["s"]
@@ -82,17 +85,22 @@ def on_message(ws, message):
 	if(parsed_json["op"] == 0):
 		# Post-login stuff
 		if(parsed_json["t"] == "READY"):
-			myself = parsed_json["d"]
+			myself = parsed_json["d"]["user"]
 		if(parsed_json["t"] == "MESSAGE_CREATE"):
 			# New message
 			if new_message_func != None:
-				thread.start_new_thread(new_message_func, (parsed_json["d"],))
+				data = {}
+				data["message"] = parsed_json["d"]
+				data["myself"] = myself
+				data["channel"] = channels[parsed_json["d"]["channel_id"]]
+				data["guild"] = channels[parsed_json["d"]["channel_id"]]["guild"]
+				thread.start_new_thread(new_message_func, (data,))
 		if(parsed_json["t"] == "GUILD_CREATE"):
 			guilds[parsed_json["d"]["id"]] = parsed_json["d"]
 
 			for channel in parsed_json["d"]["channels"]:
 				channels[channel["id"]] = channel
-				channels[channel["id"]]["guild"] = parsed_json["d"]["id"]
+				channels[channel["id"]]["guild"] = guilds[parsed_json["d"]["id"]]
 
 def on_error(ws, error):
 	print(error)
@@ -105,7 +113,7 @@ def on_open(ws):
 
 #-------------------------------------------------------------------------------
 
-def send_message(content, channel):
+def send_message(channel, content):
 	gateway_url = "https://discordapp.com/api/v{}/channels/{}/messages?encoding=json".format(GATEWAY_VERSION, channel)
 	data = opcode_factory.__gen_send_message(content)
 	ua = 'SydDiscord {} (Sydney#0256)'.format(LIBRARY_VERSION)
