@@ -105,7 +105,6 @@ def on_message(message_in):
     # Ignore messages that aren't from a server and from ourself.
     #if not message_in.server:
      #   return
-    print(message_in["myself"])
     if message_in["message"]["author"]["id"] == message_in["myself"]["id"]:
         return
 
@@ -145,6 +144,7 @@ def on_message(message_in):
             message_recv.server = message_in["guild"]
             message_recv.mentions = message_in["message"]["mentions"]
             message_recv.channel = message_in["channel"]
+            message_recv.raw = message_in
 
             command_result = command.plugin.onCommand(message_recv)
 
@@ -189,11 +189,11 @@ def process_message(target, message_in, msg):
     # If the message to send includes a file
     if msg.file != "":
         # Send the file, along with any possible message
-        client.send_file(target, msg.file, content=msg.body)
+        syddiscord.send_message(target, file=msg.file, content=msg.body)
     else:
         # Send the message, along with a possible embed
         #client.send_message(target, msg.body, embed=msg.embed)
-        syddiscord.send_message(target, msg.body)
+        syddiscord.send_message(target, content=msg.body)
 
 if __name__ == "__main__":
     # Start bot.
