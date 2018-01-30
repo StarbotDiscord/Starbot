@@ -1,9 +1,9 @@
 import time
 
-def __gen_generic(opcode, data):
+def gen_generic(opcode, data):
 	return """{"op":""" + str(opcode) + ""","d":""" + data + "}"
 
-def __gen_indentify(token):
+def gen_indentify(token):
 	data = """{
     "token": "TOKEN_DATA",
     "properties": {
@@ -25,5 +25,5 @@ def __gen_indentify(token):
 }""".replace("TOKEN_DATA", token).replace("TIME", str(int(time.time())))
 	return data
 
-def __gen_send_message(content):
+def gen_send_message(content):
     return "{\"content\": \"" + content.replace("\n", "\\n") + "\"}"

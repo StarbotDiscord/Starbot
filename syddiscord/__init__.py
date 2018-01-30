@@ -9,7 +9,7 @@ import time
 import asyncio
 import requests
 
-from syddiscord import opcode_factory
+from syddiscord import __opcode_factory
 
 GATEWAY_VERSION = "6"
 LIBRARY_VERSION = "1.0"
@@ -79,7 +79,7 @@ def on_message(ws, message):
 	if(parsed_json["op"] == 10):
 		# Hello opcode, very first and only done once
 		thread.start_new_thread(__heartbeat, (parsed_json["d"]["heartbeat_interval"],))
-		socket.send(opcode_factory.__gen_generic(2, opcode_factory.__gen_indentify(token)))
+		socket.send(__opcode_factory.gen_generic(2, __opcode_factory.gen_indentify(token)))
 	if(parsed_json["op"] == 11):
 		# Heartbeat acknowledged opcode
 		print("HEARTBEAT ACK")
@@ -124,7 +124,7 @@ def send_typing(channel):
 
 def send_message(channel, content="", file=None):
 	gateway_url = "https://discordapp.com/api/v{}/channels/{}/messages?encoding=json".format(GATEWAY_VERSION, channel)
-	data = opcode_factory.__gen_send_message(content)
+	data = __opcode_factory.gen_send_message(content)
 	ua = 'SydDiscord {} (Sydney#0256)'.format(LIBRARY_VERSION)
 	fdata = None
 
