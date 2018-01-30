@@ -113,6 +113,14 @@ def on_open(ws):
 
 #-------------------------------------------------------------------------------
 
+def send_typing(channel):
+	gateway_url = "https://discordapp.com/api/v{}/channels/{}/typing?encoding=json".format(GATEWAY_VERSION, channel)
+	ua = 'SydDiscord {} (Sydney#0256)'.format(LIBRARY_VERSION)
+
+	req = urllib.request.Request(url=gateway_url,headers={'User-Agent':ua,"Authorization":"Bot "+token})
+	json_data = urllib.request.urlopen(req).read()
+	print(json_data)
+
 def send_message(channel, content):
 	gateway_url = "https://discordapp.com/api/v{}/channels/{}/messages?encoding=json".format(GATEWAY_VERSION, channel)
 	data = opcode_factory.__gen_send_message(content)
