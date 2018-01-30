@@ -14,7 +14,7 @@
 
 import unittest
 from api import message
-from plugins import eat
+from plugins import fun
 from tests.fake_server import Server
 
 class TestEatSuite(unittest.TestCase):
