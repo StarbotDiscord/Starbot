@@ -13,7 +13,6 @@ def __gen_indentify(token):
     },
     "compress": false,
     "large_threshold": 50,
-    "shard": [1, 10],
     "presence": {
         "game": {
             "name": "with APIs",
