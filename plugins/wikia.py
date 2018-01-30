@@ -57,7 +57,7 @@ def onInit(plugin_in):
     wikia_command    = command.Command(plugin_in, 'wikia',    shortdesc='Search Wikia!')
     return plugin.Plugin(plugin_in, 'starwiki', [starwiki_command, wikia_command])
 
-async def onCommand(message_in):
+def onCommand(message_in):
     if message_in.command == 'starwiki':
         if message_in.body == '':
             return message.Message(body='Usage:\nstarwiki [search term]')

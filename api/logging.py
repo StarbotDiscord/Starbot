@@ -30,6 +30,6 @@ def message_log(msg, server_id):
     '''Log a message into the database.'''
     database.init()
     table_log = Table('user_messages_{}'.format(server_id), TableTypes.pGlobal)
-    Table.insert(table_log, dict(userid=msg.author.id, username=msg.author.name,
-                                 message=msg.content, serverid=msg.server.id,
-                                 servername=msg.server.name))
+    Table.insert(table_log, dict(userid=msg["message"]["author"]["id"], username=msg["message"]["author"]["username"],
+                                 message=msg["message"]["content"], serverid=msg["guild"]["id"],
+                                 servername=msg["guild"]["name"]))

@@ -32,7 +32,7 @@ def onInit(plugin_in):
     serverinvite_command = command.Command(plugin_in, SERVERINVITECMD, shortdesc="Get an invite link to this server")
     return plugin.Plugin(plugin_in, "infoutils", [serverinfo_command, emoteinfo_command, serverinvite_command])
 
-async def onCommand(message_in):
+def onCommand(message_in):
     if message_in.command == SERVERINFOCMD:
         # Get server.
         server = message_in.server
@@ -103,6 +103,7 @@ async def onCommand(message_in):
             return message.Message("Whoops I don't have permission to create instant invites for this server.")
 
         # Create invite and return message.
-        invite = await Bot.client.create_invite(server.default_channel, unique=False)
-        return message.Message("Use this link to invite people to this server: {}".format(invite.url))
+        # invite = await Bot.client.create_invite(server.default_channel, unique=False)
+        # return message.Message("Use this link to invite people to this server: {}".format(invite.url))
+        return message.Message("STUB")
         

@@ -22,7 +22,7 @@ def onInit(plugin_in):
     tinyurl_command = command.Command(plugin_in, 'tinyurl', shortdesc='Convert a link to a TinyURL')
     return plugin.Plugin(plugin_in, 'tinyurl', [tinyurl_command])
 
-async def onCommand(message_in):
+def onCommand(message_in):
     if message_in.body == '':
         return message.Message(body='Usage:\ntinyurl [url]')
     else:

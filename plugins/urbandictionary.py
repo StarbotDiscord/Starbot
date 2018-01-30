@@ -25,7 +25,7 @@ def onInit(plugin_in):
     randefine_command = command.Command(plugin_in, 'randefine', shortdesc='Define a random thing')
     return plugin.Plugin(plugin_in, 'urbandictionary', [define_command, randefine_command])
 
-async def onCommand(message_in):
+def onCommand(message_in):
     # Define.
     if message_in.command == 'define':
         # Get the word to define.

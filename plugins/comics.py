@@ -22,7 +22,7 @@ def onInit(plugin_in):
     xkcd_command = command.Command(plugin_in, 'xkcd', shortdesc='Posts the latest XKCD, or by specific ID')
     return plugin.Plugin(plugin_in, 'comics', [xkcd_command])
 
-async def onCommand(message_in):
+def onCommand(message_in):
     '''Run plugin commands.'''
     if message_in.command == 'xkcd':
         if message_in.body:

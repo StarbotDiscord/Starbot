@@ -28,7 +28,7 @@ def onInit(plugin_in):
     totalcache_command = command.Command(plugin_in, 'totalcache', shortdesc=desc_totalcache, devcommand=True)
     return plugin.Plugin(plugin_in, 'cacheutils', [cachecount_command, caches_command, totalcache_command])
 
-async def onCommand(message_in):
+def onCommand(message_in):
     '''Run plugin commands.'''
     if message_in.command == 'cachecount':
         if message_in.body == '':

@@ -21,7 +21,7 @@ def onInit(plugin_in):
     wikipedia_command = command.Command(plugin_in, 'wikipedia', shortdesc='Search Wikipedia, The Free Encyclopedia')
     return plugin.Plugin(plugin_in, 'wikipedia', [wikipedia_command])
 
-async def onCommand(message_in):
+def onCommand(message_in):
     searchstring = urllib.parse.quote(str.title(message_in.body.strip()))
     if not searchstring:
         return message.Message("Usage: `!wikipedia [article name]")

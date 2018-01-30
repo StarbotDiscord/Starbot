@@ -24,7 +24,7 @@ def onInit(plugin_in):
     time_command = command.Command(plugin_in, 'time', shortdesc='Get local time.')
     return plugin.Plugin(plugin_in, 'time', [setoffset_command, time_command])
 
-async def onCommand(message_in):
+def onCommand(message_in):
     # Initialize Database
 
     database.init()

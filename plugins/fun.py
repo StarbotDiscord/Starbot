@@ -36,7 +36,7 @@ def onInit(plugin_in):
     eat_command = command.Command(plugin_in, EATCMD, shortdesc="Eat someone or something")
     return plugin.Plugin(plugin_in, "fun", [lenny_command, shrug_command, tableflip_command, fart_command, beta_command, eat_command])
 
-async def onCommand(message_in):
+def onCommand(message_in):
     '''Run plugin commands.'''
 
     # Get user.

@@ -23,7 +23,7 @@ def onInit(plugin_in):
     aol_command = command.Command(plugin_in, 'aol', shortdesc='Here you go, gramps')
     return plugin.Plugin(plugin_in, 'search', [google_command, bing_command, duckduckgo_command, aol_command])
 
-async def onCommand(message_in):
+def onCommand(message_in):
     query = message_in.body.strip()
 
     # Check if query is nothing

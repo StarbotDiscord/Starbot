@@ -20,7 +20,7 @@ def onInit(plugin_in):
     tests_command = command.Command(plugin_in, 'tests', shortdesc='Get a link to the bot\'s tests')
     return plugin.Plugin(plugin_in, 'tinyurl', [gitsrc_command, docs_command, tests_command])
 
-async def onCommand(message_in):
+def onCommand(message_in):
     if message_in.command == 'source':
         return message.Message(body="https://github.com/StarbotDiscord/Starbot")
     if message_in.command == 'docs':
