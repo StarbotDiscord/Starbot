@@ -49,6 +49,10 @@ def connect(token_in):
 
 new_message_func = None
 
+guilds = {}
+channels = {}
+myself = None
+
 def __heartbeat(interval):
 	global first_heartbeat
 	print(interval)
@@ -77,13 +81,18 @@ def on_message(ws, message):
 		print("HEARTBEAT ACK")
 	if(parsed_json["op"] == 0):
 		# Post-login stuff
+		if(parsed_json["t"] == "READY"):
+			myself = parsed_json["d"]
 		if(parsed_json["t"] == "MESSAGE_CREATE"):
 			# New message
-			print("------------------------------")
-			print(parsed_json["d"])
-			print("------------------------------")
 			if new_message_func != None:
 				thread.start_new_thread(new_message_func, (parsed_json["d"],))
+		if(parsed_json["t"] == "GUILD_CREATE"):
+			guilds[parsed_json["d"]["id"]] = parsed_json["d"]
+
+			for channel in parsed_json["d"]["channels"]:
+				channels[channel["id"]] = channel
+				channels[channel["id"]]["guild"] = parsed_json["d"]["id"]
 
 def on_error(ws, error):
 	print(error)
