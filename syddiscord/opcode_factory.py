@@ -1,0 +1,27 @@
+import time
+
+def __gen_generic(opcode, data):
+	return """{"op":""" + str(opcode) + ""","d":""" + data + "}"
+
+def __gen_indentify(token):
+	data = """{
+    "token": "TOKEN_DATA",
+    "properties": {
+        "$os": "darwin",
+        "$browser": "SydDiscord",
+        "$device": "SydDiscord"
+    },
+    "compress": false,
+    "large_threshold": 50,
+    "shard": [1, 10],
+    "presence": {
+        "game": {
+            "name": "with APIs",
+            "type": 0
+        },
+        "status": "online",
+        "since": TIME,
+        "afk": false
+    }
+}""".replace("TOKEN_DATA", token).replace("TIME", str(int(time.time())))
+	return data

@@ -7,12 +7,15 @@ except ImportError:
 	import _thread as thread
 import time
 
+from syddiscord import opcode_factory
+
 GATEWAY_VERSION = "6"
 LIBRARY_VERSION = "1.0"
 
 socket = None
 token = None
 s = None
+first_heartbeat = True
 
 def __get_gateway():
 	gateway_url = "https://discordapp.com/api/v{}/gateway?encoding=json".format(GATEWAY_VERSION)
@@ -27,7 +30,7 @@ def __get_gateway():
 
 def __connect_socket(sock_url):
 	global socket
-	websocket.enableTrace(True)
+	# websocket.enableTrace(True)
 	socket = websocket.WebSocketApp("{}/?v={}&encoding=json".format(sock_url, GATEWAY_VERSION),
 							  on_message = on_message,
 							  on_error = on_error,
@@ -44,16 +47,18 @@ def connect(token_in):
 #-------------------------------------------------------------------------------
 
 def __heartbeat(interval):
+	global first_heartbeat
 	print(interval)
 	while True:
 		if s == None:
 			data = "{\"op\": 1, \"d\": null}"
 		else:
-			data = "{\"op\": 1, \"d\": " + s + "}"
+			data = "{\"op\": 1, \"d\": " + str(s) + "}"
 		socket.send(data)
-		time.sleep(interval/1000.0)
-		print(data)
+
 		print("HEARTBEAT")
+
+		time.sleep(interval/1000.0)
 
 def on_message(ws, message):
 	global s
@@ -61,8 +66,11 @@ def on_message(ws, message):
 	parsed_json = json.loads(message)
 	s = parsed_json["s"]
 	if(parsed_json["op"] == 10):
+		# Hello opcode, very first and only done once
 		thread.start_new_thread(__heartbeat, (parsed_json["d"]["heartbeat_interval"],))
+		socket.send(opcode_factory.__gen_generic(2, opcode_factory.__gen_indentify(token)))
 	if(parsed_json["op"] == 11):
+		# Heartbeat acknowledged opcode
 		print("HEARTBEAT ACK")
 
 def on_error(ws, error):
