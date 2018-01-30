@@ -26,4 +26,4 @@ def __gen_indentify(token):
 	return data
 
 def __gen_send_message(content):
-    return "{\"content\": \"" + content + "\"}"
+    return "{\"content\": \"" + content.replace("\n", "\\n") + "\"}"

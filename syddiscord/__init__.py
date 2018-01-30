@@ -7,6 +7,7 @@ except ImportError:
 	import _thread as thread
 import time
 import asyncio
+import requests
 
 from syddiscord import opcode_factory
 
@@ -121,11 +122,21 @@ def send_typing(channel):
 	json_data = urllib.request.urlopen(req).read()
 	print(json_data)
 
-def send_message(channel, content):
+def send_message(channel, content="", file=None):
 	gateway_url = "https://discordapp.com/api/v{}/channels/{}/messages?encoding=json".format(GATEWAY_VERSION, channel)
 	data = opcode_factory.__gen_send_message(content)
 	ua = 'SydDiscord {} (Sydney#0256)'.format(LIBRARY_VERSION)
+	fdata = None
 
-	req = urllib.request.Request(url=gateway_url,data=str.encode(data),headers={'User-Agent':ua,"Authorization":"Bot "+token})
-	json_data = urllib.request.urlopen(req).read()
-	print(json_data)
+	if file == None:
+		req = urllib.request.Request(url=gateway_url,data=str.encode(data),headers={'User-Agent':ua,"Authorization":"Bot "+token})
+		json_data = urllib.request.urlopen(req).read()
+		print(json_data)
+	else:
+		files = {'file': open(file, 'rb')}
+		headers = {'User-Agent':ua,"Authorization":"Bot "+token,"payload_json":data}
+		response = requests.post(gateway_url, files=files, headers=headers)
+		print(response.text)
+
+	if fdata != None:
+		fdata.close()
