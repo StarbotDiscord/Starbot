@@ -16,7 +16,7 @@ import textwrap
 
 class Message:
     '''Store data about a message.'''
-    def __init__(self, body='', file='', embed=None, delete=False, mentions=None, channel=None):
+    def __init__(self, body='', file='', embed=None, delete=False, mentions=None, channel=None, raw=None):
         self.command = None
         self.author = None
         self.server = None
@@ -26,6 +26,7 @@ class Message:
         self.delete = delete
         self.mentions = mentions
         self.channel = channel
+        self.raw = raw
 
 # Breaks giant message into chunks.
 def msg_split(msg, characters: int = 2000):
