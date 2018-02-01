@@ -40,3 +40,16 @@ def get_remote():
         for line in content:
             if line.startswith('\turl'):
                 return line.split("url = ")[1].strip()
+
+def get_url():
+    with open(".git/config") as f:
+        content = f.readlines()
+        for line in content:
+            if line.startswith('\turl'):
+                url = line.split("url = ")[1].strip()[:-4]
+                slash = "/"
+                return url + slash
+
+            
+            
+            
