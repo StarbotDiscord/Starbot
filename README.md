@@ -13,7 +13,7 @@ We have two goals for our bot: simple and powerful. The bot uses a plugin based 
 
 <p align="center">
 <a href="https://github.com/StarbotDiscord/Starbot/wiki/Installing-on-Debian-or-Ubuntu"><img src="https://cdn.worldvectorlogo.com/logos/ubuntu-4.svg" height="100" hspace="15"/></a>
-<a href="https://github.com/StarbotDiscord/Starbot/wiki/Installing-on-Debian-Ubuntu"><img src="https://cdn.worldvectorlogo.com/logos/debian.svg" height="100" hspace="15"/></a>
+<a href="https://github.com/StarbotDiscord/Starbot/wiki/Installing-on-Debian-or-Ubuntu"><img src="https://cdn.worldvectorlogo.com/logos/debian.svg" height="100" hspace="15"/></a>
 <a href="https://github.com/StarbotDiscord/Starbot/wiki/Installing-on-Alpine-Linux"><img src="http://linuxpeer.org/assets/img/distro_logo/alpine.png" height="100" hspace="15"/></a>
 <a href="https://github.com/StarbotDiscord/Starbot/wiki/Installing-on-macOS"><img src="https://cdn.worldvectorlogo.com/logos/apple.svg" height="100" hspace="15"/></a>
 </p>

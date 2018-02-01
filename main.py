@@ -104,6 +104,8 @@ async def on_ready():
     print(client.user.name)
     print(client.user.id)
     print("------")
+    print("Bot Invite Link: " + "https://discordapp.com/oauth2/authorize?client_id=" + client.user.id + "&scope=bot&permissions=8")
+    print("------")
 
     # Set the game.
     await client.change_presence(game=discord.Game(name="with magic"))
