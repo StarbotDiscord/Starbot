@@ -12,5 +12,5 @@ python:
   - "nightly"
 install: "pip install discord.py pluginbase psutil pyparsing pyspeedtest tqdm sphinx sphinx_rtd_theme mypy pylint"
 script:
-  - mypy ./**/*.py
+  - mypy main.py api/*.py libs/*.py plugins/*.py --ignore-missing-imports
   - cd docs && make html

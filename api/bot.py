@@ -12,9 +12,14 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
+from typing import List
+from api.plugin import Plugin
+from api.command import Command
+import discord
+
 class Bot:
-    startTime = 0
-    plugins = []
-    commands = []
-    messagesSinceStart = 0
-    client = None
+    startTime:          float = 0.0
+    plugins:            List[Plugin] = []
+    commands:           List[Command] = []
+    messagesSinceStart: int = 0
+    client:             discord.Client = None
