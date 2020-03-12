@@ -58,8 +58,8 @@ def convert_size(size_bytes):
 
 def onInit(plugin_in):
     plugins_command    = command.Command(plugin_in, 'plugins', shortdesc='Print a list of plugins', devcommand=True)
-    commands_command   = command.Command(plugin_in, 'commands', shortdesc='Print a list of commands')
-    help_command       = command.Command(plugin_in, 'help', shortdesc='Redirects to !commands')
+    commands_command   = command.Command(plugin_in, 'commands', shortdesc='Print a list of commands', devcommand=True)
+    help_command       = command.Command(plugin_in, 'help', shortdesc='Print a list of commands')
     info_command       = command.Command(plugin_in, 'info', shortdesc='Print some basic bot info')
     plugintree_command = command.Command(plugin_in, 'plugintree', shortdesc='Print a tree of plugins and commands', devcommand=True)
     uptime_command     = command.Command(plugin_in, 'uptime', shortdesc='Print the bot\'s uptime', devcommand=True)
@@ -70,11 +70,9 @@ def onInit(plugin_in):
     speedtest_command  = command.Command(plugin_in, 'speedtest', shortdesc='Run a speedtest', devcommand=True)
     addowner_command   = command.Command(plugin_in, 'addowner', shortdesc='Add a bot owner', devcommand=True)
     owners_command     = command.Command(plugin_in, 'owners', shortdesc='Print the bot owners', devcommand=True)
-    messages_command   = command.Command(plugin_in, 'messages', shortdesc="Show how many messages the bot has seen since start")
-    servers_command    = command.Command(plugin_in, SERVERSCMD, shortdesc="Show how many servers the bot is on")
     return plugin.Plugin(plugin_in, 'botutils', [plugins_command, commands_command, help_command, info_command, plugintree_command, uptime_command,
                                                  hostinfo_command, cpuinfo_command, setprefix_command, getprefix_command, speedtest_command, addowner_command,
-                                                 owners_command, messages_command, servers_command])
+                                                 owners_command])
 
 async def onCommand(message_in):
     if message_in.command == 'plugins':
