@@ -13,8 +13,8 @@
 #    limitations under the License.
 
 from typing import List
-from api.plugin import Plugin
 from api.command import Command
+from api.plugin import Plugin
 import discord
 
 class Bot:

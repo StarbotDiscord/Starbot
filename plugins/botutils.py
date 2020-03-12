@@ -22,8 +22,11 @@ import discord
 import psutil
 import pyspeedtest
 
-from api import settings, logging, command, message, plugin, git
+from api import settings, logging, git
 from api.bot import Bot
+from api.message import Message
+from api.command import Command
+from api.plugin import Plugin
 from libs import progressBar, readableTime, displayname
 
 def commands_detect_dups():
@@ -52,31 +55,31 @@ def convert_size(size_bytes: int) -> str:
     s = round(size_bytes/p, 2)
     return '%s %s' % (s, size_name[i])
 
-def onInit(plugin_in: plugin.Plugin):
-    plugins_command    = command.Command(plugin_in, 'plugins',    command_plugins,    shortdesc='Print a list of plugins',                devcommand=True)
-    commands_command   = command.Command(plugin_in, 'commands',   command_commands,   shortdesc='Print a list of commands',               devcommand=True)
-    help_command       = command.Command(plugin_in, 'help',       command_commands,   shortdesc='Print a list of commands')
-    info_command       = command.Command(plugin_in, 'info',       command_info,       shortdesc='Print some basic bot info')
-    plugintree_command = command.Command(plugin_in, 'plugintree', command_plugintree, shortdesc='Print a tree of plugins and commands',   devcommand=True)
-    uptime_command     = command.Command(plugin_in, 'uptime',     command_uptime,     shortdesc='Print the bot\'s uptime',                devcommand=True)
-    hostinfo_command   = command.Command(plugin_in, 'hostinfo',   command_hostinfo,   shortdesc='Prints information about the bots home', devcommand=True)
-    cpuinfo_command    = command.Command(plugin_in, 'cpuinfo',    command_cpuinfo,    shortdesc='Prints info about the system CPUs',      devcommand=True)
-    setprefix_command  = command.Command(plugin_in, 'setprefix',  command_setprefix,  shortdesc='Set the server prefix',                  devcommand=True)
-    getprefix_command  = command.Command(plugin_in, 'getprefix',  command_getprefix,  shortdesc='Get the server prefix',                  devcommand=True)
-    speedtest_command  = command.Command(plugin_in, 'speedtest',  command_speedtest,  shortdesc='Run a speedtest',                        devcommand=True)
-    addowner_command   = command.Command(plugin_in, 'addowner',   command_addowner,   shortdesc='Add a bot owner',                        devcommand=True)
-    owners_command     = command.Command(plugin_in, 'owners',     command_owners,     shortdesc='Print the bot owners',                   devcommand=True)
-    return plugin.Plugin(plugin_in, 'botutils', [plugins_command, commands_command, help_command, info_command, plugintree_command, uptime_command,
+def onInit(plugin_in: Plugin) -> Plugin:
+    plugins_command    = Command(plugin_in, 'plugins',    command_plugins,    shortdesc='Print a list of plugins',                devcommand=True)
+    commands_command   = Command(plugin_in, 'commands',   command_commands,   shortdesc='Print a list of commands',               devcommand=True)
+    help_command       = Command(plugin_in, 'help',       command_commands,   shortdesc='Print a list of commands')
+    info_command       = Command(plugin_in, 'info',       command_info,       shortdesc='Print some basic bot info')
+    plugintree_command = Command(plugin_in, 'plugintree', command_plugintree, shortdesc='Print a tree of plugins and commands',   devcommand=True)
+    uptime_command     = Command(plugin_in, 'uptime',     command_uptime,     shortdesc='Print the bot\'s uptime',                devcommand=True)
+    hostinfo_command   = Command(plugin_in, 'hostinfo',   command_hostinfo,   shortdesc='Prints information about the bots home', devcommand=True)
+    cpuinfo_command    = Command(plugin_in, 'cpuinfo',    command_cpuinfo,    shortdesc='Prints info about the system CPUs',      devcommand=True)
+    setprefix_command  = Command(plugin_in, 'setprefix',  command_setprefix,  shortdesc='Set the server prefix',                  devcommand=True)
+    getprefix_command  = Command(plugin_in, 'getprefix',  command_getprefix,  shortdesc='Get the server prefix',                  devcommand=True)
+    speedtest_command  = Command(plugin_in, 'speedtest',  command_speedtest,  shortdesc='Run a speedtest',                        devcommand=True)
+    addowner_command   = Command(plugin_in, 'addowner',   command_addowner,   shortdesc='Add a bot owner',                        devcommand=True)
+    owners_command     = Command(plugin_in, 'owners',     command_owners,     shortdesc='Print the bot owners',                   devcommand=True)
+    return Plugin(plugin_in, 'botutils', [plugins_command, commands_command, help_command, info_command, plugintree_command, uptime_command,
                                                  hostinfo_command, cpuinfo_command, setprefix_command, getprefix_command, speedtest_command, addowner_command,
                                                  owners_command])
 
-async def command_plugins(message_in: message.Message):
+async def command_plugins(message_in: Message) -> Message:
     plugin_list = []
     for plugin_in in Bot.plugins:
         plugin_list.append(plugin_in.name)
-    return message.Message(body='```{}```'.format(', '.join(plugin_list)))
+    return Message(body='```{}```'.format(', '.join(plugin_list)))
 
-async def command_commands(message_in: message.Message):
+async def command_commands(message_in: Message) -> Message:
     cmd_names = []
     cmd_descs = []
     for botcommand in Bot.commands:
@@ -87,9 +90,9 @@ async def command_commands(message_in: message.Message):
     pad_len = len(max(cmd_names, key=len))
     for index, value in enumerate(cmd_names):
         cmd_list.append('{} - {}'.format(cmd_names[index].ljust(pad_len), cmd_descs[index]))
-    return message.Message(body='```{}```'.format('\n'.join(cmd_list)))
+    return Message(body='```{}```'.format('\n'.join(cmd_list)))
 
-async def command_info(message_in: message.Message):
+async def command_info(message_in: Message) -> Message:
     sha = git.git_commit()
     track = git.git_branch()
     remote = git.get_remote()
@@ -103,9 +106,9 @@ async def command_info(message_in: message.Message):
         embed = discord.Embed(color=discord.Color.light_grey())
     embed.set_author(name='Project StarBot v0.2.0-{} on track {}'.format(sha[:7], track))
     embed.set_footer(text="Pulled from {}".format(remote))
-    return message.Message(embed=embed)
+    return Message(embed=embed)
 
-async def command_plugintree(message_in: message.Message):
+async def command_plugintree(message_in: Message) -> Message:
     dups = commands_detect_dups()
     plugin_string = '```\n'
     for plugin_in in Bot.plugins:
@@ -125,14 +128,14 @@ async def command_plugintree(message_in: message.Message):
                 else:
                     plugin_string += '└ {}\n'.format(command_in.name)
     plugin_string += '```'
-    return message.Message(body=plugin_string)
+    return Message(body=plugin_string)
 
-async def command_uptime(message_in: message.Message):
+async def command_uptime(message_in: Message) -> Message:
     time_current = int(time.time())
     time_str = readableTime.getReadableTimeBetween(Bot.startTime, time_current)
-    return message.Message(body='I\'ve been up for *{}*.'.format(time_str))
+    return Message(body='I\'ve been up for *{}*.'.format(time_str))
 
-async def command_hostinfo(message_in: message.Message):
+async def command_hostinfo(message_in: Message) -> Message:
     # Get information about host environment.
     time_current = int(time.time())
 
@@ -177,9 +180,9 @@ async def command_hostinfo(message_in: message.Message):
     msg += 'Host uptime   : {}```'.format(readableTime.getReadableTimeBetween(psutil.boot_time(), time.time()))
 
     # Return completed message.
-    return message.Message(body=msg)
+    return Message(body=msg)
 
-async def command_cpuinfo(message_in: message.Message):
+async def command_cpuinfo(message_in: Message) -> Message:
     # Get CPU usage and create string for message.
     cpu_pcts = psutil.cpu_percent(interval=0.1, percpu=True)
     cpu_pct_str = '{}\n'.format(platform.processor())
@@ -206,20 +209,20 @@ async def command_cpuinfo(message_in: message.Message):
         cpu_pct_str += 'CPU {}: {}\n'.format(str(index), progressBar.makeBar(cpu_pcts[index]))
 
     # Return completed message.
-    return message.Message(body='```{}```'.format(cpu_pct_str))
+    return Message(body='```{}```'.format(cpu_pct_str))
 
-async def command_setprefix(message_in: message.Message):
+async def command_setprefix(message_in: Message) -> Message:
     if settings.owners_check(message_in.author.id):
         prefix = message_in.body.split(' ', 1)[-1]
         settings.prefix_set(message_in.guild.id, prefix)
-        return message.Message(body='Prefix set to {}'.format(prefix))
+        return Message(body='Prefix set to {}'.format(prefix))
     else:
-        return message.Message(body='Only my owner can set the prefix!')
+        return Message(body='Only my owner can set the prefix!')
 
-async def command_getprefix(message_in: message.Message):
-    return message.Message(body='Prefix is {}'.format(settings.prefix_get(message_in.guild.id)))
+async def command_getprefix(message_in: Message) -> Message:
+    return Message(body='Prefix is {}'.format(settings.prefix_get(message_in.guild.id)))
 
-async def command_speedtest(message_in: message.Message):
+async def command_speedtest(message_in: Message) -> Message:
     if settings.owners_check(message_in.author.id):
         speed = pyspeedtest.SpeedTest()
         msg = '**Speed Test Results:**\n'
@@ -227,11 +230,11 @@ async def command_speedtest(message_in: message.Message):
         msg += '    Ping: {}\n'.format(round(speed.ping(), 2))
         msg += 'Download: {}MB/s\n'.format(round(speed.download()/1024/1024, 2))
         msg += '  Upload: {}MB/s```'.format(round(speed.upload()/1024/1024, 2))
-        return message.Message(body=msg)
+        return Message(body=msg)
     else:
-        return message.Message(body='You do not have permisison to run a speedtest.')
+        return Message(body='You do not have permisison to run a speedtest.')
 
-async def command_addowner(message_in: message.Message):
+async def command_addowner(message_in: Message) -> Message:
     if settings.owners_get():
         try:
             if settings.owners_check(message_in.author.id):
@@ -239,24 +242,24 @@ async def command_addowner(message_in: message.Message):
                 new_member = displayname.memberForName(member, message_in.guild.members, message_in.guild.me)
 
                 if settings.owners_check(new_member.id):
-                    return message.Message(body="User is already an owner.")
+                    return Message(body="User is already an owner.")
                 elif new_member.bot:
-                    return message.Message(body="Bots cannot be owners.")
+                    return Message(body="Bots cannot be owners.")
                 else:
                     settings.owners_add(new_member.id)
-                    return message.Message(body="Added owner successfully.")
+                    return Message(body="Added owner successfully.")
             else:
-                return message.Message(body="You aren't an owner of the bot.")
+                return Message(body="You aren't an owner of the bot.")
         except AttributeError:
-            return message.Message(body="Invalid user.")
+            return Message(body="Invalid user.")
     else:
         settings.owners_add(message_in.author.id)
-        return message.Message(body="You have successfully claimed yourself as the first owner!")
+        return Message(body="You have successfully claimed yourself as the first owner!")
 
-async def command_owners(message_in: message.Message):
+async def command_owners(message_in: Message) -> Message:
     owners = []
     if not settings.owners_get():
-        return message.Message(body='I have no owners')
+        return Message(body='I have no owners')
     for owner in settings.owners_get():
         user = displayname.memberForID(owner, message_in.guild.members, message_in.guild.me)
         if user:
@@ -264,4 +267,4 @@ async def command_owners(message_in: message.Message):
         else:
             owners.append(str(owner))
     owner_list = ', '.join(owners)
-    return message.Message(body=owner_list)
+    return Message(body=owner_list)
