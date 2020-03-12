@@ -47,7 +47,7 @@ def commands_detect_dups():
 
     return list(set(duplicates))
 
-def convert_size(size_bytes):
+def convert_size(size_bytes: int) -> str:
     if size_bytes == 0:
         return '0B'
     size_name = ("B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB")
@@ -56,7 +56,7 @@ def convert_size(size_bytes):
     s = round(size_bytes/p, 2)
     return '%s %s' % (s, size_name[i])
 
-def onInit(plugin_in):
+def onInit(plugin_in: plugin.Plugin):
     plugins_command    = command.Command(plugin_in, 'plugins', shortdesc='Print a list of plugins', devcommand=True)
     commands_command   = command.Command(plugin_in, 'commands', shortdesc='Print a list of commands', devcommand=True)
     help_command       = command.Command(plugin_in, 'help', shortdesc='Print a list of commands')
