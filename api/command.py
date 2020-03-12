@@ -14,9 +14,10 @@
 
 class Command():
     '''Store information about a command'''
-    def __init__(self, plugin, name, shortdesc='no description', devcommand=False):
+    def __init__(self, plugin, name, func, shortdesc='no description', devcommand=False):
         self.plugin = plugin
         self.name = name
+        self.func = func
         self.shortdesc = shortdesc
         self.devcommand = devcommand
 
