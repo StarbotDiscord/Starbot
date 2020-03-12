@@ -24,8 +24,8 @@ def is_command(message_in, prefix, command):
     '''Check if a given message is a command'''
 
     # Get user.
-    if message_in.server:
-        me = message_in.server.me
+    if message_in.guild:
+        me = message_in.guild.me
     else:
         me = message_in.channel.me
 

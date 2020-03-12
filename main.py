@@ -104,17 +104,17 @@ async def on_ready():
     print(client.user.name)
     print(client.user.id)
     print("------")
-    print("Bot Invite Link: " + "https://discordapp.com/oauth2/authorize?client_id=" + client.user.id + "&scope=bot&permissions=8")
+    print("Bot Invite Link: " + "https://discordapp.com/oauth2/authorize?client_id=" + str(client.user.id) + "&scope=bot&permissions=8")
     print("------")
 
     # Set the game.
-    await client.change_presence(game=discord.Game(name="with magic"))
+    await client.change_presence(activity=discord.Game(name="with magic"))
 
 
 @client.event
 async def on_message(message_in):
     # Ignore messages that aren't from a server and from ourself.
-    #if not message_in.server:
+    #if not message_in.guild:
      #   return
     if message_in.author.id == client.user.id:
         return
@@ -124,10 +124,10 @@ async def on_message(message_in):
     is_command = False
 
     # Get prefix. If not on a server, no prefix is needed.
-    #logging.message_log(message_in, message_in.server.id)
-    if message_in.server:
-        prefix = settings.prefix_get(message_in.server.id)
-        me = message_in.server.me
+    #logging.message_log(message_in, message_in.guild.id)
+    if message_in.guild:
+        prefix = settings.prefix_get(message_in.guild.id)
+        me = message_in.guild.me
     else:
         prefix = ""
         me = message_in.channel.me
@@ -142,7 +142,7 @@ async def on_message(message_in):
     if message_in.content.startswith(prefix + "cachecontents") or message_in.content.startswith("{} cachecontents".format(me.mention)):
         cacheCount = glob.glob("cache/{}_*".format(message_in.content.split(' ')[-1]))
         cacheString = '\n'.join(cacheCount)
-        await client.send_message(message_in.channel, "```{}```".format(cacheString))
+        await message_in.channel.send(message_in.channel, "```{}```".format(cacheString))
 
     # Check each command loaded.
     for command in Bot.commands:
@@ -152,55 +152,54 @@ async def on_message(message_in):
             is_command = True
 
             # Send typing message.
-            await client.send_typing(message_in.channel)
+            async with message_in.channel.typing():
+                # Build message object.
+                message_recv = message.Message
+                message_recv.command = command.name
+                if message_in.content.startswith("{} ".format(me.mention)):
+                    message_recv.body = message_in.content.split("{} ".format(me.mention) + 
+                                                                command.name, 1)[1]
+                else:
+                    message_recv.body = message_in.content.split(prefix + command.name, 1)[1]
+                message_recv.author = message_in.author
+                message_recv.server = message_in.guild
+                message_recv.mentions = message_in.mentions
+                message_recv.channel = message_in.channel
 
-            # Build message object.
-            message_recv = message.Message
-            message_recv.command = command.name
-            if message_in.content.startswith("{} ".format(me.mention)):
-                message_recv.body = message_in.content.split("{} ".format(me.mention) + 
-                                                             command.name, 1)[1]
-            else:
-                message_recv.body = message_in.content.split(prefix + command.name, 1)[1]
-            message_recv.author = message_in.author
-            message_recv.server = message_in.server
-            message_recv.mentions = message_in.mentions
-            message_recv.channel = message_in.channel
+                command_result = await command.plugin.onCommand(message_recv)
 
-            command_result = await command.plugin.onCommand(message_recv)
+                # No message, error.
+                if not command_result:
+                    await message_in.channel.send(
+                                            "**Beep boop - Something went wrong!**\n_Command did not return a result._")
 
-            # No message, error.
-            if not command_result:
-                await client.send_message(message_in.channel,
-                                          "**Beep boop - Something went wrong!**\n_Command did not return a result._")
+                # Do list of messages, one after the other. If the message is more than 5 chunks long, PM it.
+                elif type(command_result) is list:
+                    if len(command_result) > 5:  # PM messages.
+                        # Send message saying that we are PMing the messages.
+                        await message_in.channel.send(
+                                                "Because the output of that command is **{} pages** long, I'm just going to PM the result to you.".format(len(command_result)))
 
-            # Do list of messages, one after the other. If the message is more than 5 chunks long, PM it.
-            elif type(command_result) is list:
-                if len(command_result) > 5:  # PM messages.
-                    # Send message saying that we are PMing the messages.
-                    await client.send_message(message_in.channel,
-                                              "Because the output of that command is **{} pages** long, I'm just going to PM the result to you.".format(len(command_result)))
+                        # PM it.
+                        for item in command_result:
+                            await process_message(message_in.author, message_in, item)
 
-                    # PM it.
-                    for item in command_result:
-                        await process_message(message_in.author, message_in, item)
+                    else: # Send to channel.
+                        for item in command_result:
+                            await process_message(message_in.channel, message_in, item)
 
-                else: # Send to channel.
-                    for item in command_result:
-                        await process_message(message_in.channel, message_in, item)
+                # Do regular message.
+                else:
+                    await process_message(message_in.channel, message_in, command_result)
 
-            # Do regular message.
-            else:
-                await process_message(message_in.channel, message_in, command_result)
-
-                # Do we delete the message afterwards?
-                if message_in.server and command_result.delete:
-                    await client.delete_message(message_in)
+                    # Do we delete the message afterwards?
+                    if message_in.guild and command_result.delete:
+                        await client.delete_message(message_in)
 
     # Increment message counters if not command.
-    if message_in.server and not is_command:
-        logging.message_log(message_in, message_in.server.id)
-        count = logging.message_count_get(message_in.server.id)
+    if message_in.guild and not is_command:
+        logging.message_log(message_in, message_in.guild.id)
+        count = logging.message_count_get(message_in.guild.id)
         Bot.messagesSinceStart += 1
         count += 1
 
@@ -214,10 +213,10 @@ async def process_message(target, message_in, msg):
     # If the message to send includes a file
     if msg.file != "":
         # Send the file, along with any possible message
-        await client.send_file(target, msg.file, content=msg.body)
+        await target.send(msg.body, embed=msg.embed, file=msg.file)
     else:
         # Send the message, along with a possible embed
-        await client.send_message(target, msg.body, embed=msg.embed)
+        await target.send(msg.body, embed=msg.embed)
 
 if __name__ == "__main__":
     # Start bot.
