@@ -162,7 +162,7 @@ async def on_message(message_in):
                 else:
                     message_recv.body = message_in.content.split(prefix + command.name, 1)[1]
                 message_recv.author = message_in.author
-                message_recv.server = message_in.guild
+                message_recv.guild = message_in.guild
                 message_recv.mentions = message_in.mentions
                 message_recv.channel = message_in.channel
 

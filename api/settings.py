@@ -91,7 +91,10 @@ def owners_get():
     conn = sqlite3.connect("bot.db3")
     cursor = conn.cursor()
     cursor.execute('CREATE TABLE IF NOT EXISTS owners (userid INTEGER)')
-    cur = cursor.execute('SELECT userid FROM owners')
+    try:
+        cur = cursor.execute('SELECT userid FROM owners')
+    except:
+        return []
     owners = []
     for row in list(cur):
         owners.append(row[0])

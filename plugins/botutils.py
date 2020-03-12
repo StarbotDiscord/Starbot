@@ -72,12 +72,9 @@ def onInit(plugin_in):
     owners_command     = command.Command(plugin_in, 'owners', shortdesc='Print the bot owners', devcommand=True)
     messages_command   = command.Command(plugin_in, 'messages', shortdesc="Show how many messages the bot has seen since start")
     servers_command    = command.Command(plugin_in, SERVERSCMD, shortdesc="Show how many servers the bot is on")
-    invite_command     = command.Command(plugin_in, 'invite', shortdesc="Invite the bot to your server!")
-    nickname_command   = command.Command(plugin_in, NICKNAMECMD, shortdesc="Change the bot's nickname")
-    ping_command       = command.Command(plugin_in, 'ping', shortdesc='Pong!')
     return plugin.Plugin(plugin_in, 'botutils', [plugins_command, commands_command, help_command, info_command, plugintree_command, uptime_command,
                                                  hostinfo_command, cpuinfo_command, setprefix_command, getprefix_command, speedtest_command, addowner_command,
-                                                 owners_command, messages_command, servers_command, invite_command, nickname_command, ping_command])
+                                                 owners_command, messages_command, servers_command])
 
 async def onCommand(message_in):
     if message_in.command == 'plugins':
@@ -112,11 +109,7 @@ async def onCommand(message_in):
             embed = discord.Embed(color=discord.Color.green())
         else:
             embed = discord.Embed(color=discord.Color.light_grey())
-        embed.set_author(name='Project StarBot v0.2.0-{} on track {}'.format(sha[:7], track),
-                         url=link,
-                         icon_url='https://pbs.twimg.com/profile_images/616309728688238592/pBeeJQDQ.png')
-        embed.add_field(name="Bot Team Alpha", value="CorpNewt\nSydney Erickson\nGoldfish64")
-        embed.add_field(name="Source Code", value="Interested in poking around inside the bot?\nClick on the link above!")
+        embed.set_author(name='Project StarBot v0.2.0-{} on track {}'.format(sha[:7], track))
         embed.set_footer(text="Pulled from {}".format(remote))
         return message.Message(embed=embed)
 
@@ -177,7 +170,7 @@ async def onCommand(message_in):
         stor_free = convert_size(stor.total - stor.used)
 
         # Format hostinfo with OS, CPU, RAM, storage, and other bot info.
-        msg = '***{}\'s*** **Home:**\n'.format(displayname.name(message_in.server.me))
+        msg = '***{}\'s*** **Home:**\n'.format(displayname.name(message_in.guild.me))
         msg += '```Host OS       : {}\n'.format(platform_current)
         msg += 'Host Python   : {}.{}.{} {}\n'.format(pyver_major, pyver_minor, pyver_micro, pyver_release)
         if not isinstance(cpu_threads, int):
@@ -226,13 +219,13 @@ async def onCommand(message_in):
     if message_in.command == 'setprefix':
         if settings.owners_check(message_in.author.id):
             prefix = message_in.body.split(' ', 1)[-1]
-            settings.prefix_set(message_in.server.id, prefix)
+            settings.prefix_set(message_in.guild.id, prefix)
             return message.Message(body='Prefix set to {}'.format(prefix))
         else:
             return message.Message(body='Only my owner can set the prefix!')
 
     if message_in.command == 'getprefix':
-        return message.Message(body='Prefix is {}'.format(settings.prefix_get(message_in.server.id)))
+        return message.Message(body='Prefix is {}'.format(settings.prefix_get(message_in.guild.id)))
 
     if message_in.command == 'speedtest':
         if settings.owners_check(message_in.author.id):
@@ -251,7 +244,7 @@ async def onCommand(message_in):
             try:
                 if settings.owners_check(message_in.author.id):
                     member = message_in.body.strip()
-                    new_member = displayname.memberForName(member, message_in.server)
+                    new_member = displayname.memberForName(member, message_in.guild.members, message_in.guild.me)
 
                     if settings.owners_check(new_member.id):
                         return message.Message(body="User is already an owner.")
@@ -273,53 +266,10 @@ async def onCommand(message_in):
         if not settings.owners_get():
             return message.Message(body='I have no owners')
         for owner in settings.owners_get():
-            user = displayname.memberForID(str(owner), message_in.server)
+            user = displayname.memberForID(owner, message_in.guild.members, message_in.guild.me)
             if user:
                 owners.append(str(user.name))
             else:
                 owners.append(str(owner))
         owner_list = ', '.join(owners)
         return message.Message(body=owner_list)
-
-    if message_in.command == SERVERSCMD:
-        # Get server count.
-        servercount = len(Bot.client.servers)
-
-        # Return message.
-        if servercount == 1:
-            return message.Message("I am a member of **{} server**!".format(servercount))
-        else:
-            return message.Message("I am a member of **{} servers**!".format(servercount))
-
-    if message_in.command == 'messages':
-        # Get server.
-        server = message_in.server
-
-        # If the server is null, show error.
-        if not server:
-            return message.Message("This is not a server. :wink:")
-
-        msg_count = Bot.messagesSinceStart
-        msg_count_server = logging.message_count_get(server.id)
-        msg = "I've witnessed *{} messages* since I started and *{} messages* overall!"
-        return message.Message(msg.format(msg_count, msg_count_server))
-
-    if message_in.command == 'invite':
-        class perm_admin:
-            value = 8
-        return message.Message(body=discord.utils.oauth_url(Bot.client.user.id, perm_admin))
-
-    if message_in.command == NICKNAMECMD:
-        if message_in.channel.permissions_for(message_in.author).manage_nicknames:
-            # Change nickname.
-            await Bot.client.change_nickname(message_in.server.me, message_in.body.strip())
-           # if message_in.server.me.nick:
-            #    return message.Message("My new nickname in this server is **{}**".format(message_in.server.me.nick))
-            #else:
-             #   return message.Message("My nickname has been removed.")
-            return message.Message("My nickname has been changed.")
-        else:
-            return message.Message("You cannot change nicknames on this server.")
-
-    if message_in.command == 'ping':
-        return message.Message(body='PONG! Bot is up!')

@@ -19,7 +19,7 @@ class Message:
     def __init__(self, body='', file='', embed=None, delete=False, mentions=None, channel=None):
         self.command = None
         self.author = None
-        self.server = None
+        self.guild = None
         self.body = body
         self.file = file
         self.embed = embed
