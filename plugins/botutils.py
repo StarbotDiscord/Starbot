@@ -104,7 +104,7 @@ async def command_info(message_in: Message) -> Message:
         embed = discord.Embed(color=discord.Color.green())
     else:
         embed = discord.Embed(color=discord.Color.light_grey())
-    embed.set_author(name='Project StarBot v{}-{} on track {}'.format(Bot.version, sha[:7], track))
+    embed.set_author(name='Project Starbot v{}-{} on track {}'.format(Bot.version, sha[:7], track))
     embed.set_footer(text="Pulled from {}".format(remote))
     return Message(embed=embed)
 
