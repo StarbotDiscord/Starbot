@@ -13,9 +13,11 @@
 #    limitations under the License.
 '''Provides the plugin class'''
 
+from typing import List
+
 class Plugin():
     '''Store information about a plugin'''
     def __init__(self, plugin, name, commands):
-        self.plugin = plugin
-        self.name = name
-        self.commands = commands
+        self.plugin:   Plugin = plugin
+        self.name:     str = name
+        self.commands: List[Command] = commands

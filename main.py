@@ -166,7 +166,7 @@ async def on_message(message_in):
                 message_recv.mentions = message_in.mentions
                 message_recv.channel = message_in.channel
 
-                command_result = await command.plugin.onCommand(message_recv)
+                command_result = await command.func(message_recv)
 
                 # No message, error.
                 if not command_result:
@@ -220,13 +220,4 @@ async def process_message(target, message_in, msg):
 
 if __name__ == "__main__":
     # Start bot.
-    # THIS MUST ALWAYS BE DOWN HERE
-    # I found this out after 3 days of stupidity and tried filing a report with the Discord.py devs to figure out why the
-    # library seems to have hanged when it was in the initial block of the same if. I still don't know. They disregarded
-    # the entirety of my ticket and told me that this is a blocking call. Yeah, I know. But if you read the rest of the ticket
-    # you would know that after this function was called all the main thread would drop and the bot would become unresponsive.
-    # But apparently it is the debugger I explicitly stated that I had turned off on some of my messages I sent while figuring it out.
-    # I don't know why you would lock a ticket because of a debugger that isn't on and a problem you were ignoring.
-    # Maybe someone should add a warning to the Discord.py library for when you run client.run in the wrong place.
-    # But honestly I can't be bothered.
     client.run(token)

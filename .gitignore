@@ -67,6 +67,9 @@ docs/_build/
 # PyBuilder
 target/
 
+# MyPy
+.mypy_cache
+
 #StarBot specific stuff
 cache/**
 token.txt

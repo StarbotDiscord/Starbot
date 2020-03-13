@@ -14,11 +14,12 @@
 
 class Command():
     '''Store information about a command'''
-    def __init__(self, plugin, name, shortdesc='no description', devcommand=False):
-        self.plugin = plugin
-        self.name = name
-        self.shortdesc = shortdesc
-        self.devcommand = devcommand
+    def __init__(self, plugin, name, func, shortdesc='no description', devcommand=False):
+        self.plugin:     Plugin = plugin
+        self.name:       str = name
+        self.func:       function = func
+        self.shortdesc:  str = shortdesc
+        self.devcommand: bool = devcommand
 
 def is_command(message_in, prefix, command):
     '''Check if a given message is a command'''
