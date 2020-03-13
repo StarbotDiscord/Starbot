@@ -23,3 +23,8 @@ class Bot:
     commands:           List[Command] = []
     messagesSinceStart: int = 0
     client:             discord.Client = None
+
+    version_major:      int = 0
+    version_minor:      int = 3
+    version_revision:   int = 0
+    version:            str = str(version_major) + "." + str(version_minor) + "." + str(version_revision)
