@@ -153,6 +153,7 @@ async def command_hostinfo(message_in: Message) -> Message:
     platform_current = platform.platform()
 
     # Python version info.
+    py_impl = platform.python_implementation()
     pyver_major = sys.version_info.major
     pyver_minor = sys.version_info.minor
     pyver_micro = sys.version_info.micro
@@ -167,7 +168,7 @@ async def command_hostinfo(message_in: Message) -> Message:
     # Format hostinfo with OS, CPU, RAM, storage, and other bot info.
     msg = '***{}\'s*** **Home:**\n'.format(displayname.name(message_in.guild.me))
     msg += '```Host OS       : {}\n'.format(platform_current)
-    msg += 'Host Python   : {}.{}.{} {}\n'.format(pyver_major, pyver_minor, pyver_micro, pyver_release)
+    msg += 'Host Python   : {} {}.{}.{} {}\n'.format(py_impl, pyver_major, pyver_minor, pyver_micro, pyver_release)
     if not isinstance(cpu_threads, int):
         msg += 'Host CPU usage: {}% of {}\n'.format(cpu_usage, platform.machine())
     elif cpu_threads > 1:
