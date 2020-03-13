@@ -1,16 +1,7 @@
-import time
-
 from pluginbase import PluginBase
-
-from api import database
 from api.bot import Bot
 
 def init():
-    #database.init()
-
-    # Log the time we started.
-    #Bot.startTime = time.time()
-
     # Get the source of plugins.
     plugin_base = PluginBase(package="plugins")
     plugin_source = plugin_base.make_plugin_source(searchpath=["./plugins"])
