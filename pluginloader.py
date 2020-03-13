@@ -6,10 +6,10 @@ from api import database
 from api.bot import Bot
 
 def init():
-    database.init()
+    #database.init()
 
     # Log the time we started.
-    Bot.startTime = time.time()
+    #Bot.startTime = time.time()
 
     # Get the source of plugins.
     plugin_base = PluginBase(package="plugins")
