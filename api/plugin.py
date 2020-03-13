@@ -21,4 +21,3 @@ class Plugin():
         self.plugin:   Plugin = plugin
         self.name:     str = name
         self.commands: List[Command] = commands
-        self.commands: List[Command] = commands

@@ -21,7 +21,8 @@ import asyncio
 import discord
 from pluginbase import PluginBase
 
-from api import settings, message, logging, bot
+import pluginloader
+from api import settings, message, logging
 from api import command as command_api
 from api.bot import Bot
 from libs import displayname
@@ -150,8 +151,16 @@ async def process_message(target, message_in, msg):
         # Send the message, along with a possible embed
         await target.send(msg.body, embed=msg.embed)
 
+import sys
+from api.message import Message
+
 if __name__ == "__main__":
-    bot.init()
+    pluginloader.init()
+
+    tm = Message(body="test")
+    m = Bot.commands[3].func(tm)
+
+    sys.exit()
 
     # Get our token to use.
     token = ""
