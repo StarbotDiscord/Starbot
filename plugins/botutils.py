@@ -93,6 +93,11 @@ async def command_commands(message_in: Message) -> Message:
     return Message(body='```{}```'.format('\n'.join(cmd_list)))
 
 async def command_info(message_in: Message) -> Message:
+    try:
+        print(type(git))
+        print(type(git.git_commit()))
+    except Exception as e:
+        print(e)
     sha = git.git_commit()
     track = git.git_branch()
     remote = git.get_remote()
