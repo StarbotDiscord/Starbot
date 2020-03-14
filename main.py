@@ -58,17 +58,6 @@ async def on_message(message_in):
     else:
         prefix = ""
 
-    # Should we die? Check for exit command.
-    if message_in.content == prefix + "exit":
-        if settings.owners_check(message_in.author.id):
-            sys.exit(0)
-
-    # Check for cache contents command.
-    if message_in.content.startswith(prefix + "cachecontents"):
-        cacheCount = glob.glob("cache/{}_*".format(message_in.content.split(' ')[-1]))
-        cacheString = '\n'.join(cacheCount)
-        await message_in.channel.send(message_in.channel, "```{}```".format(cacheString))
-
     # Check each command loaded.
     for command in Bot.commands:
         # Do we have a command?

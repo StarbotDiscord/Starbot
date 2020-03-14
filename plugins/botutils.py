@@ -17,6 +17,7 @@ import os
 import platform
 import sys
 import time
+import glob
 
 import discord
 import psutil
@@ -69,9 +70,10 @@ def onInit(plugin_in: Plugin) -> Plugin:
     speedtest_command  = Command(plugin_in, 'speedtest',  command_speedtest,  shortdesc='Run a speedtest',                        devcommand=True)
     addowner_command   = Command(plugin_in, 'addowner',   command_addowner,   shortdesc='Add a bot owner',                        devcommand=True)
     owners_command     = Command(plugin_in, 'owners',     command_owners,     shortdesc='Print the bot owners',                   devcommand=True)
+    cache_command      = Command(plugin_in, 'cachecontents', command_cachecontents, shortdesc='Print contents of cache',          devcommand=True)
     return Plugin(plugin_in, 'botutils', [plugins_command, commands_command, help_command, info_command, plugintree_command, uptime_command,
                                                  hostinfo_command, cpuinfo_command, setprefix_command, getprefix_command, speedtest_command, addowner_command,
-                                                 owners_command])
+                                                 owners_command, cache_command])
 
 async def command_plugins(message_in: Message) -> Message:
     plugin_list = []
@@ -268,3 +270,8 @@ async def command_owners(message_in: Message) -> Message:
             owners.append(str(owner))
     owner_list = ', '.join(owners)
     return Message(body=owner_list)
+
+async def command_cachecontents(message_in: Message) -> Message:
+    cacheCount = glob.glob("cache/{}_*".format(message_in.body))
+    cacheString = '\n'.join(cacheCount)
+    return Message(body="```{}```".format(cacheString))
