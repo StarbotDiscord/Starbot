@@ -19,82 +19,14 @@ import sys
 import asyncio
 
 import discord
-from pluginbase import PluginBase
 
-from api import settings, message, logging
+from api import settings, message, logging, pluginloader, bot
 from api import command as command_api
 from api.bot import Bot
 from libs import displayname
 
-def initPlugin(plugin, autoImport=True):
-    # Init plugin.
-    if autoImport == True:
-        plugin_temp = plugin_source.load_plugin(plugin)
-        plugin_info = plugin_temp.onInit(plugin_temp)
-    else:
-        plugin_info = plugin.onInit(plugin)
-
-    # Verify the plugin is defined, it has a name, and it has commands.
-    if plugin_info.plugin == None:
-        print("Plugin not defined!")
-        pass
-    if plugin_info.name == None:
-        print("Plugin name not defined")
-        pass
-    if plugin_info.commands == []:
-        print("Plugin did not define any commands.")
-        pass
-
-    # Add plugin to list.
-    Bot.plugins.append(plugin_info)
-
-    # Load each command in plugin.
-    for command in plugin_info.commands:
-        # Verify command has a parent plugin and a name.
-        if command.plugin == None:
-            print("Plugin command does not define parent plugin")
-            pass
-        if command.name == None:
-            print("Plugin command does not define name")
-            pass
-
-        # Add command to list of commands and print a success message.
-        Bot.commands.append(command)
-        print("Command `{}` registered successfully.".format(command.name))
-
-    # Print success message.
-    print("Plugin '{}' registered successfully.".format(plugin_info.name))
-
-class FakeClient:
-    def event(self):
-        pass
-
-if __name__ == "__main__":
-    from api import database
-    database.init()
-
-    # Log the time we started.
-    Bot.startTime = time.time()
-
-    # Get the source of plugins.
-    plugin_base = PluginBase(package="plugins")
-    plugin_source = plugin_base.make_plugin_source(searchpath=["./plugins"])
-
-    # Create the Discord client.
-    client = discord.Client()
-    Bot.client = client
-
-    # Load each plugin.
-    for plugin in plugin_source.list_plugins():
-        initPlugin(plugin)
-
-    # Get our token to use.
-    token = ""
-    with open("token.txt") as m:
-        token = m.read().strip()
-else:
-    client = discord.Client()
-    Bot.client = client
+client = discord.Client()
+Bot.client = client
 
 
 @client.event
@@ -219,5 +151,16 @@ async def process_message(target, message_in, msg):
         await target.send(msg.body, embed=msg.embed)
 
 if __name__ == "__main__":
+    # Init bot variables
+    bot.init()
+
+    # Init plugins
+    pluginloader.init()
+
+    # Read token
+    token = ""
+    with open("token.txt") as m:
+        token = m.read().strip()
+
     # Start bot.
     client.run(token)

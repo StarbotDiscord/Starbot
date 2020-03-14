@@ -1,22 +1,16 @@
-from pluginbase import PluginBase
 from api.bot import Bot
 
+from glob import glob
+import importlib
+
 def init():
-    # Get the source of plugins.
-    plugin_base = PluginBase(package="plugins")
-    plugin_source = plugin_base.make_plugin_source(searchpath=["./plugins"])
+    for name in glob("plugins/*.py"):
+        p = importlib.import_module("plugins." + name[8:-3])
+        initPlugin(p)
 
-    # Load each plugin.
-    for plugin in plugin_source.list_plugins():
-        initPlugin(plugin_source, plugin)
-
-def initPlugin(plugin_source, plugin, autoImport=True):
+def initPlugin(plugin):
     # Init plugin.
-    if autoImport == True:
-        plugin_temp = plugin_source.load_plugin(plugin)
-        plugin_info = plugin_temp.onInit(plugin_temp)
-    else:
-        plugin_info = plugin.onInit(plugin)
+    plugin_info = plugin.onInit(plugin)
 
     # Verify the plugin is defined, it has a name, and it has commands.
     if plugin_info.plugin == None:

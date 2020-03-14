@@ -92,8 +92,7 @@ async def command_commands(message_in: Message) -> Message:
         cmd_list.append('{} - {}'.format(cmd_names[index].ljust(pad_len), cmd_descs[index]))
     return Message(body='```{}```'.format('\n'.join(cmd_list)))
 
-def command_info(message_in: Message) -> Message:
-    from api import git
+async def command_info(message_in: Message) -> Message:
     sha = git.git_commit()
     track = git.git_branch()
     remote = git.get_remote()
