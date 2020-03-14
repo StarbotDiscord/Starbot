@@ -15,16 +15,24 @@
 from typing import List
 from api.command import Command
 from api.plugin import Plugin
+from api import database
 import discord
+import time
 
 class Bot:
     startTime:          float = 0.0
     plugins:            List[Plugin] = []
     commands:           List[Command] = []
-    messagesSinceStart: int = 0
     client:             discord.Client = None
 
     version_major:      int = 0
     version_minor:      int = 3
     version_revision:   int = 0
     version:            str = str(version_major) + "." + str(version_minor) + "." + str(version_revision)
+
+def init():
+    # Init the DB
+    database.init()
+
+    # Log the time we started.
+    Bot.startTime = time.time()
