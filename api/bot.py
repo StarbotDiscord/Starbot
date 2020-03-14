@@ -23,7 +23,6 @@ class Bot:
     startTime:          float = 0.0
     plugins:            List[Plugin] = []
     commands:           List[Command] = []
-    messagesSinceStart: int = 0
     client:             discord.Client = None
 
     version_major:      int = 0
